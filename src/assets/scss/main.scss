@@ -1,20 +1,23 @@
 @import "vendor/normalize";
 @import "vendor/include-media";
 
-@import "abstract/placeholders.scss";
-@import "abstract/variables.scss";
+@import "abstract/placeholders";
+@import "abstract/variables";
 
-@import "base/reset.scss";
-@import "base/default.scss";
-@import "base/typography.scss";
-@import "base/animation.scss";
+@import "base/reset";
+@import "base/default";
+@import "base/typography";
+@import "base/animation";
 
 
-@import "layout/footer.scss";
-@import "layout/header.scss";
+@import "layout/footer";
+@import "layout/header";
 
-@import "ui/components/button.scss";
-@import "ui/components/link.scss";
+@import "ui/components/button";
+@import "ui/components/link";
+@import "ui/components/Overlay";
+
+
 @import "ui/views/home/home";
 
 body {
