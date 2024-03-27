@@ -1,0 +1,23 @@
+@import "vendor/normalize";
+@import "vendor/include-media";
+
+@import "abstract/placeholders.scss";
+@import "abstract/variables.scss";
+
+@import "base/reset.scss";
+@import "base/default.scss";
+@import "base/typography.scss";
+@import "base/animation.scss";
+
+
+@import "layout/footer.scss";
+@import "layout/header.scss";
+
+@import "ui/components/button.scss";
+@import "ui/components/link.scss";
+@import "ui/views/home/home";
+
+body {
+  overflow-x: hidden;
+  position: absolute;
+}

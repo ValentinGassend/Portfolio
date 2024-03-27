@@ -1,0 +1,66 @@
+@keyframes slideDot {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+
+  10%{
+
+    opacity: 1;
+    left: -90%;
+  }
+
+  90% {
+    opacity: 1;
+    left: -5%;
+  }
+  100% {
+    opacity: 0;
+    left: -5%;
+  }
+}
+
+@keyframes slideDotReverse {
+  0% {
+    opacity: 0;
+    left: 100%;
+  }
+  10%{
+    opacity: 1;
+    left: 90%;
+  }
+  90% {
+    opacity: 1;
+    left: -5%;
+  }
+
+  100% {
+    opacity: 0;
+    left: -5%;
+
+  }
+}
+
+@keyframes loop {
+
+  from {
+    transform: translatey(0);
+  }
+
+  to {
+    transform: translatey(-100%);
+  }
+
+}
+
+@keyframes loopX {
+
+  from {
+    transform: translatex(0);
+  }
+
+  to {
+    transform: translatex(-100%);
+  }
+
+}
