@@ -2,6 +2,7 @@ import React from "react";
 import Landing from "./Landing/Landing.jsx";
 import About from "./About/About.jsx";
 import ProjectList from "./ProjectList/ProjectList.jsx";
+import Contact from "./Contact/Contact.jsx";
 
 const Home = () => {
 
@@ -10,6 +11,7 @@ const Home = () => {
         <Landing/>
         <About/>
         <ProjectList/>
+        <Contact/>
     </>)
 }
 export default Home
