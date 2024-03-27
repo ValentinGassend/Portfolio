@@ -1,5 +1,5 @@
 import React from "react";
-import Landing from "./Landing/landing.jsx";
+import Landing from "./Landing/Landing.jsx";
 
 const Home = () => {
 
