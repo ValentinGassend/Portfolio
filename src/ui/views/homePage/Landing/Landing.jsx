@@ -4,14 +4,15 @@ import SvgManager from "../../../../managers/SvgManager.jsx";
 const Landing = () => {
 
 
-
-    return (< section className={"Landing"}>
-        <div className={"Landing-background"}>
-            <SvgManager name={"n_element"} parentClassName={"Landing-background"}/>
-        </div>
-        <div className={"Landing-container"}>
-        <SvgManager name={"full_logo"} parentClassName={"Landing-container"}/>
-        </div>
-    </>)
+    return (
+        <section className={"Landing"}>
+            <div className={"Landing-background"}>
+                <SvgManager name={"n_element"} parentClassName={"Landing-background"}/>
+            </div>
+            <div className={"Landing-container"}>
+                <SvgManager name={"full_logo"} parentClassName={"Landing-container"}/>
+            </div>
+        </section>
+    )
 }
 export default Landing
