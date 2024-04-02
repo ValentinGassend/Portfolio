@@ -1,3 +1,17 @@
 .About {
+    &-container {
+        &--item {
+            &---content {
+                &.Before, &.After {
+                    &:before {
+                        content: ">";
+                    }
+                    &:after {
+                        content: "<";
 
+                    }
+                }
+            }
+        }
+    }
 }
