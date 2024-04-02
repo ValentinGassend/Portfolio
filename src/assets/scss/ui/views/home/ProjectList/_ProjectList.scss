@@ -1,3 +1,20 @@
-.Landing {
+.ProjectList {
+    &-container {
+        &--item {
+            &---content {
+                &.Before, &.After {
+                    &:before {
+                        content: ">";
+                    }
+                    &:after {
+                        content: "<";
 
+                    }
+                }
+            }
+            &---img {
+
+            }
+        }
+    }
 }
