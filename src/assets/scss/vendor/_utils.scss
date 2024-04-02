@@ -1,0 +1,14 @@
+*.Before, *.After {
+    display: grid;
+    width: fit-content;
+    grid-auto-flow: column;
+    justify-content: start;
+    grid-column-gap: 0.5em;
+    &:after, &:before {
+        content: "";
+        display: block;
+        position: relative;
+        width: fit-content;
+        height: 100%;
+    }
+}
