@@ -1,0 +1,37 @@
+.GridFullWidth {
+  display: grid;
+  width: 100%;
+
+  &-row {
+    display: grid;
+    justify-content: space-between;
+    justify-items: center;
+    align-content: center;
+    align-items: center;
+    grid-template-columns: repeat(var(--itemByLine),1fr);
+
+
+    &--item {
+      width: fit-content;
+      text-align: left;
+
+
+      &:first-child {
+        width: 100%;
+      }
+      &:last-child {
+        width: 100%;
+        text-align: right;
+      }
+
+      &---content {
+        &:first-child {
+          // light
+        }
+        &:last-child {
+          // bold
+        }
+      }
+    }
+  }
+}
