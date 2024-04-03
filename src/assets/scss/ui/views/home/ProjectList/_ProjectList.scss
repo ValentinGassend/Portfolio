@@ -1,20 +1,19 @@
 .ProjectList {
+    width: 100%;
+    box-shadow: 0px -32px 30px 0px rgba($color_black, 0.25);
     &-container {
-        &--item {
-            &---content {
-                &.Before, &.After {
-                    &:before {
-                        content: ">";
-                    }
-                    &:after {
-                        content: "<";
-
-                    }
-                }
-            }
-            &---img {
-
+        display: grid;
+        align-items: center;
+        width: 100%;
+        &--more {
+            width: 100%;
+            color: $color_accent3;
+            text-decoration: none;
+            padding-top: 36px;
+            &:before, &:after {
+                content: "+";
             }
         }
     }
 }
+@import "./components/ProjectListItem";
