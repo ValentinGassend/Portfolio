@@ -7,11 +7,11 @@ import Contact from "./Contact/Contact.jsx";
 const Home = () => {
 
 
-    return (<>
+    return (<section className={"Home"}>
         <Landing/>
         <About/>
         <ProjectList/>
         <Contact/>
-    </>)
+    </section>)
 }
 export default Home
