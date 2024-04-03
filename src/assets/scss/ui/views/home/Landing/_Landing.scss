@@ -1,3 +1,35 @@
 .Landing {
+    position: relative;
+    height: 100vh;
+    background-color: $color_neutral1;
+    overflow: hidden;
+    &:after {
+        background: linear-gradient(180deg, rgba(239, 228, 209, 0.00) 26.5%, $color_neutral2 100%);
+        width: 100%;
+        height: 50%;
+        position: absolute;
+        bottom: 0;
+    }
+    &-background {
+        position: absolute;
+        width: 100%;
+        z-index: 0;
+        height: auto;
+        &-svg {
+            width: 100%;
+            path {
+                fill: $color_accent2;
+                opacity: 0.06;
+            }
+        }
+    }
+    &-container {
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        &-svg {
 
+            width: 40%;
+        }
+    }
 }

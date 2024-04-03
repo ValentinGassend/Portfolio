@@ -1,14 +1,35 @@
-*.Before, *.After {
+*.Before {
     display: grid;
     width: fit-content;
     grid-auto-flow: column;
     justify-content: start;
     grid-column-gap: 0.5em;
-    &:after, &:before {
+    &:before {
         content: "";
         display: block;
         position: relative;
         width: fit-content;
         height: 100%;
     }
+}
+
+*.After {
+    display: grid;
+    width: fit-content;
+    grid-auto-flow: column;
+    justify-content: start;
+    grid-column-gap: 0.5em;
+    &:after {
+        content: "";
+        display: block;
+        position: relative;
+        width: fit-content;
+        height: 100%;
+    }
+}
+
+*.Center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
