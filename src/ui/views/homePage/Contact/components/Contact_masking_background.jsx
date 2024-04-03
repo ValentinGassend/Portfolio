@@ -1,6 +1,7 @@
 import React from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
 import GridFullWidth from "../../../../components/GridFullWidth.jsx";
+import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 
 const ContactMaskingBackground = () => {
     const childrensInArray = [
@@ -21,18 +22,18 @@ const ContactMaskingBackground = () => {
                     <SvgManager name={`Gassend`}
                                 parentClassName={`ContactMaskingBackground-background--layout---item`}/>
                 </div>
-                <div className="ContactMaskingBackground-background--grid"></div>
+                <BackgroundLine/>
             </div>
             <div className="ContactMaskingBackground-content">
-                <h3 className="ContactMaskingBackground-content--title">
+                <h3 className="ContactMaskingBackground-content--title Center">
                     You should !
                 </h3>
                 <div className="ContactMaskingBackground-content--bottom">
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
-                                   childrensInArray={childrensInArray}/>
+                                   childrensInArray={childrensInArray} itemByLine={3}/>
                     <h4 className="ContactMaskingBackground-content--bottom---title">
-                        phrase un peu cool qui explique voilà pourquoi faut me contacter moi
+                        phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi
                     </h4>
                 </div>
             </div>

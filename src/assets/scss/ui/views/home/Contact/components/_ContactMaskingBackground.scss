@@ -1,0 +1,44 @@
+.ContactMaskingBackground {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  &-background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $color_black_20;
+    &--layout {
+
+    }
+  }
+
+  &-content {
+    &--title {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      color: $color_accent4;
+
+    }
+
+    &--bottom {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0 46px;
+      overflow: hidden;
+      display: flex;
+      justify-content: flex-end;
+      flex-direction: column;
+      color: $color_neutral1;
+      &---title {
+        width: max-content;
+      }
+    }
+  }
+}
