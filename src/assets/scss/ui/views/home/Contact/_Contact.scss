@@ -1,5 +1,11 @@
 .Contact {
+    height: 100vh;
+    background-color: $color_neutral1;
     &-container {
-
+        height: 100%;
+        width: 100%;
+        position: relative;
     }
 }
+@import "./components/ContactMasking";
+@import "./components/ContactMaskingBackground";
