@@ -1,15 +1,25 @@
 .ContactMasking {
-    &-frontground {
+  height: 100%;
+  width: 100%;
+
+  &-frontground, &-cursor {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  &-frontground {
+    z-index: 1;
+    &--content {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &-cursor {
+    &-svg {
 
     }
-    &-cursor {
-        &-svg {
-
-        }
-        &--background {
-            &---content {
-
-            }
-        }
-    }
+  }
 }
