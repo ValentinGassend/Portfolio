@@ -1,35 +1,32 @@
 import React from "react";
 
-const GridFullWidth = ({ parentClassName, childrensInArray }) => {
+const GridFullWidth = ({ parentClassName, childrensInArray, itemByLine = 3 }) => {
 
     const renderContent = (content) => {
-        // Check if content contains "<#>"
         if (content.includes("<#>")) {
-            // Split the content if it contains "<#>"
             const splitContent = content.split("<#>");
             return splitContent.map((part, index) => (
                 <React.Fragment key={index}>
                     {childrensInArray.link ? (
-                        <a className={"GridFullWidth-item--content"} href={childrensInArray.link}>
+                        <a className={"GridFullWidth-row--item---content"} href={childrensInArray.link}>
                             {part}
                         </a>
                     ) : (
-                        <p className={"GridFullWidth-item--content"}>
+                        <p className={"GridFullWidth-row--item---content"}>
                             {part}
                         </p>
                     )}
                 </React.Fragment>
             ));
         } else {
-            // If content doesn't contain "<#>", render it as is
             return (
-                <React.Fragment>
+                <React.Fragment key={index}>
                     {childrensInArray.link ? (
-                        <a className={"GridFullWidth-item--content"} href={childrensInArray.link}>
+                        <a className={"GridFullWidth-row--item---content"} href={childrensInArray.link}>
                             {content}
                         </a>
                     ) : (
-                        <p className={"GridFullWidth-item--content"}>
+                        <p className={"GridFullWidth-row--item---content"}>
                             {content}
                         </p>
                     )}
@@ -38,11 +35,21 @@ const GridFullWidth = ({ parentClassName, childrensInArray }) => {
         }
     };
 
+    // Diviser les enfants en sous-tableaux pour chaque ligne
+    const rows = [];
+    for (let i = 0; i < childrensInArray.length; i += itemByLine) {
+        rows.push(childrensInArray.slice(i, i + itemByLine));
+    }
+
     return (
-        <div className={`${parentClassName}-grid GridFullWidth`}>
-            {childrensInArray.map((children, index) => (
-                <div key={index} className={`GridFullWidth-item`}>
-                    {renderContent(children.content)}
+        <div className={`${parentClassName}-grid GridFullWidth`} style={{ "--itemByLine": itemByLine }}>
+            {rows.map((row, rowIndex) => (
+                <div key={rowIndex} className="GridFullWidth-row">
+                    {row.map((children, index) => (
+                        <div key={index} className={`GridFullWidth-row--item`}>
+                            {renderContent(children.content)}
+                        </div>
+                    ))}
                 </div>
             ))}
         </div>
