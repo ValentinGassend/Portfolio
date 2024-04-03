@@ -1,0 +1,67 @@
+.ProjectListItem {
+  padding: 32px 0 28px 0;
+  display: grid;
+justify-items: center;
+  color: $color_black;
+  text-decoration: unset;
+
+  position: relative;
+  background-color: $color_neutral1;
+  width: 100%;
+  border-bottom:solid 3px $color_neutral2;
+  transition: padding 600ms ease, color 300ms ease, background-color 600ms ease;
+
+  &:hover {
+    padding: 40px 0;
+    background-color: $color_accent1;
+    color: $color_white;
+    .ProjectListItem {
+      &-header,&-subtitle {
+        opacity: 1;
+      }
+    }
+  }
+  &-header, &-subtitle {
+  opacity: 0;
+    color: $color_white;
+    transition: opacity 600ms ease 200ms;
+  }
+  &-title {
+    margin: -16px 0 -12px;
+
+    &.Before, &.After {
+      &:before {
+        content: ">";
+      }
+      &:after {
+        content: "<";
+
+      }
+    }
+  }
+  &-subtitle {
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 32px;
+
+    &--tag {
+      display: grid;
+      grid-auto-flow: column;
+      grid-column-gap: 8px;
+      align-items: center;
+      &:before {
+        width: 20px;
+        height: 1px;
+        background-color: $color_white;
+      }
+    }
+  }
+  &-img {
+    position: absolute;
+    z-index: 10;
+    max-width: 400px;
+    height: auto;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+}
