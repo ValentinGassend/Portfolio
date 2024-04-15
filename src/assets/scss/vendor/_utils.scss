@@ -1,35 +1,60 @@
 *.Before {
-    display: grid;
+  display: grid;
+  width: fit-content;
+  grid-auto-flow: column;
+  justify-content: start;
+  grid-column-gap: 0.5em;
+
+  &:before {
+    content: "";
+    display: block;
+    position: relative;
     width: fit-content;
-    grid-auto-flow: column;
-    justify-content: start;
-    grid-column-gap: 0.5em;
-    &:before {
-        content: "";
-        display: block;
-        position: relative;
-        width: fit-content;
-        height: 100%;
-    }
+    height: 100%;
+  }
 }
 
 *.After {
-    display: grid;
+  display: grid;
+  width: fit-content;
+  grid-auto-flow: column;
+  justify-content: start;
+  grid-column-gap: 0.5em;
+
+  &:after {
+    content: "";
+    display: block;
+    position: relative;
     width: fit-content;
-    grid-auto-flow: column;
-    justify-content: start;
-    grid-column-gap: 0.5em;
-    &:after {
-        content: "";
-        display: block;
-        position: relative;
-        width: fit-content;
-        height: 100%;
-    }
+    height: 100%;
+  }
 }
 
 *.Center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+*.Uppercase {
+  text-transform: uppercase;
+}
+*.TxtCenter {
+  text-align: center;
+}
+
+/// Définit un ensemble de propriétés de police de caractères.
+/// @param {string} $fontFamily
+///   La famille de police de caractères à utiliser.
+/// @param {number|string} $fontSize
+///   La taille de la police de caractères.
+/// @param {number} $fontWeight
+///   L'épaisseur de la police de caractères.
+/// @param {number|string} $lineHeight
+///   La hauteur de ligne de la police de caractères.
+@mixin font($fontFamily,$fontSize,$fontWeight, $lineHeight) {
+  font-family: $fontFamily;
+  font-size: $fontSize;
+  font-weight: $fontWeight;
+  line-height: $lineHeight;
 }
