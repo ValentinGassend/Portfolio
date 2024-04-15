@@ -8,7 +8,7 @@ const ContactMasking = () => {
     return (<>
         <div className={"ContactMasking"}>
             <div className="ContactMasking-frontground">
-                <span className="ContactMasking-frontground--content Center">Let's contact !</span>
+                <span className="ContactMasking-frontground--content Center Uppercase">Let's contact !</span>
             </div>
 
             <div className="ContactMasking-cursor __ContactMaskingCursor">
