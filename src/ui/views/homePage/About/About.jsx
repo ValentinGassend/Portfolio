@@ -13,13 +13,13 @@ const About = () => {
 
             <div className={"About-container"}>
                 <div className={"About-container--item"}>
-                    <h2 className={"About-container--item---content"}>Creative</h2>
-                    <h2 className={"About-container--item---content Before After"}>Web</h2>
-                    <h2 className={"About-container--item---content"}>Developer</h2>
+                    <h2 className={"About-container--item---content Uppercase"}>Creative</h2>
+                    <h2 className={"About-container--item---content Uppercase Before After"}>Web</h2>
+                    <h2 className={"About-container--item---content Uppercase"}>Developer</h2>
                 </div>
 
                 <div className={"About-container--item"}>
-                    <h2 className={"About-container--item---content"}>Figma stroke plugin frame editor overflow horizontal arrow.</h2>
+                    <h2 className={"About-container--item---content Uppercase TxtCenter"}>Figma stroke plugin frame editor overflow horizontal arrow.</h2>
                 </div>
             </div>
         </section>
