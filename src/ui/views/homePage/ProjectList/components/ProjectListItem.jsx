@@ -8,7 +8,7 @@ const ProjectListItem = ({project}) => {
             {project.date} - {project.client}
 
         </div>
-        <h3 className={"ProjectListItem-title Before After"}>
+        <h3 className={"ProjectListItem-title TxtCenter Uppercase Before After"}>
             {project.name}
         </h3>
         <div className={"ProjectListItem-subtitle"}>

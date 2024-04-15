@@ -1,44 +1,88 @@
 .ProjectListItem {
   padding: 32px 0 28px 0;
   display: grid;
-justify-items: center;
+  justify-items: center;
   color: $color_black;
   text-decoration: unset;
 
   position: relative;
-  background-color: $color_neutral1;
   width: 100%;
-  border-bottom:solid 3px $color_neutral2;
+  border-bottom: solid 3px $color_neutral2;
   transition: padding 600ms ease, color 300ms ease, background-color 600ms ease;
 
   &:hover {
     padding: 40px 0;
     background-color: $color_accent1;
     color: $color_white;
+
     .ProjectListItem {
-      &-header,&-subtitle {
+      &-header, &-subtitle {
         opacity: 1;
       }
+
+      &-title {
+        &.Before, &.After {
+          &:before {
+            opacity: 1;
+            content: ">";
+            display: flex;
+            align-items: center;
+          }
+
+          &:after {
+            opacity: 1;
+            content: "<";
+            display: flex;
+            align-items: center;
+
+          }
+        }
+      }
     }
   }
+
   &-header, &-subtitle {
-  opacity: 0;
+    opacity: 0;
     color: $color_white;
+    @include font($ff_1, 20px, 400, normal);
+    letter-spacing: -0.8px;
     transition: opacity 600ms ease 200ms;
   }
+
   &-title {
     margin: -16px 0 -12px;
+    @include font($ff_1_C_10pt, 132px, 800, 146px);
+    letter-spacing: -5.28px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.Before, &.After {
+
       &:before {
+        width: min-content;
+        color: $color_white;
+        transition: opacity 600ms ease;
+        opacity: 0;
         content: ">";
+        display: flex;
+        align-items: center;
       }
+
       &:after {
+        width: min-content;
+        color: $color_white;
+        transition: opacity 600ms ease;
+        opacity: 0;
         content: "<";
+        display: flex;
+        align-items: center;
 
       }
     }
   }
+
   &-subtitle {
     display: grid;
     grid-auto-flow: column;
@@ -49,6 +93,8 @@ justify-items: center;
       grid-auto-flow: column;
       grid-column-gap: 8px;
       align-items: center;
+      @include font($ff_1, 20px, 400, normal);
+
       &:before {
         width: 20px;
         height: 1px;
@@ -56,6 +102,7 @@ justify-items: center;
       }
     }
   }
+
   &-img {
     position: absolute;
     z-index: 10;
