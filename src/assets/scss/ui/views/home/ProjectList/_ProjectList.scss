@@ -1,19 +1,35 @@
 .ProjectList {
+  width: 100%;
+  box-shadow: 0px -32px 30px 0px rgba($color_black, 0.25);
+  background-color: $color_neutral1;
+
+
+  &-container {
+    display: grid;
+    align-items: center;
     width: 100%;
-    box-shadow: 0px -32px 30px 0px rgba($color_black, 0.25);
-    &-container {
-        display: grid;
+
+    &--more {
+      width: fit-content;
+      margin:  36px auto;
+      color: $color_accent3;
+      text-decoration: none;
+      @include font($ff_1_C_10pt, 48px, 800, normal);
+      letter-spacing: -1.92px;
+      display: grid;
+      grid-auto-flow: column;
+      grid-column-gap: 8px;
+      justify-content: center;
+      align-items: center;
+      &:before, &:after {
+        display: flex;
+        justify-content: center;
         align-items: center;
-        width: 100%;
-        &--more {
-            width: 100%;
-            color: $color_accent3;
-            text-decoration: none;
-            padding-top: 36px;
-            &:before, &:after {
-                content: "+";
-            }
-        }
+        @include font($ff_1, 72px, 200, normal);
+        content: "+";
+      }
     }
+  }
 }
+
 @import "./components/ProjectListItem";
