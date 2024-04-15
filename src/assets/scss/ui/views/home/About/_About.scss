@@ -44,6 +44,7 @@
             &---content {
                 width: fit-content;
                 z-index: 1;
+                @include font($ff_1_C_10pt,188px,800,146px);
 
                 &.Before, &.After {
                     &:before {
