@@ -25,14 +25,14 @@ const ContactMaskingBackground = () => {
                 <BackgroundLine/>
             </div>
             <div className="ContactMaskingBackground-content">
-                <h3 className="ContactMaskingBackground-content--title Center">
+                <h3 className="ContactMaskingBackground-content--title Center Uppercase">
                     You should !
                 </h3>
                 <div className="ContactMaskingBackground-content--bottom">
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
                                    childrensInArray={childrensInArray} itemByLine={3}/>
-                    <h4 className="ContactMaskingBackground-content--bottom---title">
+                    <h4 className="ContactMaskingBackground-content--bottom---title Uppercase">
                         phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi
                     </h4>
                 </div>

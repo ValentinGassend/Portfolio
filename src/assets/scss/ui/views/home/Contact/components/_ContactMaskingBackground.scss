@@ -10,6 +10,7 @@
     width: 100%;
     height: 100%;
     background-color: $color_black_20;
+
     &--layout {
 
     }
@@ -22,7 +23,8 @@
       width: 100%;
       height: 100%;
       color: $color_accent4;
-
+      @include font($ff_1, 188px, 800, 146px);
+      letter-spacing: -7.52px;
     }
 
     &--bottom {
@@ -36,8 +38,31 @@
       justify-content: flex-end;
       flex-direction: column;
       color: $color_neutral1;
+
       &---title {
         width: max-content;
+        @include font($ff_1, 132px, 800, 146px);
+        letter-spacing: -5.28px;
+      }
+
+      &-grid {
+        .GridFullWidth-row {
+          &--item {
+            &---content {
+              &:first-child {
+                text-transform: uppercase;
+                @include font($ff_1_C_10pt, 24px, 200, normal);
+
+              }
+
+              &:last-child {
+                text-transform: uppercase;
+                @include font($ff_1_C_10pt, 24px, 700, normal);
+
+              }
+            }
+          }
+        }
       }
     }
   }
