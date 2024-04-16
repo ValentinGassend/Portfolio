@@ -103,7 +103,7 @@ const SvgManager = ({name, parentClassName}) => {
             </svg>
 
 
-        ), Gassend: (<svg viewBox="0 0 524 524" fill="none"
+        ), Gassend: (<svg viewBox="0 0 1056 278" fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                           width="100%"
                           height="100%"
