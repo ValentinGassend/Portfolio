@@ -1,28 +1,68 @@
 .ContactMasking {
-  height: 100%;
-  width: 100%;
-
-  &-frontground, &-cursor {
-    position: absolute;
-    top: 0;
     height: 100%;
     width: 100%;
-  }
 
-  &-frontground {
-    z-index: 1;
-    &--content {
-      height: 100%;
-      width: 100%;
-      @include font($ff_1, 188px, 800, 146px);
-      letter-spacing: -7.52px;
-
+    &-frontground, &-background, &-cursor {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
     }
-  }
 
-  &-cursor {
-    &-svg {
+    &-frontground, &-background {
 
+        background-color: $color_neutral1;
+
+        &--content {
+            height: 100%;
+            width: 100%;
+            @include font($ff_1, 188px, 800, 146px);
+            letter-spacing: -7.52px;
+
+        }
     }
-  }
+
+    &-background {
+
+        width: 100vw;
+        height: 100vh;
+        background-color: $color_black;
+        color: $color_neutral1;
+
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        .BackgroundLine {
+            position: absolute;
+            top: 0;
+            opacity: 0.06;
+        }
+    }
+
+    &-cursor {
+        pointer-events: none;
+        z-index: 0;
+        position: absolute;
+        transform-origin: center center;
+        width: 50rem;
+        height: 50rem;
+        aspect-ratio: 1;
+        background-color: $color_accent2;
+        border-radius: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &-svg {
+            > * {
+            }
+        }
+    }
 }
