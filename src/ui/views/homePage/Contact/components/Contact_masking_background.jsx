@@ -15,12 +15,13 @@ const ContactMaskingBackground = () => {
 
     return (<>
         <div className="ContactMaskingBackground">
+            <div className={'ContactMaskingBackground-texture'}></div>
             <div className={"ContactMaskingBackground-background"}>
                 <div className="ContactMaskingBackground-background--layout">
                     <SvgManager name={`valentiN`}
-                                parentClassName={`ContactMaskingBackground-background--layout---item`}/>
+                                parentClassName={`ContactMaskingBackground-background--layout`}/>
                     <SvgManager name={`Gassend`}
-                                parentClassName={`ContactMaskingBackground-background--layout---item`}/>
+                                parentClassName={`ContactMaskingBackground-background--layout`}/>
                 </div>
                 <BackgroundLine/>
             </div>
