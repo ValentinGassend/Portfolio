@@ -1,31 +1,98 @@
-import React from "react";
+import React, {useState} from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
 import ContactMaskingBackground from "./Contact_masking_background.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
+import gsap from "gsap";
 
 const ContactMasking = () => {
+    const [cursorClicked, setCursorClicked] = useState(false);
 
+    const [cursorPosition, setCursorPosition] = useState({x: 0, y: 0});
+    const handleClick = (event) => {
+        setCursorClicked(true);
 
-    return (<>
-        <div className={"ContactMasking"}>
-            <ContactMaskingBackground/>
+        let x = window.innerWidth / 2;
+        let y = window.innerHeight / 2;
+        let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0];
 
-            <div className="ContactMasking-frontground">
-                <span className="ContactMasking-frontground--content Center Uppercase">Let's contact !</span>
-            </div>
+        if (!cursor.classList.contains('active')) {
+            gsap.to(cursor, {
+                duration: 0.5,
+                top: "50%",
+                bottom: "50%",
+                translateY: "-50%",
 
-            <div className="ContactMasking-cursor __ContactMaskingCursor">
-                <SvgManager name={`ContactMaskingCursor`} parentClassName={`ContactMasking-cursor`}/>
+                left: "50%",
+                right: "50%",
+                translateX: "-50%",
+                width: "200vw",
+                height: "200vw",
+                ease: "power2.inOut"
+            });
 
-                <div className="ContactMasking-background">
-                    <span className="ContactMasking-background--content Center Uppercase">Let's contact !</span>
-                    <BackgroundLine/>
+            // Animation pour le background
+            gsap.to(".__ContactMaskedBackground", {
+                duration: 0.5,
+                top: "0",
+                bottom: "0",
+
+                left: "50%",
+                right: "50%",
+                // scale:0.25,
+
+                translateX: "-50%",
+
+                // translate:"-50%, -50%",
+
+                ease: "power2.inOut"
+            });
+        }
+    };
+    const handleMouseMove = (event) => {
+        // setCursorPosition({ x: event.clientX, y: event.clientY });
+        let x = event.clientX - 25;
+        let y = event.clientY - 25;
+        let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0]
+        if (!cursor.classList.contains('active') && !cursorClicked) {
+            gsap.to(cursor, {
+                duration: 0.1,
+                top: y - cursor.offsetHeight / 2,
+                left: x - cursor.offsetWidth / 2
+            });
+            gsap.to(".__ContactMaskedBackground", {
+                duration: 0.1,
+                top: -y + cursor.offsetHeight / 2,
+                left: -x + cursor.offsetWidth / 2
+            });
+        }
+    };
+    return (
+        <>
+            <div className={"ContactMasking"} onClick={handleClick} onMouseMove={handleMouseMove}>
+                <div className={`ContactMasking-frontground ${cursorClicked ? "__clicked" : ''}`}>
+                    <span className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Let's contact !</span>
+                </div>
+
+                {/*style={{ left: cursorPosition.x, top: cursorPosition.y }}*/}
+                <div className={`ContactMasking-cursor __ContactMaskingCursor ${cursorClicked ? "__clicked" : ''}`}>
+                    <SvgManager name={`ContactMaskingCursor`} parentClassName={`ContactMasking-cursor`}/>
+
+                    <div className={`ContactMasking-background __ContactMaskedBackground ${cursorClicked ? "__clicked" : ''}`}>
+                    {/*    <div className={`ContactMasking-background-texture ${cursorClicked ? "__clicked" : ''}`}></div>*/}
+                    {/*    <div className={`ContactMasking-background-color ${cursorClicked ? "__clicked" : ''}`}>*/}
+
+                    {/*        <span className={`ContactMasking-background--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Let's contact !</span>*/}
+                    {/*        <BackgroundLine/>*/}
+                    {/*    </div>*/}
+                        <ContactMaskingBackground/>
+
+                    </div>
 
                 </div>
 
+                {/*<ContactMaskingBackground style={{opacity: cursorClicked ? 1 : 0}}/>*/}
             </div>
-
-        </div>
-    </>)
+        </>
+    );
 }
 export default ContactMasking
