@@ -29,6 +29,7 @@
         justify-content: center;
         justify-items: center;
         align-content: space-around;
+        position: relative;
         &--item {
             height: 100vh;
             display: grid;
@@ -38,8 +39,11 @@
             justify-items: center;
             align-content: center;
             &:first-child {
+                z-index: 10;
             }
             &:last-child {
+                position: absolute;
+                top: 100vh;
             }
             &---content {
                 width: fit-content;
