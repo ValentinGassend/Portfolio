@@ -3,7 +3,7 @@ import SvgManager from "../../../../../managers/SvgManager.jsx";
 import GridFullWidth from "../../../../components/GridFullWidth.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 
-const ContactMaskingBackground = () => {
+const ContactMaskingBackground = ({style}) => {
     const childrensInArray = [
         {content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "#"},
         {content: "twitter :" + "<#>" + "@valou.gass", link: "#"},
@@ -14,7 +14,7 @@ const ContactMaskingBackground = () => {
     ];
 
     return (<>
-        <div className="ContactMaskingBackground">
+        <div className="ContactMaskingBackground" style={style}>
             <div className={'ContactMaskingBackground-texture'}></div>
             <div className={"ContactMaskingBackground-background"}>
                 <div className="ContactMaskingBackground-background--layout">
