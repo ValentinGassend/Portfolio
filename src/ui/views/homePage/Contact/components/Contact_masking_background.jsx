@@ -3,7 +3,7 @@ import SvgManager from "../../../../../managers/SvgManager.jsx";
 import GridFullWidth from "../../../../components/GridFullWidth.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 
-const ContactMaskingBackground = ({style}) => {
+const ContactMaskingBackground = ({cursorClicked}) => {
     const childrensInArray = [
         {content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "#"},
         {content: "twitter :" + "<#>" + "@valou.gass", link: "#"},
@@ -14,7 +14,7 @@ const ContactMaskingBackground = ({style}) => {
     ];
 
     return (<>
-        <div className="ContactMaskingBackground" style={style}>
+        <div className="ContactMaskingBackground">
             <div className={'ContactMaskingBackground-texture'}></div>
             <div className={"ContactMaskingBackground-background"}>
                 <div className="ContactMaskingBackground-background--layout">
@@ -29,7 +29,7 @@ const ContactMaskingBackground = ({style}) => {
                 <h3 className="ContactMaskingBackground-content--title Center Uppercase">
                     You should !
                 </h3>
-                <div className="ContactMaskingBackground-content--bottom">
+                <div className={`ContactMaskingBackground-content--bottom ${cursorClicked ? "__clicked" : ''}`}>
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
                                    childrensInArray={childrensInArray} itemByLine={3}/>

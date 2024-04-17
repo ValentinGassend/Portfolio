@@ -81,7 +81,12 @@
       justify-content: flex-end;
       flex-direction: column;
       color: $color_neutral1;
+      opacity: 0;
+      transition: opacity 300ms ease-out 1s;
 
+      &.__clicked {
+        opacity: 1;
+      }
       &---title {
         width: max-content;
         @include font($ff_1, 132px, 800, 146px);
