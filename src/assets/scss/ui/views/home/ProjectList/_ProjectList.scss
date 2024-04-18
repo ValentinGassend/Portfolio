@@ -28,12 +28,23 @@
       grid-column-gap: 8px;
       justify-content: center;
       align-items: center;
+
+      @include media("<=small") {
+        margin:  38px auto 28px;
+
+        @include font($ff_1_C_10pt,24px,800,normal);
+        letter-spacing: -0.96px;
+      }
       &:before, &:after {
         display: flex;
         justify-content: center;
         align-items: center;
         @include font($ff_1, 72px, 200, normal);
         content: "+";
+        @include media("<=small") {
+          @include font($ff_1,36px,200,normal);
+          letter-spacing: -0.96px;
+        }
       }
     }
   }
