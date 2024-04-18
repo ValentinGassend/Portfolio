@@ -1,3 +1,51 @@
 .Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    padding: 32px 46px;
+    display: grid;
+    grid-auto-flow: row;
+    align-content: space-between;
+    pointer-events: none;
+    &-upper, &-lower {
+        width: 100%;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+        align-items: center;
+        grid-template-columns:repeat(auto-fit, 33%);
+        justify-items: center;
 
+        &--item {
+            display: flex;
+            justify-content: flex-start;
+            width: 33%;
+            @include font($ff_1_C_10pt, 24px, 700, normal);
+
+            &:first-child {
+                width: 100%;
+            }
+
+            &:last-child {
+                width: 100%;
+
+                justify-content: flex-end;
+            }
+        }
+    }
+
+    &-upper {
+        &--item {
+            &:last-child {
+                cursor: pointer;
+                @include font($ff_1, 26px, 800, 18px);
+                pointer-events: auto;
+
+
+            }
+        }
+    }
 }
