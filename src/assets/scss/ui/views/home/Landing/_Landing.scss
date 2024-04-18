@@ -14,9 +14,12 @@
 
     &-background {
         position: absolute;
+        top: 0;
         width: 100%;
         z-index: 0;
-        height: auto;
+        height: fit-content;
+        bottom: 0;
+        margin: auto;
         @include media("<=small") {
             display: flex;
             align-items: center;
