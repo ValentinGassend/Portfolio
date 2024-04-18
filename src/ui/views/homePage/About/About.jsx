@@ -11,13 +11,13 @@ const About = () => {
 
     useEffect(() => {
         gsap.to(".__AboutSticky", {
-            immediateRender: true, overwrite:true, opacity: 0.06, filter: "blur(8px)",
+            immediateRender: true, overwrite: true, opacity: 0.06, filter: "blur(8px)",
             scrollTrigger: {
                 trigger: ".__AboutSticky",
                 scrub: true,
                 start: "top top",
                 end: "bottom top",
-                pin:".__AboutSticky",
+                pin: ".__AboutSticky",
             },
         });
         gsap.to(".__AboutToProjectSticky", {
@@ -51,7 +51,7 @@ const About = () => {
 
                 <div className={"About-container--item __AboutToProjectSticky"}>
                     <h2 className={"About-container--item---content Uppercase TxtCenter"}>Figma stroke plugin frame
-                        editor overflow horizontal arrow.</h2>
+                        <b>editor</b> overflow horizontal arrow.</h2>
                 </div>
             </div>
         </section>
