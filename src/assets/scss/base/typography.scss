@@ -1,12 +1,14 @@
 @font-face {
     font-family: 'Bricolage Grotesque Condensed 10pt';
     src: url('../font/BricolageGrotesque10ptCondensed-ExtraBold.ttf') format("truetype");
+    src: url('../font/BricolageGrotesque10ptCondensed-ExtraBold.woff2') format("woff2");
     font-weight: 800;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque Condensed 10pt';
     src: url('../font/BricolageGrotesque10ptCondensed-Bold.ttf') format("truetype");
+    src: url('../font/BricolageGrotesque10ptCondensed-Bold.woff2') format("woff2");
     font-weight: 700;
     font-style: normal;
 }
@@ -14,6 +16,7 @@
 @font-face {
     font-family: 'Bricolage Grotesque Condensed 10pt';
     src: url('../font/BricolageGrotesque10ptCondensed-ExtraLight.ttf') format("truetype");
+    src: url('../font/BricolageGrotesque10ptCondensed-ExtraLight.woff2') format("woff2");
     font-weight: 200;
     font-style: normal;
 }
@@ -21,198 +24,49 @@
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-ExtraLight.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-ExtraLight.woff2') format('woff2');
     font-weight: 200;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-Light.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-Light.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-Regular.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-Medium.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-SemiBold.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-Bold.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
 }
 @font-face {
     font-family: 'Bricolage Grotesque';
     src: url('../font/BricolageGrotesque-ExtraBold.ttf') format('truetype');
+    src: url('../font/BricolageGrotesque-ExtraBold.woff2') format('woff2');
     font-weight: 800;
     font-style: normal;
 }
-@font-face {
-    font-family: 'Neue Haas Grotesk Text Pro';
-    src: url('../font/neue-haas-grotesk-text-pro-55-bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayBold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayBlack.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayBlackItalic.ttf') format('truetype');
-    font-weight: 900;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayXXThinItalic.ttf') format('truetype');
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayXThin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayXXThin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayMedium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayThin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayBoldItalic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayRoman.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayRomanItalic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayThinItalic.ttf') format('truetype');
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayLight.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayXThinItalic.ttf') format('truetype');
-    font-weight: 100;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayMediumItalic.ttf') format('truetype');
-    font-weight: 500;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Neue Haas Grotesk Display Pro';
-    src: url('../font/NeueHaasDisplayLightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextRoman.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextItalic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-}
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextSemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextSemiBoldItalic.ttf') format('truetype');
-    font-weight: 600;
-    font-style: italic;
-}
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextBoldItalic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
-}
-@font-face {
-    font-family: 'Miller Text';
-    src: url('../font/MillerTextBold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
