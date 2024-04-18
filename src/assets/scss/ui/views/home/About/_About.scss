@@ -1,6 +1,7 @@
 .About {
     position: relative;
     background-color:$color_neutral2;
+    overflow: hidden;
     &:before {
         position: absolute;
         background: linear-gradient(180deg, $color_neutral2 0%, rgba($color_neutral2, 0.00) 100%);
@@ -19,6 +20,13 @@
     }
     .BackgroundLine {
         height: 100%;
+
+        @include media("<=small") {
+            height: 125%;
+            width: 125%;
+            transform: translate(-10%, -10%);
+
+        }
     }
     &-container {
         width: 100%;
@@ -49,7 +57,19 @@
                 width: fit-content;
                 z-index: 1;
                 @include font($ff_1_C_10pt,188px,800,146px);
+
                 letter-spacing: -7.52px;
+                @include media("<=medium") {
+                    margin: 0 40px;
+                    @include font($ff_1_C_10pt,80px,800,64px);
+                    letter-spacing: -3.2px;
+                }
+
+                @include media("<=small") {
+                    @include font($ff_1_C_10pt,48px,800,40px);
+                    letter-spacing: -1.6px;
+                }
+
 
                 &.Before, &.After {
                     &:before {
