@@ -39,6 +39,7 @@
         align-content: space-around;
         position: relative;
         &--item {
+            padding: 0 220px;
             height: 100vh;
             display: grid;
             grid-auto-flow: row;
@@ -79,6 +80,10 @@
                         content: "<";
 
                     }
+                }
+                b, strong {
+                    padding: 0 0.15em;
+                    color: $color_accent1;
                 }
             }
         }
