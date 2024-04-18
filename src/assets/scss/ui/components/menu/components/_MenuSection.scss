@@ -1,0 +1,43 @@
+.MenuSection {
+    display: grid;
+    grid-auto-flow: row;
+    width: 50vw;
+    max-width: 742px;
+    height: 100%;
+    &-item {
+        display: flex;
+        align-items: center;
+        border: solid $color_black 3px;
+        text-decoration: unset;
+        border-top: unset;
+        border-left: unset;
+        color: $color_black;
+        transition: color 300ms;
+
+        &:first-child, &:last-child {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        &:hover {
+            color: $color_accent1;
+        }
+
+        &--text {
+            color: $color_black;
+            @include font($ff_1_C_10pt, 24px, 700, normal);
+
+        }
+
+        &--title {
+            padding: 15px 0 22px 20px;
+            @include font($ff_1_C_10pt, 188px, 800, 146px);
+            height: fit-content;
+            width: fit-content;
+            letter-spacing: -7.52px;
+
+        }
+    }
+}
