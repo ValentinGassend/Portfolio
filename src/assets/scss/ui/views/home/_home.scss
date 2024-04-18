@@ -6,10 +6,15 @@
 
 
 .Home {
+    width: 100vw;
     section {
         position: relative;
         width: 100%;
         display: block;
+    }
+
+    @include media("<=small") {
+        overflow: hidden;
     }
 }
 
