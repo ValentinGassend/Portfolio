@@ -4,6 +4,7 @@ import BackgroundLine from "../../../components/BackgroundLine.jsx";
 import ColorManager from "../../../../managers/ColorManager.jsx";
 import gsap from "gsap";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
+import {IsMobile} from "../../../../utils/utils.jsx";
 
 const About = () => {
     gsap.registerPlugin(ScrollTrigger);
@@ -35,8 +36,12 @@ const About = () => {
 
     return (<>
         <section className={"About Before After"}>
-            <BackgroundLine colorName={ColorManager.$color_neutral1} horizontalCount={6} verticalCount={3}/>
-
+            {/*<BackgroundLine colorName={ColorManager.$color_neutral1} horizontalCount={6} verticalCount={3}/>*/}
+            {IsMobile ?
+                <BackgroundLine colorName={ColorManager.$color_neutral1} verticalCount={2} horizontalCount={4}/>
+                :
+                <BackgroundLine colorName={ColorManager.$color_neutral1}/>
+            }
             <div className={"About-container"}>
                 <div className={"About-container--item __AboutSticky"}>
                     <h2 className={"About-container--item---content Uppercase"}>Creative</h2>
