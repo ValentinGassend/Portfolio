@@ -1,13 +1,22 @@
 @import "./components/MenuSection";
 
 .Menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
+    z-index: 999;
     width: 100vw;
     height: 100vh;
     background: linear-gradient(180deg, rgba(239, 228, 209, 0.80) 0%, rgba(239, 228, 209, 0.80) 100%);
     backdrop-filter: blur(12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms linear;
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+
+    }
     .swiper {
         height: 100%;
         &-wrapper {
@@ -19,10 +28,15 @@
         }
     }
     &-close {
+        z-index: 1;
+        cursor: pointer;
         position: absolute;
         top: 48px;
         right: 48px;
         width: 36px;
         height: 36px;
+        svg {
+            pointer-events: none;
+        }
     }
 }
