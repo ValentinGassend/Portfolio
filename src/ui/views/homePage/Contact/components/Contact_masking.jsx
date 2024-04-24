@@ -155,12 +155,6 @@ const ContactMasking = () => {
 
                 <div
                     className={`ContactMasking-background __ContactMaskedBackground ${cursorClicked ? "__clicked" : ''}`}>
-                    {/*    <div className={`ContactMasking-background-texture ${cursorClicked ? "__clicked" : ''}`}></div>*/}
-                    {/*    <div className={`ContactMasking-background-color ${cursorClicked ? "__clicked" : ''}`}>*/}
-
-                    {/*        <span className={`ContactMasking-background--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Let's contact !</span>*/}
-                    {/*        <BackgroundLine/>*/}
-                    {/*    </div>*/}
                     <ContactMaskingBackground cursorClicked={cursorClicked}/>
 
                 </div>
