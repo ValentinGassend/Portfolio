@@ -69,7 +69,7 @@ const ProjectList = () => {
 
     const handleMouseMove = (e) => {
         console.log(e)
-        setMousePosition({x: e.layerX, y: e.layerY});
+        setMousePosition({x: e.offsetX, y: e.offsetY});
     };
     const handleMouseEnter = (evt) => {
         evt.target.classList.add("hovered")
