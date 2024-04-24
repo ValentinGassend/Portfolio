@@ -1,17 +1,21 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
 import GridFullWidth from "../../../../components/GridFullWidth.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
+import gsap from "gsap";
+import {Autoplay} from "swiper/modules";
+import {Swiper, SwiperSlide} from "swiper/react";
+import MenuSection from "../../../../components/menu/components/MenuSection.jsx";
 
 const ContactMaskingBackground = ({cursorClicked}) => {
-    const childrensInArray = [
-        {content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "#"},
-        {content: "twitter :" + "<#>" + "@valou.gass", link: "#"},
-        {content: "phone :" + "<#>" + "07 07 07 07 07", link: "#"},
-        {content: "github :" + "<#>" + "valentin.gassend", link: "#"},
-        {content: "instagram :" + "<#>" + "@valou.gass", link: "#"},
-        {content: "designed by :" + "<#>" + "Hugo Pinna", link: "#"},
-    ];
+
+    const childrensInArray = [{
+        content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "#"
+    }, {content: "twitter :" + "<#>" + "@valou.gass", link: "#"}, {
+        content: "phone :" + "<#>" + "07 07 07 07 07", link: "#"
+    }, {content: "github :" + "<#>" + "valentin.gassend", link: "#"}, {
+        content: "instagram :" + "<#>" + "@valou.gass", link: "#"
+    }, {content: "designed by :" + "<#>" + "Hugo Pinna", link: "#"},];
 
     return (<>
         <div className="ContactMaskingBackground">
@@ -33,9 +37,32 @@ const ContactMaskingBackground = ({cursorClicked}) => {
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
                                    childrensInArray={childrensInArray} itemByLine={3}/>
-                    <h4 className="ContactMaskingBackground-content--bottom---title Uppercase">
-                        phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi phrase un peu cool qui explique voilà pourquoi faut me contacter moi
-                    </h4>
+
+                    <Swiper
+                        className="ContactMaskingBackground-content--bottom---title Uppercase __ScrollText"
+
+                        slidesPerView={'auto'}
+                        autoplay={{
+                            enabled: true,
+                            delay: 0,
+                            disableOnInteraction: false,
+                        }}
+                        spaceBetween={30}
+                        loop={true}
+                        modules={[Autoplay]}
+                        speed={7500}
+
+                    >
+                        <SwiperSlide>
+                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                        </SwiperSlide>
+                    </Swiper>
                 </div>
             </div>
         </div>
