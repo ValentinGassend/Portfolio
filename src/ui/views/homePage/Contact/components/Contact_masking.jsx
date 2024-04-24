@@ -79,7 +79,8 @@ const ContactMasking = () => {
                 translateX: "-50%",
                 width: `200vw`,
                 height: `200vw`,
-                ease: "power2.inOut"
+                ease: "power2.inOut",
+                overwrite: true
             });
 
             // Animation pour le background
@@ -92,7 +93,7 @@ const ContactMasking = () => {
 
                 // translate:"-50%, -50%",
 
-                ease: "power2.inOut"
+                ease: "power2.inOut", overwrite: true
             });
         }
     };
