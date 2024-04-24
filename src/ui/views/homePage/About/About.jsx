@@ -38,9 +38,6 @@ const About = () => {
 
         let x;
         let y;
-        console.log(event)
-        console.log(boundingRect)
-        console.log(elementRect)
         x = event.offsetX;
         y = event.offsetY - 25;
         // Check if mouse is inside the cursor container

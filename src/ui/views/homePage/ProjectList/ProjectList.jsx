@@ -68,7 +68,6 @@ const ProjectList = () => {
     const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
 
     const handleMouseMove = (e) => {
-        console.log(e)
         setMousePosition({x: e.offsetX, y: e.offsetY});
     };
     const handleMouseEnter = (evt) => {
@@ -94,7 +93,7 @@ const ProjectList = () => {
                     </a>
                     <span className={`ProjectList-container--separator`}></span>
                 </>))}
-                <a className={"ProjectList-container--more Center Before After"} href={'#'}>Voir plus de projets</a>
+                <a className={"ProjectList-container--more Center Before After"} href={'/projects'}>Voir plus de projets</a>
             </div>
         </section>
 

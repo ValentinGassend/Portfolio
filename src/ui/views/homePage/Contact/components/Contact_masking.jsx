@@ -135,7 +135,6 @@ const ContactMasking = () => {
 
 
         }
-        // console.log(cursorClicked)
         gsap.to(cursor, {
             duration: 0.1, top: y - cursor.offsetHeight / 2, left: x - cursor.offsetWidth / 2
         });
