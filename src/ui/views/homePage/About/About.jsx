@@ -41,33 +41,33 @@ const About = () => {
         console.log(event)
         console.log(boundingRect)
         console.log(elementRect)
-        // if (elementRect.width - event.offsetX - (cursor.offsetWidth / 2) >= 0) {
-        //     if ((((event.offsetX - 25) - cursor.offsetWidth / 2) >= 0)) {
         x = event.offsetX;
-        // }
-
-        // } else {
-        //     x = elementRect.width - cursor.right - 25;
-
-
-        // }
-        y = event.offsetY;
-        //
-        // if (elementRect.height - event.offsetY - (cursor.offsetHeight / 2) >= 0) {
-        //
-        //
-        //     if (((event.offsetY - 25) - cursor.offsetHeight / 2) >= 0) {
-        //         y = event.offsetY;
-        //     }
-        // } else {
-        //     y = elementRect.height - cursor.bottom - 25;
-        //
-        //
-        // }
-        // console.log(cursorClicked)
-        gsap.to(cursor, {
-            duration: 0.1, top: y + elementRect.top, left: x + elementRect.left, height: "25vw", width: "25vw"
-        });
+        y = event.offsetY - 25;
+        // Check if mouse is inside the cursor container
+        if (event.clientX >= elementRect.left && event.clientX <= elementRect.right && event.clientY >= elementRect.top && event.clientY <= elementRect.bottom) {
+            // Mouse is inside the container, keep cursor at its normal size
+            gsap.to(cursor, {
+                duration: 0.5,
+                top: y + (elementRect.bottom - elementRect.top),
+                left: x + elementRect.x,
+                height: "277px",
+                width: "277px",
+                ease: "none"
+            });
+        } else {
+            // Mouse is outside the container, reduce cursor size
+            gsap.to(cursor, {
+                duration: 0.8,
+                top: elementRect.bottom - elementRect.top + elementRect.height,
+                left: elementRect.right - elementRect.left,
+                height: "150px", // Adjust these values as needed
+                width: "150px",
+                ease: "none"// Adjust these values as needed
+            });
+        }
+        // gsap.to(cursor, {
+        //     duration: 0.1, top: y + (elementRect.bottom - elementRect.top) , left: x + elementRect.x, height: "277px", width: "277px"
+        // });
     };
 
     return (<>
@@ -88,7 +88,8 @@ const About = () => {
 
                     <div className={`About-container--item---cursor __AboutCursor`}>
 
-                        <SvgManager name={`ContactMaskingCursor`} parentClassName={`About-container--item---cursor`}/>
+                        <SvgManager name={`AboutPlusCursor`} parentClassName={`About-container--item---cursor`}/>
+                        <SvgManager name={`AboutTextCursor`} parentClassName={`About-container--item---cursor`}/>
                     </div>
                     <h2 className={"About-container--item---content Uppercase TxtCenter __AboutCursorContainer"}>Figma
                         stroke plugin frame
