@@ -1,0 +1,121 @@
+.ProjectSingle {
+  padding: 32px 0 28px;
+  display: grid;
+  justify-items: center;
+  color: $color_white;
+  background-color: $color_accent3;
+  align-content: center;
+  align-items: center;
+  text-decoration: unset;
+  position: relative;
+  height: 100vh;
+  max-width: 100vw;
+  transition: padding 600ms ease, color 300ms ease, background-color 600ms ease;
+  grid-row-gap: 32px;
+  @include media("<=small") {
+    overflow: hidden;
+    padding: 72px 0 32px;
+
+
+  }
+
+
+  &-header, &-subtitle {
+    height: fit-content;
+    pointer-events: none;
+    color: $color_white;
+    @include font($ff_1, 20px, 400, normal);
+    letter-spacing: -0.8px;
+    transition: opacity 600ms ease 200ms;
+
+    @include media("<=small") {
+      display: none;
+    }
+  }
+
+  &-title {
+    height: fit-content;
+    pointer-events: none;
+    max-width: 1060px;
+    @include font($ff_1_C_10pt, 188px, 800, 146px);
+    letter-spacing: -7.52px;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    text-align: center;
+    @include media("<=medium") {
+      @include font($ff_1_C_10pt,64px,800,90%);
+      letter-spacing: -2.56px;
+    }
+    @include media("<=small") {
+      padding: 0 16px;
+      @include font($ff_1_C_10pt,40px,800,90%);
+      text-align: left;
+      letter-spacing: -1.2px;
+    }
+    @include media("<=small") {
+      @include font($ff_1_C_10pt,36px,800,90%);
+    }
+    &.Before, &.After {
+
+      pointer-events: none;
+      &:before {
+        width: min-content;
+        color: $color_white;
+        transition: opacity 600ms ease;
+        opacity: 0;
+        content: ">";
+        display: flex;
+        align-items: center;
+
+        @include media("<=small") {
+          opacity: 1;
+          color: $color_black;
+
+
+        }
+      }
+
+      &:after {
+        width: min-content;
+        color: $color_white;
+        transition: opacity 600ms ease;
+        opacity: 0;
+        content: "<";
+        display: flex;
+        align-items: center;
+
+        @include media("<=small") {
+          display: none;
+        }
+
+      }
+    }
+  }
+
+  &-subtitle {
+    pointer-events: none;
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 32px;
+    @include media("<=small") {
+      display: none;
+    }
+
+    &--tag {
+      display: grid;
+      grid-auto-flow: column;
+      grid-column-gap: 8px;
+      align-items: center;
+      @include font($ff_1, 20px, 400, normal);
+
+      &:before {
+        width: 20px;
+        height: 1px;
+        background-color: $color_white;
+      }
+    }
+  }
+}
