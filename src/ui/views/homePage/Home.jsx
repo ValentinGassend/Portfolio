@@ -9,11 +9,15 @@ const Home = () => {
 
 
     return (<section className={"Home"}>
-        <Landing/>
-        <About/>
-        <ProjectList/>
-        <Contact/>
+        <div className={`__ScrollSmooth`}>
+
+            <Landing/>
+            <About/>
+            <ProjectList/>
+            <Contact/>
+        </div>
         <Overlay/>
+
     </section>)
 }
 export default Home
