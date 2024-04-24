@@ -7,26 +7,84 @@ import gsap from "gsap";
 const ContactMasking = () => {
     const [cursorClicked, setCursorClicked] = useState(false);
 
+    const [clickCount, setClickCount] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({x: 0, y: 0});
     const handleClick = (event) => {
         document.getElementsByClassName("Contact")[0].removeEventListener("mousemove", handleMouseMove)
 
-        setCursorClicked(true);
+        // setCursorClicked(true);
 
-        let x = window.innerWidth / 2;
-        let y = window.innerHeight / 2;
-        let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0];
+        setClickCount(clickCount + 1);
+        let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0]
+        const boundingRect = cursor.getBoundingClientRect();
+        const elementRect = document.getElementsByClassName("ContactMasking")[0].getBoundingClientRect();
 
-        if (!cursorClicked) {
+        let x;
+        let y;
+        if (elementRect.width - event.offsetX - (cursor.offsetWidth / 2) >= 0) {
+            if ((((event.offsetX - 25) - cursor.offsetWidth / 2) >= 0)) {
+                x = event.offsetX - 25;
+            } else {
+                x = boundingRect.x + 400;
+            }
+
+        } else {
+            x = boundingRect.x + 400;
+        }
+        if (elementRect.height - event.offsetY - (cursor.offsetHeight / 2) >= 0) {
+
+
+            if (((event.offsetY - 25) - cursor.offsetHeight / 2) >= 0) {
+                y = event.offsetY - 25;
+            } else {
+                y = boundingRect.y + 400;
+            }
+        } else {
+            y = boundingRect.y + 400;
+        }
+
+        // Créer un cercle initiallement à 0
+        let circle = document.createElement('div');
+        circle.classList.add('circle');
+        document.getElementsByClassName("ContactMasking-frontground")[0].appendChild(circle);
+
+
+        gsap.set(circle, {
+
+            top: y - circle.offsetHeight / 2, left: x - circle.offsetWidth / 2,
+        })
+        // Animation pour faire grossir le cercle jusqu'au bord de la fenêtre
+        gsap.to(circle, {
+            duration: 3,
+            width: "1000vw",
+            height: "1000vh",
+            ease: "power2.inOut",
+            top: y - circle.offsetHeight / 2,
+            left: x - circle.offsetWidth / 2,
+            onComplete: () => {
+                document.getElementsByClassName("ContactMasking-frontground")[0].removeChild(circle);
+            }
+        });
+
+        if (!cursorClicked && clickCount === 3) {
             gsap.to(cursor, {
-                duration: 0.5, top: "50%", bottom: "50%", translateY: "-50%",
+                delay: 1.6,
+                duration: 0.5,
+                top: "50%",
+                bottom: "50%",
+                translateY: "-50%",
 
-                left: "50%", right: "50%", translateX: "-50%", width: "200vw", height: "200vw", ease: "power2.inOut"
+                left: "50%",
+                right: "50%",
+                translateX: "-50%",
+                width: `200vw`,
+                height: `200vw`,
+                ease: "power2.inOut"
             });
 
             // Animation pour le background
             gsap.to(".__ContactMaskedBackground", {
-                duration: 0.5, top: "0", bottom: "0",
+                delay: 1.6, duration: 0.5, top: "0", bottom: "0",
 
                 left: "50%", right: "50%", // scale:0.25,
 
@@ -39,23 +97,50 @@ const ContactMasking = () => {
         }
     };
     useEffect(() => {
+        if (clickCount === 3) {
+            setCursorClicked(true);
+        }
         if (!cursorClicked) {
             document.getElementsByClassName("Contact")[0].addEventListener("mousemove", handleMouseMove)
-        document.getElementsByClassName("ContactMasking")[0].addEventListener("click", handleClick)
+            document.getElementsByClassName("ContactMasking")[0].addEventListener("click", handleClick)
         }
-    }, [cursorClicked]);
+    }, [cursorClicked, clickCount]);
     const handleMouseMove = (event) => {
-        // setCursorPosition({ x: event.clientX, y: event.clientY });
-        let x = event.layerX - 25;
-        let y = event.layerY - 25;
+
         let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0]
+        const boundingRect = cursor.getBoundingClientRect();
+        const elementRect = document.getElementsByClassName("ContactMasking")[0].getBoundingClientRect();
+
+        let x;
+        let y;
+        if (elementRect.width - event.offsetX - (cursor.offsetWidth / 2) >= 0) {
+            if ((((event.offsetX - 25) - cursor.offsetWidth / 2) >= 0)) {
+                x = event.offsetX - 25;
+            }
+
+        } else {
+            x = elementRect.width - cursor.right - 25;
+
+
+        }
+        if (elementRect.height - event.offsetY - (cursor.offsetHeight / 2) >= 0) {
+
+
+            if (((event.offsetY - 25) - cursor.offsetHeight / 2) >= 0) {
+                y = event.offsetY - 25;
+            }
+        } else {
+            y = elementRect.height - cursor.bottom - 25;
+
+
+        }
         // console.log(cursorClicked)
-            gsap.to(cursor, {
-                duration: 0.1, top: y - cursor.offsetHeight / 2, left: x - cursor.offsetWidth / 2
-            });
-            gsap.to(".__ContactMaskedBackground", {
-                duration: 0.1, top: -y + cursor.offsetHeight / 2, left: -x + cursor.offsetWidth / 2
-            });
+        gsap.to(cursor, {
+            duration: 0.1, top: y - cursor.offsetHeight / 2, left: x - cursor.offsetWidth / 2
+        });
+        gsap.to(".__ContactMaskedBackground", {
+            duration: 0.1, top: -y + cursor.offsetHeight / 2, left: -x + cursor.offsetWidth / 2
+        });
     };
     return (<>
         <div className={"ContactMasking"}>
