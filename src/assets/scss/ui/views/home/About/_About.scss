@@ -55,6 +55,7 @@
                 top: 100vh;
             }
             &---content {
+                cursor: pointer;
                 width: fit-content;
                 z-index: 1;
                 @include font($ff_1_C_10pt,188px,800,146px);
@@ -84,6 +85,28 @@
                 b, strong {
                     padding: 0 0.15em;
                     color: $color_accent1;
+                }
+            }
+            &---cursor {
+                pointer-events: none;
+                z-index: 10;
+                position: absolute;
+                transform-origin: center center;
+                width: 5vw;
+                height: 5vw;
+                transition: width 600ms cubic-bezier(0.5, 0, 0.6, 1), height 600ms cubic-bezier(0.5, 0, 0.6, 1);
+                aspect-ratio: 1;
+                border-radius: 100%;
+                overflow: hidden;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transform: translate(-50%,-50%);
+                &-svg {
+                    &>* {
+                        fill: $color_accent2;
+                    }
                 }
             }
         }
