@@ -48,6 +48,11 @@
     width: 100vw;
     height: 100vh;
 
+    //transition: inset 0.5s ease-in-out 1.6s;
+    &.__clicked {
+      //inset: 0 50% !important;
+    }
+
     .BackgroundLine {
       position: absolute;
       top: 0;
@@ -96,6 +101,7 @@
     align-items: center;
     justify-content: center;
 
+
     &-svg {
       > * {
       }
@@ -107,8 +113,7 @@
   position: absolute;
   background: radial-gradient(circle, rgba($color_accent4, 0) 0%, rgba($color_accent4, 0) 33%, rgba($color_accent4, 1) 33%, rgba($color_accent4, 1) 66%, rgba($color_accent4, 0) 66%, rgba($color_accent4, 0) 100%);
   transform: translate(-50%, -50%);
-  pointer-events: none; /* Pour permettre les clics en dessous du cercle */
-  //z-index: 100;
+  pointer-events: none;
   width: 0;
   height: 0;
   margin: auto;
