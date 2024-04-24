@@ -9,7 +9,7 @@ const MenuSection = () => {
                 <p className={"MenuSection-item--text Uppercase"}>Creative web developer</p>
                 <p className={"MenuSection-item--text Uppercase"}>Based in annecy</p>
             </div>
-            <a href="#" className={"MenuSection-item"}>
+            <a href="/projects" className={"MenuSection-item"}>
                 <h1 className={"MenuSection-item--title Uppercase"}>
                     Projects
 
