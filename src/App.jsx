@@ -7,6 +7,8 @@ import gsap from "gsap";
 import {ScrollSmoother} from "gsap/ScrollSmoother";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import CustomEase from "gsap/CustomEase";
+import {BrowserRouter, createBrowserRouter, Route, Router, RouterProvider, Routes, useLocation} from "react-router-dom";
+import Projects from "./ui/views/projectsPage/projects.jsx";
 
 function App() {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
@@ -25,8 +27,12 @@ function App() {
 
     }, []);
     return (<div className={`__ScrollSmooth`}>
-        <Home/>
-        <Menu/>
+        <BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={<Home/>}/>
+                <Route path={"/projects"} element={<Projects/>}/>
+            </Routes>
+        </BrowserRouter>
     </div>)
 }
 
