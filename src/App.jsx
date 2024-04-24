@@ -14,26 +14,23 @@ function App() {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
     CustomEase.create("hop", ".235, .615, .185, .995")
     useEffect(() => {
-        if (document.getElementsByClassName("__ScrollSmooth")) {
+        if (document.getElementsByClassName("__ScrollSmooth")[0]) {
 
             ScrollSmoother.create({
-                content: ".__ScrollSmooth",
-                smooth: 0.5,
-                effects:true,
-                speed:1.2,
-                ease: "hop"
+                content: ".__ScrollSmooth", smooth: 0.5, effects: true, speed: 1.2, ease: "hop"
             });
         }
 
     }, []);
-    return (<div className={`__ScrollSmooth`}>
-        <BrowserRouter>
-            <Routes>
-                <Route path={"/"} element={<Home/>}/>
-                <Route path={"/projects"} element={<Projects/>}/>
-            </Routes>
-        </BrowserRouter>
-    </div>)
+    return (<>
+        <Menu/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path={"/"} element={<Home/>}/>
+                    <Route path={"/projects"} element={<Projects/>}/>
+                </Routes>
+            </BrowserRouter>
+    </>)
 }
 
 export default App
