@@ -1,0 +1,85 @@
+.AboutLanding {
+  position: relative;
+  background-color: $color_neutral2;
+  width: 100%;
+  overflow: hidden;
+  &:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(180deg, #EFE4D1 0%, rgba(239, 228, 209, 0.00) 100%);
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+  }
+  .BackgroundLine {
+    height: 100%;
+
+    @include media("<=small") {
+      height: 125%;
+      width: 125%;
+      transform: translate(-10%, -10%);
+
+    }
+  }
+
+  &-container {
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-content: start;
+    justify-items: start;
+    align-content: space-around;
+    position: relative;
+
+    &--item {
+      padding: 0 220px;
+      max-width: 1006px;
+      height: 100vh;
+      display: grid;
+      grid-auto-flow: row;
+      align-items: center;
+      justify-content: start;
+      justify-items: start;
+      align-content: center;
+
+      &---content {
+        width: fit-content;
+        z-index: 1;
+        @include font($ff_1_C_10pt, 188px, 800, 146px);
+
+        letter-spacing: -7.52px;
+        @include media("<=medium") {
+          margin: 0 40px;
+          @include font($ff_1_C_10pt, 80px, 800, 64px);
+          letter-spacing: -3.2px;
+        }
+
+        @include media("<=small") {
+          @include font($ff_1_C_10pt, 48px, 800, 40px);
+          letter-spacing: -1.6px;
+        }
+
+
+        &.Before, &.After {
+          &:before {
+            content: ">";
+          }
+
+          &:after {
+            content: "<";
+
+          }
+        }
+
+        b, strong {
+          padding: 0 0.15em;
+          color: $color_accent1;
+        }
+      }
+    }
+  }
+}
