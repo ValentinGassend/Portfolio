@@ -15,7 +15,7 @@ const MenuSection = () => {
 
                 </h1>
             </a>
-            <a href="#" className={"MenuSection-item"}>
+            <a href="/about" className={"MenuSection-item"}>
                 <h1 className={"MenuSection-item--title Uppercase"}>
 
                     About
