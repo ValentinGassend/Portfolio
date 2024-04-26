@@ -1,0 +1,79 @@
+.AboutIntro {
+  position: relative;
+  background-color: $color_neutral2;
+  overflow: hidden;
+  width: 100%;
+
+  &-container {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-content: start;
+    justify-items: start;
+    align-content: space-around;
+    position: relative;
+
+    &--item {
+      padding: 0 220px;
+      height: 100vh;
+      display: grid;
+      grid-auto-flow: row;
+      align-items: center;
+      justify-content: center;
+      justify-items: center;
+      align-content: center;
+      &:after {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.80) 100%);
+        width: 100%;
+        z-index: 1;
+
+      }
+      &---background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+
+      }
+      &---content {
+        width: fit-content;
+        max-width: 1075px;
+        z-index: 10;
+        color: $color_white;
+        @include font($ff_1, 64px, 40, normal);
+
+        @include media("<=medium") {
+          //margin: 0 40px;
+          //@include font($ff_1, 64px, 40, normal);
+
+        }
+
+        @include media("<=small") {
+          //@include font($ff_1, 64px, 40, normal);
+        }
+
+
+        &.Before, &.After {
+          &:before {
+            content: ">";
+          }
+
+          &:after {
+            content: "<";
+
+          }
+        }
+
+        b, strong {
+          padding: 0 0.15em;
+          color: $color_accent1;
+        }
+      }
+    }
+  }
+}
