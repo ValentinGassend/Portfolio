@@ -29,13 +29,13 @@
     display: grid;
     grid-auto-flow: column;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
     justify-items: start;
     align-content: space-around;
     position: relative;
     grid-column-gap: 96px;
     padding: 0 100px;
-    grid-template-columns: 66.66% 33.33%;
+    grid-template-columns: fit-content(100%) fit-content(33%);
 
     &--item {
 
@@ -48,12 +48,12 @@
       grid-row-gap: 64px;
       &:first-child {
 
-
+      width: 100%;
 
       }
       &:last-child {
-        padding-right: 100px;
 
+        width: fit-content;
 
 
         .AboutDetails-container--item---content {
