@@ -3,6 +3,7 @@
   background-color: $color_neutral2;
   overflow: hidden;
   width: 100%;
+  z-index: 10;
 
   &-container {
     width: 100%;
