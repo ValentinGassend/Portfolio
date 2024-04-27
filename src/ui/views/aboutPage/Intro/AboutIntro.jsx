@@ -13,7 +13,7 @@ const AboutIntro = () => {
 
     return (
 
-        <div className={"AboutIntro"}>
+        <div className={"AboutIntro __HorizontalPanel"}>
             <div className={"AboutIntro-container"}>
                 <div className={"AboutIntro-container--item After"}>
                     <img src={`https://picsum.photos/1800/1800`}
