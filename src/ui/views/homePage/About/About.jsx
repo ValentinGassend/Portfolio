@@ -38,30 +38,31 @@ const About = () => {
 
         let x;
         let y;
-        x = event.offsetX;
-        y = event.offsetY - 25;
+        x = event.clientX;
+        y = event.clientY;
         // Check if mouse is inside the cursor container
-        if (event.clientX >= elementRect.left && event.clientX <= elementRect.right && event.clientY >= elementRect.top && event.clientY <= elementRect.bottom) {
+        // if (x >= elementRect.left || x <= elementRect.right || y >= elementRect.top || y <= elementRect.bottom) {
+
             // Mouse is inside the container, keep cursor at its normal size
             gsap.to(cursor, {
                 duration: 0.5,
-                top: y + (elementRect.bottom - elementRect.top),
-                left: x + elementRect.x,
+                top: y - elementRect.y,
+                left: x - elementRect.x,
                 height: "277px",
                 width: "277px",
-                ease: "none"
+                ease: "none",
+                // overwrite:true,
             });
-        } else {
-            // Mouse is outside the container, reduce cursor size
-            gsap.to(cursor, {
-                duration: 0.8,
-                top: elementRect.bottom - elementRect.top + elementRect.height,
-                left: elementRect.right - elementRect.left,
-                height: "150px", // Adjust these values as needed
-                width: "150px",
-                ease: "none"// Adjust these values as needed
-            });
-        }
+        // } else {
+        // gsap.to(cursor, {
+            //     duration: 0.8,
+            //     top: elementRect.bottom - elementRect.top + elementRect.height,
+            //     left: elementRect.right - elementRect.left,
+            //     height: "150px", // Adjust these values as needed
+            //     width: "150px",
+            //     ease: "none"// Adjust these values as needed
+            // });
+        // }
         // gsap.to(cursor, {
         //     duration: 0.1, top: y + (elementRect.bottom - elementRect.top) , left: x + elementRect.x, height: "277px", width: "277px"
         // });
@@ -80,7 +81,7 @@ const About = () => {
                     <h2 className={"About-container--item---content Uppercase"}>Developer</h2>
                 </div>
 
-                <div className={"About-container--item __AboutToProjectSticky"}>
+                <a href={'/about'} className={"About-container--item __AboutToProjectSticky __AboutCursorContainer"}>
 
 
                     <div className={`About-container--item---cursor __AboutCursor`}>
@@ -88,10 +89,10 @@ const About = () => {
                         <SvgManager name={`AboutPlusCursor`} parentClassName={`About-container--item---cursor`}/>
                         <SvgManager name={`AboutTextCursor`} parentClassName={`About-container--item---cursor`}/>
                     </div>
-                    <h2 className={"About-container--item---content Uppercase TxtCenter __AboutCursorContainer"}>Figma
+                    <h2 className={"About-container--item---content Uppercase TxtCenter"}>Figma
                         stroke plugin frame
                         <b>editor</b> overflow horizontal arrow.</h2>
-                </div>
+                </a>
             </div>
         </section>
     </>)
