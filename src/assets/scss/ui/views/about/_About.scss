@@ -1,5 +1,8 @@
 .About {
-
+  .swiper-wrapper{
+    transition-duration: 1200ms !important;
+    transition-timing-function:$hop;
+  }
 }
 @import "./details/AboutDetails";
 @import "./intro/AboutIntro";

@@ -16,7 +16,7 @@ const AboutDetails = () => {
 
     return (
 
-        <div className={"AboutDetails Before"}>
+        <div className={"AboutDetails Before __HorizontalPanel"}>
             {IsMobile ?
                 <BackgroundLine colorName={ColorManager.$color_neutral2} verticalCount={2} horizontalCount={4}/> :
                 <BackgroundLine colorName={ColorManager.$color_neutral2}/>}
