@@ -17,7 +17,7 @@
   }
   &:hover {
     padding: 40px 0;
-    background-color: $color_accent1;
+    background-color: var(--color);
     color: $color_white;
 
       @include media("<=small") {
