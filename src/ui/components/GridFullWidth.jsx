@@ -2,13 +2,13 @@ import React from "react";
 
 const GridFullWidth = ({ parentClassName, childrensInArray, itemByLine = 3 }) => {
 
-    const renderContent = (content) => {
+    const renderContent = (content, link) => {
         if (content.includes("<#>")) {
             const splitContent = content.split("<#>");
             return splitContent.map((part, index) => (
                 <React.Fragment key={index}>
-                    {childrensInArray.link ? (
-                        <a className={"GridFullWidth-row--item---content"} href={childrensInArray.link}>
+                    {link ? (
+                        <a className={"GridFullWidth-row--item---content"} target={`_blank`} href={link}>
                             {part}
                         </a>
                     ) : (
@@ -21,8 +21,8 @@ const GridFullWidth = ({ parentClassName, childrensInArray, itemByLine = 3 }) =>
         } else {
             return (
                 <React.Fragment key={index}>
-                    {childrensInArray.link ? (
-                        <a className={"GridFullWidth-row--item---content"} href={childrensInArray.link}>
+                    {link ? (
+                        <a className={"GridFullWidth-row--item---content"} target={`_blank`} href={link}>
                             {content}
                         </a>
                     ) : (
@@ -47,7 +47,7 @@ const GridFullWidth = ({ parentClassName, childrensInArray, itemByLine = 3 }) =>
                 <div key={rowIndex} className="GridFullWidth-row">
                     {row.map((children, index) => (
                         <div key={index} className={`GridFullWidth-row--item`}>
-                            {renderContent(children.content)}
+                            {renderContent(children.content, children.link)}
                         </div>
                     ))}
                 </div>
