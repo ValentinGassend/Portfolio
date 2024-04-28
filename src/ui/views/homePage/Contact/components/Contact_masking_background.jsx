@@ -10,12 +10,12 @@ import MenuSection from "../../../../components/menu/components/MenuSection.jsx"
 const ContactMaskingBackground = ({cursorClicked}) => {
 
     const childrensInArray = [{
-        content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "#"
-    }, {content: "twitter :" + "<#>" + "@valou.gass", link: "#"}, {
-        content: "phone :" + "<#>" + "07 07 07 07 07", link: "#"
-    }, {content: "github :" + "<#>" + "valentin.gassend", link: "#"}, {
-        content: "instagram :" + "<#>" + "@valou.gass", link: "#"
-    }, {content: "designed by :" + "<#>" + "Hugo Pinna", link: "#"},];
+        content: "email :" + "<#>" + "valentin.gassend@gmail.com", link: "mailto:valentin.gassend@gmail.com"
+    }, {content: "twitter :" + "<#>" + "@GassValentin", link: "https://twitter.com/GassValentin"}, {
+        content: "phone :" + "<#>" + "07 68 93 59 96", link: "tel:+0768935996"
+    }, {content: "github :" + "<#>" + "ValentinGassend", link: "https://github.com/ValentinGassend"}, {
+        content: "instagram :" + "<#>" + "@levavalou", link: "https://www.instagram.com/levavalou/"
+    }, {content: "designed by :" + "<#>" + "Hugo Pinna", link: "https://hugopinna.com/"},];
 
     return (<>
         <div className="ContactMaskingBackground">
@@ -31,7 +31,7 @@ const ContactMaskingBackground = ({cursorClicked}) => {
             </div>
             <div className="ContactMaskingBackground-content">
                 <h3 className="ContactMaskingBackground-content--title Center Uppercase">
-                    You should !
+                    click pour voir !
                 </h3>
                 <div className={`ContactMaskingBackground-content--bottom ${cursorClicked ? "__clicked" : ''}`}>
 
