@@ -43,7 +43,7 @@
     position: relative;
 
     &--item {
-      max-width: 1006px;
+      max-width: 1060px;
 
       height: 100vh;
       display: grid;
@@ -82,7 +82,13 @@
           letter-spacing: -1.6px;
         }
 
-
+        .__AboutSplitText-word, .__AboutSplitText-line {
+          overflow-y: hidden;
+          overflow-x: visible;
+          padding: 0 10px;
+          letter-spacing: -7px;
+          transform: translateY(110%);
+        }
         &.Before, &.After {
           &:before {
             content: ">";
