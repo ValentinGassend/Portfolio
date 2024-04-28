@@ -4,11 +4,11 @@ const ProjectListItem = ({project, mousePosition}) => {
 
     return (<>
         <div className={"ProjectListItem-header"}>
-            {project.date} - {project.client}
+            {project.year} - {project.client}
 
         </div>
         <h3 className={"ProjectListItem-title TxtCenter Uppercase Before After"}>
-            {project.name}
+            {project.title}
         </h3>
         <div className={"ProjectListItem-subtitle"}>
             {project.tags.map((tag, index) => (
