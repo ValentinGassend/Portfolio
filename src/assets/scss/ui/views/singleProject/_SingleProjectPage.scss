@@ -1,0 +1,58 @@
+.SingleProjectPage {
+  width: 100vw;
+  background-color: $color_neutral1;
+  display: flex;
+  flex-direction: column;
+
+  .BackgroundLine {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+  }
+  &:before {
+    position: fixed;
+
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, #EFE4D1 0%, rgba(239, 228, 209, 0.00) 100%);
+    width: 100%;
+    height: 50vh;
+  }
+  &-background {
+
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 110;
+    pointer-events: none;
+
+    &--image {
+      position: absolute;
+      top: 0;
+      left: 50vw;
+      width: 50vw;
+      //z-index: 110;
+      z-index: 0;
+
+    }
+    &--back {
+      position: relative;
+      margin: 24px;
+      color: $color_black;
+      @include font($ff_1_C_10pt, 32px, 800, normal);
+      letter-spacing: -1.28px;
+      z-index: 1;
+      pointer-events: all;
+
+    }
+  }
+
+}
+@import "./landing/SingleProjectLanding";
+@import "./content/SingleProjectContent";
+@import "./end/SingleProjectEnd";
