@@ -3,7 +3,7 @@
   display: grid;
   justify-items: center;
   color: $color_white;
-  background-color: $color_accent3;
+  background-color: var(--color);
   align-content: center;
   align-items: center;
   text-decoration: unset;
