@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 const ProjectSingle = ({project, index}) => {
-    // Liste de projets
+    const projectStyle = {
+        "--color": project.color, // Utilisation de la couleur définie dans le projet
+    };
 
-
-    return (<div className={"ProjectSingle"} id={`project${index}`}>
+    return (<a href={`/project/${project.id}`} className={"ProjectSingle"} style={projectStyle} id={`project${index}`}>
 
         <div className={"ProjectSingle-header"}>
             {project.year} - {project.client}
@@ -17,7 +18,7 @@ const ProjectSingle = ({project, index}) => {
                 {tag}
             </p>))}
         </div>
-    </div>);
+    </a>);
 };
 
 export default ProjectSingle;
