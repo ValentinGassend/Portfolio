@@ -1,0 +1,81 @@
+.SingleProjectLanding {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-auto-flow: row;
+  justify-content: start;
+  align-items: center;
+  align-content: center;
+  grid-row-gap: 18px;
+  padding-left: 48px;
+  padding-bottom: 5%;
+  &-headline {
+    width: 50%;
+    padding-right: 64px;
+
+    &--header, &--subtitle {
+      color: $color_black;
+      @include font($ff_1_C_10pt, 24px, 700, normal);
+
+      @include media("<=small") {
+        display: none;
+      }
+    }
+    &--header {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: start;
+      grid-column-gap: 32px;
+      &---item {
+        width: fit-content;
+      }
+    }
+    &--subtitle {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: start;
+      grid-column-gap: 16px;
+      &---tag {
+        width: fit-content;
+      }
+    }
+    &--title {
+      pointer-events: none;
+      color: $color_black;
+
+      margin: 8px 0;
+      @include font($ff_1_C_10pt, 100px, 800, 80px);
+      letter-spacing: -4px;
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include media("<=medium") {
+        @include font($ff_1_C_10pt, 64px, 800, 90%);
+        letter-spacing: -2.56px;
+      }
+      @include media("<=small") {
+        padding: 0 16px;
+        @include font($ff_1_C_10pt, 40px, 800, 90%);
+        text-align: left;
+        letter-spacing: -1.2px;
+      }
+      @include media("<=small") {
+        @include font($ff_1_C_10pt, 36px, 800, 90%);
+      }
+
+    }
+  }
+  &-content {
+    width: 50%;
+    padding-right: 64px;
+    &--text {
+      color: $color_black;
+      @include font($ff_1, 32px, 500, normal);
+
+    }
+  }
+}
