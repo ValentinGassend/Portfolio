@@ -50,7 +50,7 @@ const AboutLanding = () => {
 
     return (
 
-        <div className={"AboutLanding Before "}>
+        <div className={"AboutLanding Before"}>
             {/*<BackgroundLine colorName={ColorManager.$color_neutral1} horizontalCount={6} verticalCount={3}/>*/}
             {IsMobile ?
                 <BackgroundLine colorName={ColorManager.$color_neutral1} verticalCount={2} horizontalCount={4}/> :
