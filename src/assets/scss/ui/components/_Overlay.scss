@@ -35,6 +35,14 @@
 
         justify-content: flex-end;
       }
+
+      &---text {
+        pointer-events: auto;
+
+        text-decoration: unset;
+        color: $color_black_20;
+
+      }
     }
   }
 
@@ -73,9 +81,11 @@
         @include font($ff_1_C_10pt, 24px, 700, normal);
         pointer-events: all;
         text-decoration: unset;
+
         &---text {
           opacity: 0.1;
           display: flex;
+
           &:before {
 
             content: ">";
@@ -89,6 +99,111 @@
       &--item {
         justify-content: flex-start;
 
+      }
+    }
+  }
+
+  &.SingleProject {
+    display: grid;
+    grid-auto-flow: column;
+
+    //z-index: 110;
+    grid-template-columns: 1fr 1fr;
+
+    padding: 24px 46px;
+    .Overlay {
+
+      &-right,&-left {
+        z-index: -1;
+        display: grid;
+        grid-auto-flow: row;
+        grid-row-gap: 4px;
+        width: 100%;
+
+
+        &--upper,&--lower {
+          display: grid;
+          grid-auto-flow: column;
+          justify-content: space-between;
+          padding-left: 24px;
+
+
+
+
+          &---item {
+            display: grid;
+            grid-auto-flow: column;
+            grid-column-gap: 32px;
+            &:first-child{
+              .Overlay-right--upper---item----text {
+                @include font($ff_1_C_10pt, 32px, 800, normal);
+                letter-spacing: -1.28px;
+              }
+
+
+            }
+            &:last-child {
+              width: fit-content;
+
+            }
+
+            &----text {
+
+              width: fit-content;
+            }
+
+
+            &----text {
+              color: $color_black_20;
+              display: grid;
+              grid-auto-flow: row;
+              justify-items: center;
+              @include font($ff_1_C_10pt, 24px, 700, normal);
+              pointer-events: all;
+              text-decoration: unset;
+            }
+          }
+        }
+
+        &--lower {
+          display: grid;
+          grid-auto-flow: column;
+
+          width: fit-content;
+          &---item {
+            display: grid;
+            grid-auto-flow: column;
+
+            grid-column-gap: 16px;
+            &----text {
+              color: $color_black_20;
+              display: grid;
+              grid-auto-flow: row;
+              justify-items: center;
+              @include font($ff_1_C_10pt, 24px, 700, normal);
+              pointer-events: all;
+              text-decoration: unset;
+            }
+          }
+        }
+      }
+      &-left {
+        //width: fit-content;
+        position: relative;
+        z-index: 110;
+        height: fit-content;
+        &--upper {
+          width: fit-content;
+          &---item {
+            &----text {
+              color: $color_black;
+              @include font($ff_1_C_10pt, 32px, 800, normal);
+              letter-spacing: -1.28px;
+
+            }
+          }
+
+        }
       }
     }
   }
