@@ -1,0 +1,31 @@
+.SingleProjectEnd {
+  position: relative;
+  left: 50%;
+  width: 50%;
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-auto-flow: row;
+  align-items: center;
+  align-content: center;
+  grid-row-gap: 100px;
+  z-index: 100;
+  padding-left: 64px;
+  padding-right: 116px;
+  &-credit, &-inspiration,&-link {
+    &--content {
+      display: grid;
+      grid-auto-flow: row;
+      grid-row-gap: 8px;
+      &---title {
+        @include font($ff_1_C_10pt, 48px, 800, normal);
+        letter-spacing: -1.92px;
+      }
+      &---text {
+        text-decoration: unset;
+        color: $color_black;
+        @include font($ff_1, 18px, 500, normal);
+      }
+    }
+  }
+}
