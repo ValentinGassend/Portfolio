@@ -89,7 +89,8 @@
       color: $color_neutral1;
       opacity: 0;
       transition: opacity 300ms ease-out 1s;
-
+      pointer-events: all;
+      cursor: default;
       &.__clicked {
         opacity: 1;
       }
@@ -123,9 +124,25 @@
       }
 
       &-grid {
+        padding: 0 32px;
         .GridFullWidth-row {
           &--item {
+            display: flex;
+            flex-direction: column;
+
+            width: 25%;
+            &:first-child,&:last-child {
+              width: 100%;
+            }
+            &:last-child {
+
+              text-align: end;
+              align-items: flex-end;
+            }
             &---content {
+              width: fit-content;
+              color: $color_white;
+              text-decoration: unset;
               &:first-child {
                 text-transform: uppercase;
                 @include font($ff_1_C_10pt, 24px, 200, normal);
