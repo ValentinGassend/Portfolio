@@ -146,7 +146,7 @@ const ContactMasking = () => {
         <div className={"ContactMasking"}>
             <div className={`ContactMasking-frontground ${cursorClicked ? "__clicked" : ''}`}>
                     <span
-                        className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Let's contact !</span>
+                        className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Prends contact !</span>
             </div>
 
             {/*style={{ left: cursorPosition.x, top: cursorPosition.y }}*/}
