@@ -11,6 +11,7 @@ import {BrowserRouter, createBrowserRouter, Route, Router, RouterProvider, Route
 import Projects from "./ui/views/projectsPage/projects.jsx";
 import About from "./ui/views/aboutPage/aboutPage.jsx";
 import AboutPage from "./ui/views/aboutPage/aboutPage.jsx";
+import SingleProjectPage from "./ui/views/singleProjectPage/singleProjectPage.jsx";
 
 function App() {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
@@ -31,6 +32,7 @@ function App() {
                     <Route path={"/"} element={<Home/>}/>
                     <Route path={"/projects"} element={<Projects/>}/>
                     <Route path={"/about"} element={<AboutPage/>}/>
+                    <Route path={"/project/:id"}  element={<SingleProjectPage/>}/>
                 </Routes>
             </BrowserRouter>
     </>)
