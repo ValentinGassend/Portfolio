@@ -14,6 +14,7 @@ const AboutPage = () => {
     gsap.registerPlugin(ScrollTrigger)
     let sections = gsap.utils.toArray(".__HorizontalPanel");
     useEffect(() => {
+
         // gsap.to(sections, {
         //     xPercent: -100 * (sections.length - 1), ease: "none", scrollTrigger: {
         //         trigger: ".__HorizontalScrollContainer",
@@ -28,9 +29,11 @@ const AboutPage = () => {
 
 
     return (<>
+        <Overlay/>
 
         <div className={`__ScrollSmooth`}>
             <section className={"About"}>
+
                 <AboutLanding/>
                 <Swiper
                     slidesPerView={'auto'}
