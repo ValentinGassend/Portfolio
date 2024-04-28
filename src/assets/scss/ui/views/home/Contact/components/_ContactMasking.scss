@@ -2,6 +2,7 @@
   height: 100%;
   width: 100%;
   max-height: 100vh;
+  background: transparent;
 
   &:hover {
     .ContactMasking-cursor {
@@ -20,7 +21,7 @@
 
   &-frontground, &-background {
     transition: opacity 300ms ease 1s;
-    background-color: $color_neutral1;
+    background: transparent;
     pointer-events: none;
 
     &--content {
@@ -100,6 +101,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: transparent;
 
 
     &-svg {
