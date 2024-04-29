@@ -35,7 +35,10 @@ const SingleProjectLanding = ({project}) => {
                 </div>
             </div>
             <div className={"SingleProjectLanding-content"}>
-                <p className={"SingleProjectLanding-content--text"}>{project.content.description}</p>
+                <p
+                    className={"SingleProjectLanding-content--text"}
+                    dangerouslySetInnerHTML={{ __html: project.content.description.replace(/\n/g, "<br>") }}
+                />
             </div>
 
         </section>
