@@ -61,6 +61,7 @@
         position: absolute;
         top: 100vh;
         text-decoration: unset;
+
       }
 
       &---content {
@@ -87,6 +88,8 @@
           padding: 0 10px;
           letter-spacing: -7px;
           transform: translateY(110%);
+          @include font($ff_1_C_10pt, 188px, 800, 146px);
+          margin: -21px 0;
 
           @include media("<=medium") {
             letter-spacing: -3.2px;
