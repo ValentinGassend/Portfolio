@@ -65,13 +65,13 @@ const ContactMaskingBackground = ({cursorClicked}) => {
 
                     >
                         <SwiperSlide>
-                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
                         </SwiperSlide>
                         <SwiperSlide>
-                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
                         </SwiperSlide>
                         <SwiperSlide>
-                            <h4>phrase un peu cool voilà pourquoi faut me contacter moi</h4>
+                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
                         </SwiperSlide>
                     </Swiper>
                 </div>
