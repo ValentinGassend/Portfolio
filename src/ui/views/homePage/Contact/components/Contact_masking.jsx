@@ -3,6 +3,7 @@ import SvgManager from "../../../../../managers/SvgManager.jsx";
 import ContactMaskingBackground from "./Contact_masking_background.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 import gsap from "gsap";
+import {IsMobile} from "../../../../../utils/utils.jsx";
 
 const ContactMasking = () => {
     const [cursorClicked, setCursorClicked] = useState(false);
@@ -54,21 +55,25 @@ const ContactMasking = () => {
             top: y - circle.offsetHeight / 2, left: x - circle.offsetWidth / 2,
         })
         // Animation pour faire grossir le cercle jusqu'au bord de la fenêtre
-        gsap.to(circle, {
-            duration: 3,
-            width: "1000vw",
-            height: "1000vh",
-            ease: "power2.inOut",
-            top: y - circle.offsetHeight / 2,
-            left: x - circle.offsetWidth / 2,
-            onComplete: () => {
-                document.getElementsByClassName("ContactMasking-frontground")[0].removeChild(circle);
-            }
-        });
 
-        if (!cursorClicked && clickCount === 3) {
+        if (!IsMobile) {
+            gsap.to(circle, {
+                duration: 3,
+                width: "1000vw",
+                height: "1000vh",
+                ease: "power2.inOut",
+                top: y - circle.offsetHeight / 2,
+                left: x - circle.offsetWidth / 2,
+                onComplete: () => {
+                    document.getElementsByClassName("ContactMasking-frontground")[0].removeChild(circle);
+                }
+            });
+        }
+
+
+        if ((!cursorClicked && clickCount === 3) || IsMobile) {
             gsap.to(cursor, {
-                delay: 1.6,
+                delay: !IsMobile ? 1.6 : 0,
                 duration: 0.5,
                 top: "50%",
                 bottom: "50%",
@@ -77,15 +82,15 @@ const ContactMasking = () => {
                 left: "50%",
                 right: "50%",
                 translateX: "-50%",
-                width: `200vw`,
-                height: `200vw`,
+                width: IsMobile ? `200vh` : `200vw`,
+                height: IsMobile ? `200vh` : `200vw`,
                 ease: "power2.inOut",
                 overwrite: true
             });
 
             // Animation pour le background
             gsap.to(".__ContactMaskedBackground", {
-                delay: 1.6, duration: 0.5, top: "0", bottom: "0",
+                delay: !IsMobile ? 1.6 : 0, duration: 0.5, top: "0", bottom: "0",
 
                 left: "50%", right: "50%", // scale:0.25,
 
@@ -98,13 +103,14 @@ const ContactMasking = () => {
         }
     };
     useEffect(() => {
-        if (clickCount === 3) {
+        if (clickCount === 3 || IsMobile) {
             setCursorClicked(true);
         }
         if (!cursorClicked) {
             document.getElementsByClassName("Contact")[0].addEventListener("mousemove", handleMouseMove)
             document.getElementsByClassName("ContactMasking")[0].addEventListener("click", handleClick)
         }
+
     }, [cursorClicked, clickCount]);
     const handleMouseMove = (event) => {
 
@@ -146,7 +152,7 @@ const ContactMasking = () => {
         <div className={"ContactMasking"}>
             <div className={`ContactMasking-frontground ${cursorClicked ? "__clicked" : ''}`}>
                     <span
-                        className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Prends contact !</span>
+                        className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Faisons connaissance !</span>
             </div>
 
             {/*style={{ left: cursorPosition.x, top: cursorPosition.y }}*/}
