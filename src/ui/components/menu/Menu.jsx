@@ -41,6 +41,11 @@ const Menu = () => {
             loop={true}
             modules={[Autoplay]}
             speed={7500}
+            // breakpoints={{
+            //     768: {
+            //         slidesPerView: 1.25,
+            //     },
+            // }}
 
         >
             <SwiperSlide>
