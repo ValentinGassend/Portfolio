@@ -47,15 +47,34 @@
       align-items: center;
       align-content: center;
 
+      @include media("<=medium") {
+        grid-row-gap: 33%;
+
+      }
+
       &-svg {
         width: 66%;
+        @include media("<=medium") {
+          width: 125%;
+
+        }
 
         &:first-child {
           margin: 0 auto 0 46px;
+
+          @include media("<=medium") {
+            margin: 0;
+            transform: translateX(-25%) translateY(24px);
+
+          }
         }
 
         &:last-child {
           margin: 0 46px 0 auto;
+          @include media("<=medium") {
+            margin: 0;
+            transform: translateX(5%);
+          }
         }
 
         path {
@@ -67,6 +86,7 @@
   }
 
   &-content {
+
     &--title {
       position: absolute;
       top: 0;
@@ -75,6 +95,16 @@
       color: $color_accent4;
       @include font($ff_1, 188px, 800, 146px);
       letter-spacing: -7.52px;
+      @include media("<=medium") {
+        text-align: center;
+        @include font($ff_1, 80px, 800, 74px);
+        letter-spacing: -3.2px;
+      }
+      @include media("<=small") {
+        @include font($ff_1_C_10pt, 56px, 800, 92.5%);
+        letter-spacing: -2.4px;
+
+      }
     }
 
     &--bottom {
@@ -91,6 +121,7 @@
       transition: opacity 300ms ease-out 1s;
       pointer-events: all;
       cursor: default;
+
       &.__clicked {
         opacity: 1;
       }
@@ -102,6 +133,16 @@
         display: grid;
         grid-auto-flow: column;
         grid-column-gap: 1em;
+        @include media("<=medium") {
+          text-align: center;
+          @include font($ff_1, 80px, 800, 74px);
+          letter-spacing: -3.2px;
+        }
+        @include media("<=small") {
+          @include font($ff_1_C_10pt, 56px, 800, 92.5%);
+          letter-spacing: -2.4px;
+
+        }
 
         .swiper {
           padding: 0 46px;
@@ -125,27 +166,40 @@
 
       &-grid {
         padding: 0 32px;
+        @include media("<=medium") {
+          padding: 0 16px;
+
+        }
+
         .GridFullWidth-row {
           &--item {
             display: flex;
             flex-direction: column;
 
             width: 25%;
-            &:first-child,&:last-child {
+
+            &:first-child, &:last-child {
               width: 100%;
             }
+
             &:last-child {
 
               text-align: end;
               align-items: flex-end;
             }
+
             &---content {
               width: fit-content;
               color: $color_white;
               text-decoration: unset;
+
               &:first-child {
                 text-transform: uppercase;
                 @include font($ff_1_C_10pt, 24px, 200, normal);
+                @include media("<=medium") {
+                  @include font($ff_1_C_10pt, 14px, 200, normal);
+
+                }
 
               }
 
@@ -153,6 +207,10 @@
                 text-transform: uppercase;
                 @include font($ff_1_C_10pt, 24px, 700, normal);
 
+                @include media("<=medium") {
+                  @include font($ff_1_C_10pt, 14px, 700, normal);
+
+                }
               }
             }
           }
