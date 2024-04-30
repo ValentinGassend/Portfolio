@@ -54,7 +54,7 @@
 ///   L'épaisseur de la police de caractères.
 /// @param {number|string} $lineHeight
 ///   La hauteur de ligne de la police de caractères.
-@mixin font($fontFamily,$fontSize,$fontWeight, $lineHeight) {
+@mixin font($fontFamily,$fontSize,$fontWeight, $lineHeight:normal) {
   font-family: $fontFamily;
   font-size: $fontSize;
   font-weight: $fontWeight;
