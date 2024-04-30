@@ -9,6 +9,11 @@
 
       width: 50rem;
       height: 50rem;
+      @include media("<=medium") {
+
+        width: 10rem;
+        height: 10rem;
+      }
     }
   }
 
@@ -30,14 +35,15 @@
       @include font($ff_1, 188px, 800, 146px);
       letter-spacing: -7.52px;
 
-      @include media("<=small") {
+      @include media("<=medium") {
         text-align: center;
-        @include font($ff_1_C_10pt, 80px, 800, 92.5%);
+        @include font($ff_1, 80px, 800, 74px);
         letter-spacing: -3.2px;
       }
-      @include media("<=extra-small") {
+      @include media("<=small") {
         @include font($ff_1_C_10pt, 56px, 800, 92.5%);
         letter-spacing: -2.4px;
+
       }
     }
 
