@@ -25,9 +25,14 @@
       justify-content: flex-start;
       width: 33%;
       @include font($ff_1_C_10pt, 24px, 700, normal);
+      @include media("<=small") {
+        @include font($ff_1_C_10pt, 20px, 700, normal);
+
+      }
 
       &:first-child {
         width: 100%;
+
       }
 
       &:last-child {
@@ -47,7 +52,19 @@
   }
 
   &-upper {
+
+    @include media("<=medium") {
+      justify-items: start;
+    }
     &--item {
+
+      &:first-child {
+        @include media("<=medium") {
+          display: none;
+        }
+      }
+
+
       &:last-child {
         cursor: pointer;
         @include font($ff_1, 26px, 800, 18px);
@@ -57,6 +74,25 @@
           pointer-events: none;
         }
 
+      }
+
+    }
+  }
+
+  &-lower {
+    @include media("<=medium") {
+      grid-template-columns:unset;
+    }
+    &--item {
+
+      @include media("<=medium") {
+        display: none;
+      }
+      &:first-child,&:last-child {
+
+        @include media("<=medium") {
+          display: flex;
+        }
       }
     }
   }
@@ -111,9 +147,10 @@
     grid-template-columns: 1fr 1fr;
 
     padding: 24px 46px;
+
     .Overlay {
 
-      &-right,&-left {
+      &-right, &-left {
         z-index: -1;
         display: grid;
         grid-auto-flow: row;
@@ -121,20 +158,19 @@
         width: 100%;
 
 
-        &--upper,&--lower {
+        &--upper, &--lower {
           display: grid;
           grid-auto-flow: column;
           justify-content: space-between;
           padding-left: 24px;
 
 
-
-
           &---item {
             display: grid;
             grid-auto-flow: column;
             grid-column-gap: 32px;
-            &:first-child{
+
+            &:first-child {
               .Overlay-right--upper---item----text {
                 @include font($ff_1_C_10pt, 32px, 800, normal);
                 letter-spacing: -1.28px;
@@ -142,6 +178,7 @@
 
 
             }
+
             &:last-child {
               width: fit-content;
 
@@ -170,11 +207,13 @@
           grid-auto-flow: column;
 
           width: fit-content;
+
           &---item {
             display: grid;
             grid-auto-flow: column;
 
             grid-column-gap: 16px;
+
             &----text {
               color: $color_black_20;
               display: grid;
@@ -187,13 +226,16 @@
           }
         }
       }
+
       &-left {
         //width: fit-content;
         position: relative;
         z-index: 110;
         height: fit-content;
+
         &--upper {
           width: fit-content;
+
           &---item {
             &----text {
               color: $color_black;
