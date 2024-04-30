@@ -2,6 +2,11 @@
     display: grid;
     grid-auto-flow: row;
     width: 50vw;
+    @include media("<=small") {
+        width: fit-content;
+
+    }
+
     max-width: 742px;
     height: 100%;
     &-item {
@@ -19,6 +24,11 @@
             grid-auto-flow: column;
             justify-content: space-between;
             padding: 0 20px;
+            @include media("<=small") {
+                padding: 0 16px;
+
+            }
+
         }
 
         &:hover {
@@ -28,6 +38,15 @@
         &--text {
             color: $color_black;
             @include font($ff_1_C_10pt, 24px, 700, normal);
+            @include media("<=small") {
+                @include font($ff_1_C_10pt, 20px, 700, normal);
+
+            }
+
+
+            &:last-child {
+                display: none;
+            }
 
         }
 
@@ -37,6 +56,14 @@
             height: fit-content;
             width: fit-content;
             letter-spacing: -7.52px;
+
+            @include media("<=small") {
+                @include font($ff_1_C_10pt, 80px, 800, 68px);
+                padding: 15px 36px 22px 16px;
+                letter-spacing: -4px;
+
+
+            }
 
         }
     }
