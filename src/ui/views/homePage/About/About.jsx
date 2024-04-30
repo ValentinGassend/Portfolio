@@ -91,7 +91,7 @@ const About = () => {
     };
 
     return (<>
-        <section className={"About"}>
+        <section className={"About Before"}>
             {/*<BackgroundLine colorName={ColorManager.$color_neutral1} horizontalCount={6} verticalCount={3}/>*/}
             {IsMobile ?
                 <BackgroundLine colorName={ColorManager.$color_neutral1} verticalCount={2} horizontalCount={4}/> :
