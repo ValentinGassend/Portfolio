@@ -95,8 +95,9 @@
       color: $color_accent4;
       @include font($ff_1, 188px, 800, 146px);
       letter-spacing: -7.52px;
+      text-align: center;
+
       @include media("<=medium") {
-        text-align: center;
         @include font($ff_1, 80px, 800, 74px);
         letter-spacing: -3.2px;
       }
@@ -159,6 +160,13 @@
 
             h4 {
               width: fit-content;
+              &:before {
+                content: ">";
+              }
+
+              &:after {
+                content: "<";
+              }
             }
           }
         }
