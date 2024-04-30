@@ -27,6 +27,7 @@ const ProjectList = () => {
             <section className="ProjectList">
                 <div className="ProjectList-container">
                     {promotedProjects.map((project, index) => (
+                        <>
                         <a
                             href={`project/${project.id}`}
                             key={index}
@@ -37,8 +38,10 @@ const ProjectList = () => {
                         >
                             <ProjectListItem project={project} mousePosition={mousePosition} />
                         </a>
+                            <span className="ProjectList-container--separator"></span>
+
+                        </>
                     ))}
-                    <span className="ProjectList-container--separator"></span>
                     <a className="ProjectList-container--more Center Before After" href="/projects">
                         Voir plus de projets
                     </a>
