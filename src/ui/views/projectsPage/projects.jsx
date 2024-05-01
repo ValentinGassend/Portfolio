@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import Overlay from "../../components/Overlay.jsx";
 import ProjectSingle from "./projectSingle/projectSingle.jsx";
 import gsap from "gsap";
@@ -11,7 +11,13 @@ import projectsData from "../../../models/projectsData.js";
 const Projects = () => {
 
     const projects = projectsData
+    const [sortedProjects, setSortedProjects] = useState([]);
 
+    // Sort projects by year on component mount
+    useEffect(() => {
+        const sorted = projectsData.slice().sort((a, b) => b.year - a.year);
+        setSortedProjects(sorted);
+    }, []);
 
     gsap.registerPlugin(ScrollTrigger)
     useEffect(() => {
@@ -56,11 +62,11 @@ const Projects = () => {
                 return maxOpacity - Math.abs(index) * step;
             }
         });
-    }, []);
+    }, [sortedProjects]);
 
 
     return (<>
-        <Overlay projectsPage={true} projectsList={projects}/>
+        <Overlay projectsPage={true} projectsList={sortedProjects}/>
 
         {/*<div className={`__ScrollSmooth`}>*/}
 
@@ -73,7 +79,7 @@ const Projects = () => {
                 }
                 <h1 className={`Projects-landing--title Uppercase Before After`}>Projects</h1>
             </div>
-            {projects.map((project, index) => (<div key={index}>
+            {sortedProjects.map((project, index) => (<div key={index}>
                 <ProjectSingle project={project} index={index}/>
             </div>))}
         </section>
