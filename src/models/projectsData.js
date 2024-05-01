@@ -30,33 +30,43 @@ const projects = [{
             url: "https://github.com/ValentinGassend/Syndesi.", title: "Voir le repo github"
         }]
     },
-    color: "#4D407D",
+    color: "#C52D48",
     isPromoted: true,
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 2,
-    year: 2019,
-    client: "Hugo Pinna",
-    title: "Portfolio Hugo PINNA",
-    tags: ["Site web", "React", "Gsap"],
+    year: 2023,
+    client: "Gobelins",
+    title: "Liveo",
+    tags: ["IOT", "Python", "IA", "Whisper"],
     content: {
-        description: "Une application mobile interactive conçue pour sensibiliser le grand public aux problématiques environnementales et encourager des actions individuelles et collectives en faveur de l'environnement.",
-        history: "Développé en collaboration avec l'Association ABC, le projet a été lancé avec succès en 2019 et a reçu un accueil positif, atteignant rapidement un large public.",
-        why: "Pour répondre au besoin croissant de sensibilisation du public aux problématiques environnementales et encourager des actions concrètes pour la protection de l'environnement.",
-        how: "L'application a été développée en utilisant les dernières technologies mobiles et en s'appuyant sur des données scientifiques pour fournir des informations précises sur les questions environnementales.",
-        what: "L'application permet aux utilisateurs d'accéder à des informations sur les problématiques environnementales, de participer à des actions de sensibilisation et de partager leurs propres initiatives écologiques.",
+        description: "Ce projet a été mené à l'école des Gobelins Campus Annecy par une équipe composée de 2 designers et 1 développeur. Le projet s’est déroulé sur 4 mois, en commençant par l’idéation pour se terminer par une soutenance avec démonstration du produit. Ce projet s’est tenu en collaboration avec l’association Renaissance d’Annecy.",
+        history: "C’est après avoir constaté que plus d’1 senior sur 5 était concerné par la perte de mémoire que Liveo a émergé. En effet, Liveo a pour but de fiabiliser la prise de rendez-vous des personnes âgées afin de leur faire gagner en autonomie.",
+        why: "Liveo répond à une nécessité de s'ancrer dans le monde réel, c’est pourquoi il était nécessaire que Liveo soit un objet connecté voire embarqué. Fiable, autonome et discret, Liveo doit s’intégrer dans le quotidien des personnes âgées pour les soulager mentalement.",
+        how: "Liveo repose sur de multiples composants IoT, de l'appui sur un bouton jusqu'à la compréhension et la retranscription vocale des informations fournies par un utilisateur, en passant par une reconnaissance de badge, des retours visuels et sonores, une communication interne en Bluetooth, et bien d'autres encore. Tout ceci permet de récupérer un certain nombre d'informations qu'il suffit d'analyser et d'enregistrer méthodiquement dans l'objet connecté.",
+        what: "En tant que seul développeur de l’équipe, je me suis occupé de l’ensemble du développement de l’objet connecté.\n" +
+            "\n" +
+            "Liveo regroupe un ESP32, un Raspberry Pi, divers modules de communication tels que le Bluetooth, le wifi ou le RFID, ainsi que Whisper, le modèle d’intelligence artificielle de reconnaissance et de transcription vocale.\n" +
+            "\n" +
+            "L’ensemble de l’objet est développé en Python et une grosse partie reprend, techniquement, les bases d’une gestion d’agenda.\n" +
+            "\n" +
+            "Un site web promotionnel a également été produit, mais celui-ci n’a pas été publié en raison de contraintes de temps et de priorité.",
         credits: [{
-            link: "https://hugopinna.com/", content: "Hugo Pinna, designer Graphique"
+            link: "https://bento.me/melisseclivaz", content: "Mélisse CLIVAZ, Designer graphique & cheffe de projet"
+        },{
+            link: "https://www.instagram.com/kinou_design/", content: "Kilian Rizzo, Designer graphique"
         }],
         inspiration: [],
         links: [{
-            url: "https://hugopinna.com/", title: "Voir le site",
+            url: "https://github.com/ValentinGassend/Liveo", title: "voir le repo github",
+        },{
+            url: "https://vimeo.com/941742794", title: "Video promotionnelle",
         }, {
-            url: "https://example.com/link2", title: "Titre du lien 2",
+            url: "https://liveo-website.vercel.app/", title: "Voir le site promotionnel",
         },],
     },
-    color: "#33FF57",
-    isPromoted: false,
+    color: "#333896",
+    isPromoted: true,
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 3,
@@ -89,7 +99,7 @@ const projects = [{
         },],
     },
     color: "#3366FF",
-    isPromoted: true,
+    isPromoted: false,
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 4,
@@ -185,7 +195,7 @@ const projects = [{
         },],
     },
     color: "#33FFFF",
-    isPromoted: true,
+    isPromoted: false,
     imageUrl: "https://picsum.photos/2000/3000"
 },];
 
