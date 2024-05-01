@@ -3,6 +3,7 @@
   background-color: $color_neutral1;
   overflow: hidden;
   width: 100%;
+
   &:before {
     z-index: 10;
     position: absolute;
@@ -12,6 +13,7 @@
     width: 100%;
     height: 50vh;
   }
+
   .BackgroundLine {
     height: 100%;
 
@@ -22,6 +24,7 @@
 
     }
   }
+
   &-container {
     z-index: 10;
     width: 100%;
@@ -36,6 +39,24 @@
     grid-column-gap: 96px;
     padding: 0 100px;
     grid-template-columns: fit-content(100%) fit-content(33%);
+    @include media("<=extra-large") {
+      padding: 0 64px;
+
+    }
+
+    @include media("<=large") {
+      padding: 0 48px;
+
+    }
+
+    @include media("<=small") {
+      padding: 0 20px;
+      width: 100%;
+      grid-auto-flow: row;
+      grid-column-gap: 86px;
+
+      grid-template-columns: none;
+    }
 
     &--item {
 
@@ -46,11 +67,13 @@
       justify-items: center;
       align-content: center;
       grid-row-gap: 64px;
+
       &:first-child {
 
-      width: 100%;
+        width: 100%;
 
       }
+
       &:last-child {
 
         width: fit-content;
@@ -60,7 +83,20 @@
           text-align: right;
           color: $color_black;
           @include font($ff_1_C_10pt, 188px, 800, 146px);
+          @include media("<=extra-large") {
 
+            @include font($ff_1_C_10pt, 148px, 800, 124px);
+
+          }
+
+          @include media("<=medium") {
+            @include font($ff_1_C_10pt, 80px, 800, 64px);
+          }
+
+          @include media("<=small") {
+            text-align: center;
+            @include font($ff_1_C_10pt, 64px, 800, 52px);
+          }
         }
       }
 
@@ -71,7 +107,12 @@
         z-index: 10;
         @include font($ff_1, 32px, 400, normal);
 
-        @include media("<=medium") {
+        @include media("<=extra-large") {
+          @include font($ff_1, 28px, 400, normal);
+        }
+        @include media("<=large") {
+          @include font($ff_1, 24px, 400, normal);
+
           //margin: 0 40px;
           //@include font($ff_1, 32px, 400, normal);
 
@@ -81,6 +122,8 @@
         @include media("<=small") {
           //@include font($ff_1, 32px, 400, normal);
           //letter-spacing: -1.6px;
+          @include font($ff_1, 20px, 400, normal);
+
         }
 
 
