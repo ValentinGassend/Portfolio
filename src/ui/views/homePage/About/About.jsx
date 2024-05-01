@@ -111,9 +111,8 @@ const About = () => {
                         <SvgManager name={`AboutPlusCursor`} parentClassName={`About-container--item---cursor`}/>
                         <SvgManager name={`AboutTextCursor`} parentClassName={`About-container--item---cursor`}/>
                     </div>
-                    <h2 className={"About-container--item---content Uppercase TxtCenter __AboutSplitText"}>Figma
-                        stroke plugin frame
-                        <b>editor</b> overflow horizontal arrow.</h2>
+                    <h2 className={"About-container--item---content Uppercase TxtCenter __AboutSplitText"}>Developpeur
+                        frontend <b>passionne</b> en quete de defis creatifs.</h2>
                 </a>
             </div>
         </section>
