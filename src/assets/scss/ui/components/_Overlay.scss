@@ -102,6 +102,13 @@
 
   // Overlay modifications for ProjectsPage
   .Projects & {
+    &-upper,&-lower {
+      &--item, &--item---text {
+        color: $color_neutral1;
+
+      }
+
+    }
     &-center {
 
       width: 100%;
@@ -113,7 +120,7 @@
       justify-items: end;
 
       &--item, &--item---text {
-        color: $color_black_20;
+        color: $color_neutral1;
         display: grid;
         grid-auto-flow: row;
         justify-items: end;
