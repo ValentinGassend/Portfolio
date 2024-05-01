@@ -56,7 +56,7 @@ const ContactMasking = () => {
         })
         // Animation pour faire grossir le cercle jusqu'au bord de la fenêtre
 
-        if (!IsMobile) {
+        if (!IsMobile()) {
             gsap.to(circle, {
                 duration: 3,
                 width: "1000vw",
@@ -70,10 +70,10 @@ const ContactMasking = () => {
             });
         }
 
-
-        if ((!cursorClicked && clickCount === 3) || IsMobile) {
+        console.log(IsMobile())
+        if ((!cursorClicked && clickCount === 3) || IsMobile()) {
             gsap.to(cursor, {
-                delay: !IsMobile ? 1.6 : 0,
+                delay: !IsMobile() ? 1.6 : 0,
                 duration: 0.5,
                 top: "50%",
                 bottom: "50%",
@@ -82,15 +82,15 @@ const ContactMasking = () => {
                 left: "50%",
                 right: "50%",
                 translateX: "-50%",
-                width: IsMobile ? `200vh` : `200vw`,
-                height: IsMobile ? `200vh` : `200vw`,
+                width: IsMobile() ? `200vh` : `200vw`,
+                height: IsMobile() ? `200vh` : `200vw`,
                 ease: "power2.inOut",
                 overwrite: true
             });
 
             // Animation pour le background
             gsap.to(".__ContactMaskedBackground", {
-                delay: !IsMobile ? 1.6 : 0, duration: 0.5, top: "0", bottom: "0",
+                delay: !IsMobile() ? 1.6 : 0, duration: 0.5, top: "0", bottom: "0",
 
                 left: "50%", right: "50%", // scale:0.25,
 
@@ -103,7 +103,7 @@ const ContactMasking = () => {
         }
     };
     useEffect(() => {
-        if (clickCount === 3 || IsMobile) {
+        if (clickCount === 3 || IsMobile()) {
             setCursorClicked(true);
         }
         if (!cursorClicked) {
