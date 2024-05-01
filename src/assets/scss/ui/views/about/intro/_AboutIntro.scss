@@ -25,6 +25,15 @@
       justify-content: center;
       justify-items: center;
       align-content: center;
+      @include media("<=large") {
+        padding: 0 124px;
+
+      }
+
+      @include media("<=small") {
+        padding: 0;
+        width: 100%;
+      }
       &:after {
         position: absolute;
         left: 0;
@@ -39,23 +48,32 @@
         top: 0;
         left: 0;
         width: 100%;
+        height: 100%;
+        object-fit: cover;
 
+        @include media("<=small") {
+          height: 100%;
+          width: auto;
+          object-fit: cover;
+        }
       }
       &---content {
         width: fit-content;
         max-width: 1075px;
         z-index: 10;
         color: $color_white;
-        @include font($ff_1, 64px, 40, normal);
+        @include font($ff_1, 64px, 400, normal);
 
-        @include media("<=medium") {
+        @include media("<=large") {
           //margin: 0 40px;
-          //@include font($ff_1, 64px, 40, normal);
+          @include font($ff_1, 48px, 400, normal);
 
         }
 
         @include media("<=small") {
-          //@include font($ff_1, 64px, 40, normal);
+          padding: 0 46px;
+          @include font($ff_1, 32px, 400, normal);
+
         }
 
 
