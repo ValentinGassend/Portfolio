@@ -3,7 +3,7 @@ import ProjectSingle from "../views/projectsPage/projectSingle/projectSingle.jsx
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 
-const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project}) => {
+const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project, about=false}) => {
 
     const [menu, setMenu] = useState(null);
     gsap.registerPlugin(ScrollToPlugin)
@@ -56,86 +56,94 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
         }
     }, [menu]);
     return (<>
-        {projectsPage && projectsList ? <div className={`Overlay Projects`}>
-                <div className={`Overlay-upper`}>
-                    <div className={`Overlay-upper--item`}>
-                        <a href={"/"} className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</a>
-                    </div>
-                    <div className={`Overlay-upper--item __MenuOpener`}>
-                        <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
-                    </div>
+        {about ? <div className={`Overlay About`}>
+            <div className={`Overlay-upper`}>
+                <div className={`Overlay-upper--item __MenuOpener`}>
+                    <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
                 </div>
-                <div className={`Overlay-center`}>
-                    <div className={`Overlay-center--item `}>
-                        {projectsList.map((project, index) => (<a key={index} href={`#project${index}`}
-                                                                  className={`Overlay-center--item---text Uppercase Before`}>
-                            {project.title}
-                        </a>))}
-                    </div>
-                </div>
-                <div className={`Overlay-lower`}>
-
-                    <div className={`Overlay-lower--item`}>
-                        <p className={`Overlay-lower--item---text Uppercase`}>Projects</p>
-                    </div>
-                </div>
-
             </div>
 
-            : <>
-                {singleProjectPage && project ?
-                    <div className={`Overlay SingleProject`}>
-                        <div className={`Overlay-left`}>
+        </div> : <>
+            {projectsPage && projectsList ? <div className={`Overlay Projects`}>
+                    <div className={`Overlay-upper`}>
+                        <div className={`Overlay-upper--item`}>
+                            <a href={"/"} className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</a>
                         </div>
-                        <div className={`Overlay-right`}>
-                            <div className={`Overlay-right--upper`}>
-                                <div className={`Overlay-right--upper---item`}>
-                                    <p className={`Overlay-right--upper---item----text Uppercase`}>{project.title}</p>
-
-                                </div>
-                                <div className={`Overlay-right--upper---item __MenuOpener`}>
-                                    <p className={`Overlay-right--upper---item----text Uppercase`}>{project.year}</p>
-                                    <p className={`Overlay-right--upper---item----text Uppercase`}>{project.client}</p>
-                                </div>
-                            </div>
-                            <div className={`Overlay-right--lower`}>
-                                <div className={`Overlay-right--lower---item`}>
-                                    {project.tags.map((tag, index) => (
-                                        <p className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
-                                </div>
-                            </div>
+                        <div className={`Overlay-upper--item __MenuOpener`}>
+                            <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
                         </div>
+                    </div>
+                    <div className={`Overlay-center`}>
+                        <div className={`Overlay-center--item `}>
+                            {projectsList.map((project, index) => (<a key={index} href={`#project${index}`}
+                                                                      className={`Overlay-center--item---text Uppercase Before`}>
+                                {project.title}
+                            </a>))}
+                        </div>
+                    </div>
+                    <div className={`Overlay-lower`}>
 
+                        <div className={`Overlay-lower--item`}>
+                            <p className={`Overlay-lower--item---text Uppercase`}>Projects</p>
+                        </div>
                     </div>
 
-                    : <div className={`Overlay`}>
-                        <div className={`Overlay-upper`}>
-                            <div className={`Overlay-upper--item`}>
-                                <p className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</p>
+                </div>
+
+                : <>
+                    {singleProjectPage && project ?
+                        <div className={`Overlay SingleProject`}>
+                            <div className={`Overlay-left`}>
                             </div>
-                            <div className={`Overlay-upper--item`}>
-                                <p className={`Overlay-upper--item---text Uppercase`}>Basé à annecy</p>
+                            <div className={`Overlay-right`}>
+                                <div className={`Overlay-right--upper`}>
+                                    <div className={`Overlay-right--upper---item`}>
+                                        <p className={`Overlay-right--upper---item----text Uppercase`}>{project.title}</p>
+
+                                    </div>
+                                    <div className={`Overlay-right--upper---item __MenuOpener`}>
+                                        <p className={`Overlay-right--upper---item----text Uppercase`}>{project.year}</p>
+                                        <p className={`Overlay-right--upper---item----text Uppercase`}>{project.client}</p>
+                                    </div>
+                                </div>
+                                <div className={`Overlay-right--lower`}>
+                                    <div className={`Overlay-right--lower---item`}>
+                                        {project.tags.map((tag, index) => (
+                                            <p key={index} className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
+                                    </div>
+                                </div>
                             </div>
-                            <div className={`Overlay-upper--item __MenuOpener`}>
-                                <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
-                            </div>
+
                         </div>
-                        <div className={`Overlay-lower`}>
 
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}>En recherche d'alternance</p>
+                        : <div className={`Overlay`}>
+                            <div className={`Overlay-upper`}>
+                                <div className={`Overlay-upper--item`}>
+                                    <p className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</p>
+                                </div>
+                                <div className={`Overlay-upper--item`}>
+                                    <p className={`Overlay-upper--item---text Uppercase`}>Basé à annecy</p>
+                                </div>
+                                <div className={`Overlay-upper--item __MenuOpener`}>
+                                    <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
+                                </div>
                             </div>
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>
-                            </div>
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}>2024</p>
-                            </div>
-                        </div>
+                            <div className={`Overlay-lower`}>
 
-                    </div>}
-            </>}
+                                <div className={`Overlay-lower--item`}>
+                                    <p className={`Overlay-lower--item---text Uppercase`}>En recherche d'alternance</p>
+                                </div>
+                                <div className={`Overlay-lower--item`}>
+                                    <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>
+                                </div>
+                                <div className={`Overlay-lower--item`}>
+                                    <p className={`Overlay-lower--item---text Uppercase`}>2024</p>
+                                </div>
+                            </div>
 
+                        </div>}
+                </>}
+        </>}
 
     </>)
 }
