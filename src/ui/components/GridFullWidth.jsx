@@ -23,7 +23,7 @@ const GridFullWidth = ({parentClassName, childrensInArray, itemByLine = 3}) => {
             </React.Fragment>);
         }
     };
-    const filteredChildrens = IsMobile ? childrensInArray.filter((child) => !child.excludeOnMobile) : childrensInArray;
+    const filteredChildrens = IsMobile() ? childrensInArray.filter((child) => !child.excludeOnMobile) : childrensInArray;
 
     // Diviser les enfants en sous-tableaux pour chaque ligne
     const rows = [];
