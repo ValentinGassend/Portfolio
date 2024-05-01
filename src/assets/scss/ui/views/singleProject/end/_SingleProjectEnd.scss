@@ -12,6 +12,13 @@
   z-index: 100;
   padding-left: 64px;
   padding-right: 116px;
+  @include media("<=small") {
+    left: unset;
+    width: 100%;
+
+    padding-left: 18px;
+    padding-right: 24px;
+  }
   &-credit, &-inspiration,&-link {
     &--content {
       display: grid;
@@ -20,11 +27,20 @@
       &---title {
         @include font($ff_1_C_10pt, 48px, 800, normal);
         letter-spacing: -1.92px;
+        @include media("<=small") {
+          @include font($ff_1_C_10pt, 40px, 800, normal);
+
+        }
+
       }
       &---text {
         text-decoration: unset;
         color: $color_black;
         @include font($ff_1, 18px, 500, normal);
+        @include media("<=small") {
+          @include font($ff_1, 16px, 500, normal);
+
+        }
       }
     }
   }
