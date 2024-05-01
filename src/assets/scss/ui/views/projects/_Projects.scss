@@ -2,12 +2,14 @@
   width: 100%;
 
   &-landing {
+    position: relative;
     height: 100vh;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: $color_neutral1;
+    z-index: 110;
     &:before {
       position: absolute;
       left: 0;
