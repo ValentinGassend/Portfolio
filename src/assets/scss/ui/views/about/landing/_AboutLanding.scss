@@ -58,14 +58,15 @@
       }
 
       &---content {
+
         width: fit-content;
         z-index: 1;
-        @include font($ff_1_C_10pt, 188px, 800, 146px);
+        @include font($ff_1_C_10pt, 188px, 800, 164px);
+        letter-spacing: -5px;
 
-        letter-spacing: -7.52px;
         @include media("<=large") {
           @include font($ff_1_C_10pt, 148px, 800, 124px);
-          letter-spacing: -5px;
+
 
 
         }
@@ -96,7 +97,7 @@
 
         b, strong {
           padding: 0 0.15em;
-          color: $color_accent1;
+          color: $color_accent3;
         }
       }
     }
