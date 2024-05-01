@@ -44,7 +44,6 @@
 
     &--item {
       max-width: 1060px;
-
       height: 100vh;
       display: grid;
       grid-auto-flow: row;
@@ -75,6 +74,8 @@
         @include media("<=medium") {
           @include font($ff_1_C_10pt, 80px, 800, 68px);
           letter-spacing: -3.2px;
+          margin: 0 200px;
+
         }
 
         @include media("<=small") {
@@ -88,13 +89,10 @@
           padding: 0 10px;
           letter-spacing: -7px;
           transform: translateY(110%);
-          @include font($ff_1_C_10pt, 188px, 800, 146px);
-          margin: -21px 0;
+          @include font($ff_1_C_10pt, 188px, 800, normal);
+          margin: -32px 0;
           @include media("<=medium") {
-            margin: -6px 0;
-
-            @include font($ff_1_C_10pt, 80px, 800, 68px);
-
+            @include font($ff_1_C_10pt, 80px, 800, normal);
             letter-spacing: -3.2px;
             padding: 0;
 
@@ -102,10 +100,8 @@
           @include media("<=small") {
             margin: -4px 0;
             padding-right:1px;
-
             letter-spacing: -1.6px;
             @include font($ff_1_C_10pt, 48px, 800, 40px);
-
           }
         }
         &.Before, &.After {
@@ -121,7 +117,7 @@
 
         b, strong {
           padding: 0 0.15em;
-          color: $color_accent1;
+          color: $color_accent3;
         }
       }
 
@@ -148,7 +144,7 @@
           position: absolute;
 
           & > * {
-            fill: $color_accent2;
+            fill: $color_accent3;
           }
 
           &:first-child {
