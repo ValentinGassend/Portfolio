@@ -29,7 +29,7 @@ const AboutPage = () => {
 
 
     return (<>
-        <Overlay/>
+        <Overlay about={true}/>
 
         <div className={`__ScrollSmooth`}>
             <section className={"About"}>
