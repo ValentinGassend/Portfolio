@@ -12,6 +12,7 @@
     height: 100vh;
     z-index: 0;
   }
+
   &:before {
     position: fixed;
 
@@ -21,6 +22,7 @@
     width: 100%;
     height: 50vh;
   }
+
   &-background {
 
     position: sticky;
@@ -31,28 +33,54 @@
     z-index: 110;
     pointer-events: none;
 
-    &--image {
+    &--container {
       position: absolute;
       top: 0;
       left: 50vw;
+      height: 100%;
       width: 50vw;
       //z-index: 110;
       z-index: 0;
 
+      @include media("<=small") {
+        display: none;
+
+      }
+      &---image {
+        position: absolute;
+        top: 0;
+        width: 50vw;
+        opacity: 0;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 300ms ease-out;
+        &:first-child {
+          opacity: 1;
+        }
+      }
     }
+
     &--back {
       position: relative;
       margin: 24px;
       color: $color_black;
       @include font($ff_1_C_10pt, 32px, 800, normal);
-      letter-spacing: -1.28px;
+      letter-spacing: -4px;
       z-index: 1;
       pointer-events: all;
 
+
+      @include media("<=medium") {
+        @include font($ff_1_C_10pt, 20px, 800, normal);
+        letter-spacing: -1px;
+
+
+      }
     }
   }
 
 }
+
 @import "./landing/SingleProjectLanding";
 @import "./content/SingleProjectContent";
 @import "./end/SingleProjectEnd";
