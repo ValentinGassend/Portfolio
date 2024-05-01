@@ -90,14 +90,21 @@
           transform: translateY(110%);
           @include font($ff_1_C_10pt, 188px, 800, 146px);
           margin: -21px 0;
-
           @include media("<=medium") {
+            margin: -6px 0;
+
+            @include font($ff_1_C_10pt, 80px, 800, 68px);
+
             letter-spacing: -3.2px;
             padding: 0;
 
           }
-          @include media("<=medium") {
+          @include media("<=small") {
+            margin: -4px 0;
+            padding-right:1px;
+
             letter-spacing: -1.6px;
+            @include font($ff_1_C_10pt, 48px, 800, 40px);
 
           }
         }
