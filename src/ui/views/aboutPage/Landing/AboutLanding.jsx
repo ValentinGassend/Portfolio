@@ -59,9 +59,8 @@ const AboutLanding = () => {
 
                 <div className={"AboutLanding-container--item "}>
 
-                    <h2 className={"AboutLanding-container--item---content Uppercase"}>Figma
-                        stroke plugin frame
-                        <b>editor</b> overflow horizontal arrow.</h2>
+                    <h2 className={"AboutLanding-container--item---content Uppercase"}>Developpeur
+                        frontend <b>passionne</b> en quete de defis creatifs.</h2>
                 </div>
             </div>
         </div>);
