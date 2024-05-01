@@ -44,12 +44,12 @@ const ContactMaskingBackground = ({cursorClicked}) => {
             </div>
             <div className="ContactMaskingBackground-content">
                 <h3 className="ContactMaskingBackground-content--title Center Uppercase">
-                    ca devient interessant !
+                    ça devient interessant !
                 </h3>
                 <div className={`ContactMaskingBackground-content--bottom ${cursorClicked ? "__clicked" : ''}`}>
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
-                                   childrensInArray={childrensInArray} itemByLine={IsMobile ? 2 : 3}/>
+                                   childrensInArray={childrensInArray} itemByLine={IsMobile() ? 2 : 3}/>
 
                     <Swiper
                         className="ContactMaskingBackground-content--bottom---title Uppercase __ScrollText"
