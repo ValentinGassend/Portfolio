@@ -5,29 +5,34 @@ const projects = [{
     title: "Syndesi.",
     tags: ["Site web", "Dataviz", "Gsap", "Echarts", "Mapbox"],
     content: {
-        description: "Syndesi. est la formalisation de plusieurs de mois de réflexions autour d’une thématique imposé “Prends de la hauteur, utiliser les données produites de l’espace pour regarder vers la Terre... ou ailleurs !”.\n\nCe projet a été mené à l'école des Gobelins Campus Annecy par une équipe composée de 2 designers et 1 développeur. C’est d'ailleur en cherchant, au seins du groupe, une cause qui nous tenais à cœur que nous avons choisi de nous concentrer sur l'écologie.",
-        history: "Syndesi. est née d’une information clé: plus de 4 jeunes sur 5 ont une pensée concernant l’écologie dans leurs journées. \nEn effet Syndesi à pour objectif d’accompagner toutes personnes qui se sentent concernées par l’urgence climatique et qui souhaitent en apprendre sur le rôle qu’elles peuvent jouer.",
-        why: "En effet la datavisualisation des informations et la dynamisation de la page web à, selon nous, été le meilleur moyen de communiquer les informations souhaitées et de répondre à la problématique du projet étudiant “Prendre de la hauteur” tout en faisait du “data storytelling”.",
-        how: "Syndesi. se découpe en plusieurs étapes, seul la première a été développé pour des raisons de temps. L’idée était de prendre une action quotidienne et de montrer son impacte en changeants d’échelles.\nLa homepage elle, contribue à personnalisé l’expérience pour parler directement au visiteur.",
-        what: "En tant que seul développeur de l’équipe je me suis occupé de l’ensemble de l’intégration de la maquette ainsi que des animations.\n\nLe site Syndesi. rassemble Echarts et Mapbox afin de représenter visuellement certaines données. \nGsap à, en plus de dynamisé le site, contribué à l’aspect fils rouge de l’action quotidienne avec un élément qui nous suit tout au long du scroll représentatif du changement d’échelle. \nLottie à également été un facilitateur de dynamisation du site, il a permis d’alléger les animations en les remplaçant par des séquences vidéos facilement manipulables.",
-        credits: [{
-            link: "https://www.instagram.com/rever.dsgn/",
-            content: "Baptiste SINHSATANAK, Designer graphique"
+        description: {
+            text: "Syndesi. est la formalisation de plusieurs de mois de réflexions autour d’une thématique imposé “Prends de la hauteur, utiliser les données produites de l’espace pour regarder vers la Terre... ou ailleurs !”.\n\nCe projet a été mené à l'école des Gobelins Campus Annecy par une équipe composée de 2 designers et 1 développeur. C’est d'ailleur en cherchant, au seins du groupe, une cause qui nous tenais à cœur que nous avons choisi de nous concentrer sur l'écologie.",
+            image: "https://picsum.photos/2000/3000"
+        }, history: {
+            text: "Syndesi. est née d’une information clé: plus de 4 jeunes sur 5 ont une pensée concernant l’écologie dans leurs journées. \nEn effet Syndesi à pour objectif d’accompagner toutes personnes qui se sentent concernées par l’urgence climatique et qui souhaitent en apprendre sur le rôle qu’elles peuvent jouer.",
+            image: "https://picsum.photos/1000/3000"
+        }, why: {
+            text: "En effet la datavisualisation des informations et la dynamisation de la page web à, selon nous, été le meilleur moyen de communiquer les informations souhaitées et de répondre à la problématique du projet étudiant “Prendre de la hauteur” tout en faisait du “data storytelling”.",
+            image: "https://picsum.photos/2000/2000"
+        }, how: {
+            text: "Syndesi. se découpe en plusieurs étapes, seul la première a été développé pour des raisons de temps. L’idée était de prendre une action quotidienne et de montrer son impacte en changeants d’échelles.\nLa homepage elle, contribue à personnalisé l’expérience pour parler directement au visiteur.",
+            image: "https://picsum.photos/2000/1000"
+        }, what: {
+            text: "En tant que seul développeur de l’équipe je me suis occupé de l’ensemble de l’intégration de la maquette ainsi que des animations.\n\nLe site Syndesi. rassemble Echarts et Mapbox afin de représenter visuellement certaines données. \nGsap à, en plus de dynamisé le site, contribué à l’aspect fils rouge de l’action quotidienne avec un élément qui nous suit tout au long du scroll représentatif du changement d’échelle. \nLottie à également été un facilitateur de dynamisation du site, il a permis d’alléger les animations en les remplaçant par des séquences vidéos facilement manipulables.",
+            image: "https://picsum.photos/3000/3000"
+        }, credits: [{
+            link: "https://www.instagram.com/rever.dsgn/", content: "Baptiste SINHSATANAK, Designer graphique"
         }, {
-            link: "https://bento.me/melisseclivaz",
-            content: "Melisse CLIVAZ, Designer graphique"
-        }],
-        inspiration: [],
-        links: [{
-            url: "https://syndesi.vercel.app/", title: "Voir le site",
+            link: "https://bento.me/melisseclivaz", content: "Melisse CLIVAZ, Designer graphique"
+        }], inspiration: [], links: [{
+            url: "https://syndesi.vercel.app/", title: "Voir le site"
         }, {
-            url: "https://github.com/ValentinGassend/Syndesi.", title: "Voir le repo github",
-        },],
+            url: "https://github.com/ValentinGassend/Syndesi.", title: "Voir le repo github"
+        }]
     },
     color: "#4D407D",
     isPromoted: true,
-    imageUrl: "https://picsum.photos/2000/3000",
-
+    imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 2,
     year: 2019,
@@ -41,8 +46,7 @@ const projects = [{
         how: "L'application a été développée en utilisant les dernières technologies mobiles et en s'appuyant sur des données scientifiques pour fournir des informations précises sur les questions environnementales.",
         what: "L'application permet aux utilisateurs d'accéder à des informations sur les problématiques environnementales, de participer à des actions de sensibilisation et de partager leurs propres initiatives écologiques.",
         credits: [{
-            link: "https://hugopinna.com/",
-            content: "Hugo Pinna, designer Graphique"
+            link: "https://hugopinna.com/", content: "Hugo Pinna, designer Graphique"
         }],
         inspiration: [],
         links: [{
