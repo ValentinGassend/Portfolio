@@ -18,9 +18,11 @@ const ProjectList = () => {
         evt.target.classList.remove("hovered");
         evt.target.removeEventListener("mousemove", handleMouseMove);
     };
+// Sort projects by year
+    const sortedProjects = projectsData.slice().sort((a, b) => b.year - a.year);
 
     // Filter projects with isPromoted true
-    const promotedProjects = projectsData.filter((project) => project.isPromoted);
+    const promotedProjects = sortedProjects.filter((project) => project.isPromoted);
 
     return (
         <>
