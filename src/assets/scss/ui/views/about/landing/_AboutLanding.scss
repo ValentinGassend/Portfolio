@@ -46,6 +46,16 @@
       justify-content: start;
       justify-items: start;
       align-content: center;
+      width: 100%;
+
+      @include media("<=large") {
+        padding: 0 124px;
+
+      }
+      @include media("<=small") {
+        padding: 0;
+        width: 100%;
+      }
 
       &---content {
         width: fit-content;
@@ -53,8 +63,16 @@
         @include font($ff_1_C_10pt, 188px, 800, 146px);
 
         letter-spacing: -7.52px;
+        @include media("<=large") {
+          @include font($ff_1_C_10pt, 148px, 800, 124px);
+          letter-spacing: -5px;
+
+
+        }
+
         @include media("<=medium") {
-          margin: 0 40px;
+          //margin: 0 40px;
+          padding: 0 24px 0 16px;
           @include font($ff_1_C_10pt, 80px, 800, 64px);
           letter-spacing: -3.2px;
         }
