@@ -56,6 +56,7 @@
     @include media("<=medium") {
       justify-items: start;
     }
+
     &--item {
 
       &:first-child {
@@ -83,12 +84,14 @@
     @include media("<=medium") {
       grid-template-columns:unset;
     }
+
     &--item {
 
       @include media("<=medium") {
         display: none;
       }
-      &:first-child,&:last-child {
+
+      &:first-child, &:last-child {
 
         @include media("<=medium") {
           display: flex;
@@ -113,7 +116,7 @@
         color: $color_black_20;
         display: grid;
         grid-auto-flow: row;
-        justify-items: center;
+        justify-items: end;
         @include font($ff_1_C_10pt, 24px, 700, normal);
         pointer-events: all;
         text-decoration: unset;
@@ -122,9 +125,9 @@
           opacity: 0.1;
           display: flex;
 
-          &:before {
+          &:after {
 
-            content: ">";
+            content: "<";
           }
         }
       }
@@ -143,6 +146,9 @@
     display: grid;
     grid-auto-flow: column;
 
+    @include media("<=small") {
+      display: none !important;
+    }
     //z-index: 110;
     grid-template-columns: 1fr 1fr;
 
@@ -245,6 +251,26 @@
             }
           }
 
+        }
+      }
+    }
+  }
+
+  &.About {
+    background: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+
+    .Overlay {
+      &-upper {
+        justify-content: end;
+        height: fit-content;
+        grid-template-columns: none;
+
+        &--item {
+          display: block;
+          width: fit-content;
         }
       }
     }
