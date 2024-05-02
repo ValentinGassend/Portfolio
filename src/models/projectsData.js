@@ -70,36 +70,34 @@ const projects = [{
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 3,
-    year: 2021,
-    client: "Startup XYZ",
-    title: "Site web de commerce électronique",
-    tags: ["Site web", "Commerce électronique", "Développement web"],
+    year: 2024,
+    client: "Hugo PINNA",
+    title: "Portfolio Hugo PINNA",
+    tags: ["Site internet", "Animation", "React", "Gsap", "Lottie"],
     content: {
-        description: "Un site web de commerce électronique dynamique conçu pour offrir aux clients une expérience de magasinage en ligne intuitive et sécurisée.",
-        history: "Lancé en 2021 par la startup XYZ, le site web de commerce électronique a rapidement attiré l'attention des consommateurs et a généré une croissance significative des ventes.",
-        why: "Pour permettre à la startup XYZ d'entrer sur le marché du commerce électronique et de proposer ses produits à un public plus large.",
-        how: "Le site web a été développé en utilisant les dernières technologies web et en se concentrant sur une conception conviviale et responsive pour offrir une expérience utilisateur optimale.",
-        what: "Le site web permet aux utilisateurs de parcourir une large sélection de produits, de passer des commandes en toute sécurité et de suivre leur livraison en temps réel.",
+        description: "Ce projet est le fruit d’une collaboration avec Hugo Pinna. L’objectif était de réaliser un site qui mettait en avant l’ensemble de son travail, en respectant une direction artistique précise et qui se démarquait.",
+        history: "Hugo Pinna est un ami, camarade de classe et freelance. Nous avons également été collègues pendant nos deux premières années d’alternance. C’est à ce moment-là que la proposition de ce portfolio est née. Une demande créative et ambitieuse qui m’a immédiatement séduit.",
+        why: "Ce portfolio devait refléter l’image d’Hugo, mais également se démarquer visuellement et techniquement. Dans le monde du design graphique, la concurrence est forte et chaque détail peut avoir son importance.",
+        how: "Puisque nous étions techniquement différents de la concurrence, nous nous devions d'aller plus loin que de simples timing d'animation sur quelques survols. Il a fallu penser à des mécaniques originales, créatives et surtout qui avaient du sens dans l'idée générale.",
+        what: "Pour cela, le projet s’est construit avec React. J’ai rapidement intégré GSAP pour la gestion de tous les événements au scroll.\n" +
+            "Ensuite, la question de la performance s’est rapidement posée. \n" +
+            "\n" +
+            "C’est alors que j’ai intégré Lottie pour afficher un écran de chargement.\n" +
+            "\n" +
+            "Pour faciliter la modération du contenu, j’ai choisi le CMS headless de Firebase, \"FireCMS\".",
         credits: [{
-            link: "https://example.com/credit1",
-            content: "Conception et développement par une équipe talentueuse de développeurs web de la startup XYZ, avec un accent particulier sur la convivialité et la performance."
-        }, {
-            link: "https://example.com/credit2",
-            content: "Intégration des systèmes de paiement sécurisés par un partenaire spécialisé."
+            link: "https://www.hugopinna.com/",
+            content: "Hugo PINNA, Designer graphique"
         }],
-        inspiration: [{
-            url: "https://example.com/inspiration1", title: "Titre de l'inspiration 1",
-        }, {
-            url: "https://example.com/inspiration2", title: "Titre de l'inspiration 2",
-        },],
+        inspiration: [],
         links: [{
-            url: "https://example.com/link1", title: "Titre du lien 1",
+            url: "https://www.hugopinna.com/", title: "Voir le site"
         }, {
-            url: "https://example.com/link2", title: "Titre du lien 2",
-        },],
+            url: "https://github.com/ValentinGassend/portfolio-hugo-pinna", title: "Voir le repo github"
+        }]
     },
-    color: "#3366FF",
-    isPromoted: false,
+    color: "#E70000",
+    isPromoted: true,
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
     id: 4,
