@@ -61,11 +61,12 @@
     }
 
     &--back {
+      cursor: pointer;
       position: relative;
       margin: 24px;
       color: $color_black;
       @include font($ff_1_C_10pt, 32px, 800, normal);
-      letter-spacing: -4px;
+      letter-spacing: -2.56px;
       z-index: 1;
       pointer-events: all;
 
