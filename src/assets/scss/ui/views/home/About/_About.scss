@@ -92,6 +92,10 @@
            @include media(">1980px") {
              margin: -36px 0;
            }
+           @include media("<=small") {
+             margin: -4px 0;
+
+           }
 
 
         }
@@ -109,10 +113,9 @@
 
           }
           @include media("<=small") {
-            margin: -4px 0;
             padding-right:1px;
             letter-spacing: -1.6px;
-            @include font($ff_1_C_10pt, 48px, 800, 40px);
+            @include font($ff_1_C_10pt, 48px, 800, 48px);
           }
         }
         &.Before, &.After {
