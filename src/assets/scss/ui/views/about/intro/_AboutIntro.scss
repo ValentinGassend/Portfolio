@@ -76,8 +76,9 @@
         }
 
         @include media("<=small") {
-          padding: 0 46px;
-          @include font($ff_1, 32px, 400, normal);
+          padding: 0 32px;
+          max-width: unset;
+          @include font($ff_1, 24px, 400, normal);
 
         }
 
