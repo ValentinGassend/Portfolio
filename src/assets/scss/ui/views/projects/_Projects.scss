@@ -1,6 +1,8 @@
 .Projects {
   width: 100%;
-
+  .BackgroundLine {
+    z-index: -10;
+  }
   &-landing {
     position: relative;
     height: 100vh;
@@ -10,6 +12,7 @@
     justify-content: center;
     background-color: $color_neutral1;
     z-index: 110;
+
     &:before {
       position: absolute;
       left: 0;
@@ -19,10 +22,16 @@
       height: 50vh;
       z-index: 1;
     }
+
     &--title {
       color: $color_black;
       @include font($ff_1_C_10pt, 188px, 800, 146px);
       letter-spacing: -7.52px;
+      @include media("<=medium") {
+        @include font($ff_1_C_10pt, 80px, 800, 68px);
+        letter-spacing: -4px;
+      }
+
       &:before {
         content: ">";
       }
