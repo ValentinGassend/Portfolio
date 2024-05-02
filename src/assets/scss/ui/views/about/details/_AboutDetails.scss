@@ -36,11 +36,13 @@
     justify-items: start;
     align-content: space-around;
     position: relative;
-    grid-column-gap: 96px;
-    padding: 0 100px;
+    grid-column-gap: 80px;
+    padding: 0 64px;
+
     grid-template-columns: fit-content(100%) fit-content(33%);
-    @include media("<=extra-large") {
-      padding: 0 64px;
+    @include media(">1600px") {
+      padding: 0 100px;
+      grid-column-gap: 96px;
 
     }
 
@@ -66,7 +68,11 @@
       justify-content: center;
       justify-items: center;
       align-content: center;
-      grid-row-gap: 64px;
+      grid-row-gap: 58px;
+      @include media(">1600px") {
+        grid-row-gap: 64px;
+
+      }
 
       &:first-child {
 
@@ -82,10 +88,10 @@
         .AboutDetails-container--item---content {
           text-align: right;
           color: $color_black;
-          @include font($ff_1_C_10pt, 188px, 800, 146px);
-          @include media("<=extra-large") {
+          @include font($ff_1_C_10pt, 148px, 800, 124px);
 
-            @include font($ff_1_C_10pt, 148px, 800, 124px);
+          @include media(">1600px") {
+            @include font($ff_1_C_10pt, 188px, 800, 146px);
 
           }
 
@@ -105,11 +111,13 @@
         text-decoration: unset;
         width: fit-content;
         z-index: 10;
-        @include font($ff_1, 32px, 400, normal);
+        @include font($ff_1, 28px, 400, normal);
 
-        @include media("<=extra-large") {
-          @include font($ff_1, 28px, 400, normal);
+        @include media(">1600px") {
+          @include font($ff_1, 32px, 400, normal);
+
         }
+
         @include media("<=large") {
           @include font($ff_1, 24px, 400, normal);
 
