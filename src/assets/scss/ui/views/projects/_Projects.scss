@@ -31,6 +31,14 @@
         @include font($ff_1_C_10pt, 80px, 800, 68px);
         letter-spacing: -4px;
       }
+        @include media("<=small") {
+          letter-spacing: -2.6px;
+
+          @include font($ff_1_C_10pt, 64px, 800, 56px);
+
+          grid-column-gap: .2em;
+      }
+
 
       &:before {
         content: ">";
