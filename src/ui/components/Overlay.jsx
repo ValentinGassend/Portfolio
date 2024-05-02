@@ -25,16 +25,13 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                 scrollToTargetElement(targetElement);
             });
         });
-        gsap.to(".Overlay", {
-            opacity: 0,
-            zIndex:-1,
-            scrollTrigger: {
-                trigger: ".Contact",
-                start: "top center",
-                end: "bottom bottom",
-                scrub: true,
-            }
-        })
+        if (!about && !projectsPage && !singleProjectPage) {
+            gsap.to(".Overlay", {
+                opacity: 0, zIndex: -1, scrollTrigger: {
+                    trigger: ".Contact", start: "top center", end: "bottom bottom", scrub: true,
+                }
+            })
+        }
     }, []);
     const scrollToTargetElement = (targetElement) => {
         if (targetElement) {
@@ -102,8 +99,7 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                 </div>
 
                 : <>
-                    {singleProjectPage && project ?
-                        <div className={`Overlay SingleProject`}>
+                    {singleProjectPage && project ? <div className={`Overlay SingleProject`}>
                             <div className={`Overlay-left`}>
                             </div>
                             <div className={`Overlay-right`}>
@@ -119,9 +115,8 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                                 </div>
                                 <div className={`Overlay-right--lower`}>
                                     <div className={`Overlay-right--lower---item`}>
-                                        {project.tags.map((tag, index) => (
-                                            <p key={index}
-                                               className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
+                                        {project.tags.map((tag, index) => (<p key={index}
+                                                                              className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
                                     </div>
                                 </div>
                             </div>
