@@ -73,6 +73,10 @@
         grid-row-gap: 64px;
 
       }
+      @include media("<=small") {
+        grid-row-gap: 24px;
+
+      }
 
       &:first-child {
 
@@ -101,7 +105,7 @@
 
           @include media("<=small") {
             text-align: center;
-            @include font($ff_1_C_10pt, 64px, 800, 52px);
+            @include font($ff_1_C_10pt, 48px, 800, 36px);
           }
         }
       }
@@ -130,7 +134,7 @@
         @include media("<=small") {
           //@include font($ff_1, 32px, 400, normal);
           //letter-spacing: -1.6px;
-          @include font($ff_1, 20px, 400, normal);
+          @include font($ff_1, 14px, 400, normal);
 
         }
 
