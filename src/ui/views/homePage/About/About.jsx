@@ -11,7 +11,30 @@ const About = () => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
     useEffect(() => {
-        let AboutSplitText = new SplitText(".__AboutSplitText", {type: "words", wordsClass: "__AboutSplitText-word"})
+        let AboutSplitText
+        if (document.getElementsByClassName("__AboutSplitText") && !document.getElementsByClassName("__AboutSplitText-word")[0]) {
+            AboutSplitText = new SplitText(".__AboutSplitText", {
+                type: "lines, words",
+                linesClass: "__AboutSplitText-line",
+                wordsClass: "__AboutSplitText-word"
+            })
+        }
+        if (AboutSplitText && document.getElementsByClassName("__AboutSplitText-word")) {
+
+            gsap.fromTo(AboutSplitText.words, {
+                y: "110%",
+            }, {
+                y: "0",
+                opacity: 1,
+                stagger: 0.2,
+                duration: 0.6,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: ".__AboutSplitText", start: "center bottom", end: "bottom top",
+                },
+
+            });
+        }
         document.getElementsByClassName("__AboutCursorContainer")[0].addEventListener("mousemove", handleMouseMove)
 
         gsap.to(".__AboutSticky", {
@@ -34,19 +57,6 @@ const About = () => {
                 end: "bottom top",
                 pin: ".__AboutToProjectSticky",
             },
-        });
-        gsap.fromTo(AboutSplitText.words, {
-            y: "110%",
-        }, {
-            y: "0",
-            opacity: 1,
-            stagger: 0.2,
-            duration: 0.6,
-            ease: "power3.out",
-            scrollTrigger: {
-                trigger: ".__AboutSplitText", start: "center bottom", end: "bottom top",
-            },
-
         });
 
 
