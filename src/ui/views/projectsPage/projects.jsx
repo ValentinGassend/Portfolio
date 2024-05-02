@@ -73,15 +73,13 @@ const Projects = () => {
         <section className={"Projects"}>
             <div className={`Projects-landing Before`}>
                 {IsMobile ?
-                    <BackgroundLine colorName={ColorManager.$color_neutral2} verticalCount={2} horizontalCount={2}/>
-                    :
-                    <BackgroundLine colorName={ColorManager.$color_neutral2}/>
-                }
+                    <BackgroundLine colorName={ColorManager.$color_neutral2} verticalCount={2} horizontalCount={2}/> :
+                    <BackgroundLine colorName={ColorManager.$color_neutral2}/>}
                 <h1 className={`Projects-landing--title Uppercase Before After`}>Projects</h1>
             </div>
-            {sortedProjects.map((project, index) => (<div key={index}>
+            {sortedProjects.map((project, index) => (<React.Fragment key={index}>
                 <ProjectSingle project={project} index={index}/>
-            </div>))}
+            </React.Fragment>))}
         </section>
         {/*</div>*/}
 
