@@ -22,25 +22,6 @@ const AboutLanding = () => {
                     end: "bottom top",
                     pin: ".__AboutLandingSticky",
                     markers: false,
-
-                    onEnter: () => {
-                        gsap.to(window, {
-                            scrollTo: {
-                                y: offset,
-                                autoKill: false
-                            },
-                            duration: 1
-                        });
-                    },
-                    onEnterBack: () => {
-                        gsap.to(window, {
-                            scrollTo: {
-                                y: 0,
-                                autoKill: false
-                            },
-                            duration: 1
-                        });
-                    }
                 },
             });
         }
