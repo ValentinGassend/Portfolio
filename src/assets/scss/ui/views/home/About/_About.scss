@@ -83,14 +83,25 @@
           letter-spacing: -1.6px;
         }
 
-        .__AboutSplitText-word, .__AboutSplitText-line {
+         .__AboutSplitText-line {
           overflow-y: hidden;
           overflow-x: visible;
-          padding: 0 10px;
+          padding: 0;
           letter-spacing: -7px;
+           margin: -32px 0;
+           @include media(">1980px") {
+             margin: -36px 0;
+           }
+
+
+        }
+        .__AboutSplitText-word {
+          padding: 0 10px;
           transform: translateY(110%);
-          @include font($ff_1_C_10pt, 188px, 800, normal);
-          margin: -32px 0;
+          @include font($ff_1_C_10pt, 164px, 800, 164px);
+          @include media(">1980px") {
+            @include font($ff_1_C_10pt, 188px, 800, 188px);
+          }
           @include media("<=medium") {
             @include font($ff_1_C_10pt, 80px, 800, normal);
             letter-spacing: -3.2px;
