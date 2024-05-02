@@ -61,8 +61,11 @@
 
         width: fit-content;
         z-index: 1;
-        @include font($ff_1_C_10pt, 188px, 800, 164px);
+        @include font($ff_1_C_10pt, 164px, 800, 148px);
         letter-spacing: -5px;
+        @include media(">1600px") {
+          @include font($ff_1_C_10pt, 188px, 800, 164px);
+        }
 
         @include media("<=large") {
           @include font($ff_1_C_10pt, 148px, 800, 124px);
