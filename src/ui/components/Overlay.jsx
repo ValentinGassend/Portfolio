@@ -3,7 +3,7 @@ import ProjectSingle from "../views/projectsPage/projectSingle/projectSingle.jsx
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 
-const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project, about=false}) => {
+const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project, about = false}) => {
 
     const [menu, setMenu] = useState(null);
     gsap.registerPlugin(ScrollToPlugin)
@@ -25,6 +25,16 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                 scrollToTargetElement(targetElement);
             });
         });
+        gsap.to(".Overlay", {
+            opacity: 0,
+            zIndex:-1,
+            scrollTrigger: {
+                trigger: ".Contact",
+                start: "top center",
+                end: "bottom bottom",
+                scrub: true,
+            }
+        })
     }, []);
     const scrollToTargetElement = (targetElement) => {
         if (targetElement) {
@@ -43,6 +53,7 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
             menu.classList.add("active");
         }
     };
+
     useEffect(() => {
         if (menu) {
             document
@@ -109,7 +120,8 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                                 <div className={`Overlay-right--lower`}>
                                     <div className={`Overlay-right--lower---item`}>
                                         {project.tags.map((tag, index) => (
-                                            <p key={index} className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
+                                            <p key={index}
+                                               className={`Overlay-right--lower---item----text Uppercase`}>{tag}</p>))}
                                     </div>
                                 </div>
                             </div>
