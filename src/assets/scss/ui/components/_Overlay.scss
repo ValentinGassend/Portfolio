@@ -102,13 +102,23 @@
 
   // Overlay modifications for ProjectsPage
   .Projects & {
-    &-upper,&-lower {
+    &-upper {
+      @include media("<=medium") {
+        grid-template-columns:unset;
+
+        justify-content: end;
+      }
+
+    }
+
+    &-upper, &-lower {
       &--item, &--item---text {
         color: $color_neutral1;
 
       }
 
     }
+
     &-center {
 
       width: 100%;
@@ -118,6 +128,10 @@
       align-items: center;
       grid-template-columns:repeat(auto-fit, 33%);
       justify-items: end;
+      @include media("<=medium") {
+        grid-template-columns:unset;
+
+      }
 
       &--item, &--item---text {
         color: $color_neutral1;
@@ -142,6 +156,10 @@
     }
 
     &-lower {
+      @include media("<=medium") {
+        display: none;
+      }
+
       &--item {
         justify-content: flex-start;
 
