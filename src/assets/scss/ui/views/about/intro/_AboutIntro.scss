@@ -17,7 +17,8 @@
     position: relative;
 
     &--item {
-      padding: 0 220px;
+      padding: 0 124px;
+
       height: 100vh;
       display: grid;
       grid-auto-flow: row;
@@ -25,8 +26,12 @@
       justify-content: center;
       justify-items: center;
       align-content: center;
+
+      @include media(">1600px") {
+        padding: 0 220px;
+
+      }
       @include media("<=large") {
-        padding: 0 124px;
 
       }
 
@@ -59,15 +64,15 @@
       }
       &---content {
         width: fit-content;
-        max-width: 66vw;
+        max-width: 75vw;
         z-index: 10;
         color: $color_white;
-        @include font($ff_1, 64px, 400, normal);
+        @include font($ff_1, 48px, 400, normal);
 
-        @include media("<=large") {
+        @include media(">1600px") {
+          max-width: 66vw;
           //margin: 0 40px;
-          @include font($ff_1, 48px, 400, normal);
-
+          @include font($ff_1, 56px, 400, normal);
         }
 
         @include media("<=small") {
