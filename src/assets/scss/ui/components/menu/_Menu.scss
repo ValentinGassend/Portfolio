@@ -44,6 +44,12 @@
     background-color: $color_accent1;
     border-radius: 50%;
 
+    @include media("<=small") {
+
+      width: 56px;
+      height: 56px;
+      padding: 16px;
+    }
     svg {
       pointer-events: none;
       path {
