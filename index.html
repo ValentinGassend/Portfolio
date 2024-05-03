@@ -1,13 +1,61 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Valentin Gassend - Portfolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portfolio - Valentin Gassend</title>
+    <script>
+        // Fonction pour changer le titre après un certain temps d'inactivité
+        function changerTitreSiInactif() {
+            // Durée d'inactivité en millisecondes (par exemple, 5 minutes)
+            var dureeInactivite = 1 * 60 * 1000; // 1 minute en millisecondes
+
+            // Enregistrement du moment où la page a été chargée
+            var dernierActif = Date.now();
+
+            // Fonction pour vérifier l'inactivité et changer le titre si nécessaire
+            function verifierInactivite() {
+                var maintenant = Date.now();
+                if (maintenant - dernierActif > dureeInactivite) {
+                    // Changer le titre
+                    document.title = "Futur alternant - Valentin Gassend";
+                }
+            }
+
+            setInterval(verifierInactivite, 1000); // Vérifier toutes les secondes
+
+            window.addEventListener("focus", function() {
+                document.title = "Portfolio - Valentin Gassend";
+                dernierActif = Date.now();
+            });
+
+            window.addEventListener("mousemove", function() {
+                document.title = "Portfolio - Valentin Gassend";
+                dernierActif = Date.now();
+            });
+            window.addEventListener("wheel", function() {
+                document.title = "Portfolio - Valentin Gassend";
+                dernierActif = Date.now();
+            });
+
+            window.addEventListener("keydown", function() {
+                document.title = "Portfolio - Valentin Gassend";
+                dernierActif = Date.now();
+            });
+
+            window.addEventListener("touchstart", function() {
+                document.title = "Portfolio - Valentin Gassend";
+                dernierActif = Date.now();
+            });
+        }
+
+        // Appeler la fonction lorsque la page est chargée
+        window.addEventListener("load", changerTitreSiInactif);
+    </script>
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
