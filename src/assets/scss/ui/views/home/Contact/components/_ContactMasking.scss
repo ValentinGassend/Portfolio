@@ -7,8 +7,8 @@
   &:hover {
     .ContactMasking-cursor {
 
-      width: 50rem;
-      height: 50rem;
+      width: 50vh;
+      height: 50vh;
       @include media("<=medium") {
 
         width: 10rem;
