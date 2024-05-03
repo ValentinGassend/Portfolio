@@ -70,7 +70,8 @@
         cursor: pointer;
         @include font($ff_1, 26px, 800, 18px);
         pointer-events: auto;
-
+        width: fit-content;
+        margin-left: auto;
         & > * {
           pointer-events: none;
         }
