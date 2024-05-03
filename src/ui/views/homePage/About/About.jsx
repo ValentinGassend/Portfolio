@@ -43,7 +43,6 @@ const About = () => {
                     scrub: true,
                     start: "center center",
                     end: "bottom top",
-                    markers: true,
                     pin: ".__AboutSticky",
                     pinSpacer:false
                 }, onComplete: () => {
