@@ -21,7 +21,6 @@ const AboutLanding = () => {
                     start: "1px top",
                     end: "bottom top",
                     pin: ".__AboutLandingSticky",
-                    markers: false,
                 },
             });
         }
