@@ -25,7 +25,9 @@ const Projects = () => {
         projectElements.forEach((project, i) => {
 
             ScrollTrigger.create({
-                trigger: project, start: "-10px top", onEnter: () => {
+                trigger: project, start: "5px top",pin: true,
+                pinSpacing: false, // Optional, to prevent spacing between pinned elements
+                onEnter: () => {
                     const projectIdFormatted = parseInt(project.id.replace(/^project/, ''));
 
                     // Définir l'intervalle autour de l'ID du projet actuel
@@ -62,6 +64,7 @@ const Projects = () => {
                 return maxOpacity - Math.abs(index) * step;
             }
         });
+
     }, [sortedProjects]);
 
 
