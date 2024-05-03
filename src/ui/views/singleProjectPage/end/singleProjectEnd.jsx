@@ -16,14 +16,18 @@ const SingleProjectEnd = ({ project }) => {
                         </h2>
                         {project.content.credits.map((credit, index) => (
                             <div key={index}>
-                                <a
-                                    className={"SingleProjectEnd-credit--content---text"}
-                                    href={credit.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    {credit.content}
-                                </a>
+                                {credit.link ? (
+                                    <a
+                                        className={"SingleProjectEnd-credit--content---text"}
+                                        href={credit.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {credit.content}
+                                    </a>
+                                ) : (
+                                    <p className={"SingleProjectEnd-credit--content---text"}>{credit.content}</p>
+                                )}
                             </div>
                         ))}
                     </div>
