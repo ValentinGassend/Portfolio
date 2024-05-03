@@ -3,7 +3,7 @@ const projects = [{
     year: 2022,
     client: "Gobelins",
     title: "Syndesi.",
-    tags: ["Site web", "Dataviz", "Gsap", "Echarts", "Mapbox"],
+    tags: ["Site internet", "Dataviz", "Gsap", "Echarts", "Mapbox"],
     content: {
         description: {
             text: "Syndesi. est la formalisation de plusieurs mois de réflexion autour d'une thématique imposée : « Prends de la hauteur, utilise les données produites depuis l'espace pour regarder vers la Terre... ou ailleurs ! ».   Ce projet a été mené à l'école des Gobelins Campus Annecy par une équipe composée de 2 designers et 1 développeur. Le projet s'est déroulé sur 4 mois, de l'idéation à une soutenance avec démonstration.   C'est en cherchant, au sein du groupe, une cause qui nous tenait à cœur que nous avons choisi de nous concentrer sur l'écologie.",
@@ -30,7 +30,7 @@ const projects = [{
             url: "https://github.com/ValentinGassend/Syndesi.", title: "Voir le repo github"
         }]
     },
-    color: "#C52D48",
+    color: "#20105C",
     isPromoted: true,
     imageUrl: "https://picsum.photos/2000/3000"
 }, {
@@ -98,6 +98,121 @@ const projects = [{
     },
     color: "#E70000",
     isPromoted: true,
+    imageUrl: "https://picsum.photos/2000/3000"
+}, {
+    id: 4,
+    year: 2022,
+    client: "Altimax",
+    title: "Voeux 2023",
+    tags: ["Site internet", "Animation", "Interaction", "Gsap", "MatterJS", "Lottie"],
+    content: {
+        description: {
+            text: "Le site des vœux 2023 est un projet réalisé au sein de l’agence Altimax. L’objectif est de souhaiter une bonne année à l’ensemble de la clientèle par e-mail, en redirigeant vers un site web via un QR code imprimé sur des chocolats reçus par la cible. Ce projet est créativement libre, il doit simplement correspondre à la direction éditoriale de l’agence.",
+            image: "https://picsum.photos/1000/3000"
+        }, history: {}, why: {
+            text: "Le site des vœux devient peu à peu un rituel au sein de l’entreprise, permettant de rappeler notre présence auprès des clients et de mettre en avant de nouvelles compétences techniques au sein de l’équipe.",
+            image: "https://picsum.photos/2000/1750"
+        }, how: {
+            text: "Bien souvent, tout commence par un brainstorming pour générer des idées, faire naître des concepts, puis laisser la créativité réfléchir à une façon de mettre en forme tout cela, de l'intégrer à la ligne éditoriale de l'agence et d'assurer une véritable cohérence.",
+            image: "https://picsum.photos/1000/2000"
+        }, what: {
+            text: "A titre personnel j’ai abordé plusieurs sujets en R&D principalement pour les interactions avec l’utilisateur comme avec l’utilisation des librairies MatterJS et GSAP.\n" + "\n" + "Pendant que Lucas s’est occupé d’initialiser le projet, de faire les animations de fond sur chaque partie et de résoudre des problèmes de responsivité, Lilian lui s’est occupé de tout l’aspect navigation avant de m’aider sur MatterJS notamment. Il a ensuite finalisé avec une partie de correction de bugs.\n" + "\n" + "Comme dit précédemment, j’ai principalement été sur de l’interactivité utilisateur et donc, sur une grosse partie javascript, ce que j’ai bien aimé même si je n’avais pas suffisamment d’expérience à cette époque ce qui a malheureusement ajouté du travail sur la phase de recette.",
+            image: "https://picsum.photos/2000/3000"
+        }, credits: [{
+            link: "https://www.hugopinna.com/", content: "Hugo PINNA, Designer graphique"
+        }, {
+            link: "https://www.linkedin.com/in/morgan-orabona-765b6b197/", content: "Morgan ORABONA, Designer graphique"
+        }, {
+            link: "", content: "Marine MASSIT, Directrice Artistique"
+        }, {
+            link: "https://www.linkedin.com/in/florent-chatelet/", content: "Florent CHATELET, Motion Designer"
+        }, {
+            link: "", content: "Lucas ENCRENAZ, Développeur Front-end"
+        }, {
+            link: "https://lilian-mignogna.fr/", content: "Lilian MIGNOGNA, Développeur Front-end"
+        },], inspiration: [], links: [{
+            url: "https://voeux23.altimax.com/", title: "Voir le site"
+        }]
+    },
+    color: "#FA60BE",
+    isPromoted: false,
+    imageUrl: "https://picsum.photos/2000/3000"
+}, {
+    id: 5,
+    year: 2023,
+    client: "Altimax",
+    title: "Voeux 2024",
+    tags: ["Site internet", "Interaction", "React", "ThreeJS", "Lottie"],
+    content: {
+        description: {
+            text: "Comme l’année passée, Altimax sort son site de vœux pour souhaiter la bonne année à sa clientèle. Cette année, c’est un peu particulier puisque ce sont les deux alternants, Hugo Pinna et moi-même, qui nous occupons de sa réalisation. Évidemment, nous sommes supervisés par Morgan Orabona du côté créatif et Rémi Hervaud du côté développement.",
+            image: "https://picsum.photos/1000/3000"
+        }, history: {text: "", image: ""}, why: {
+            text: "Le site des vœux se voulait plus simple que l’année précédente, mais malgré tout innovant pour, comme l’année passée, mettre en avant les compétences techniques des membres de l’entreprise.",
+            image: "https://picsum.photos/2000/1750"
+        }, how: {
+            text: "Il a fallu réfléchir, à deux, à ce que nous voulions faire. La communication de l’agence avait récemment pris une direction plus créative en s’orientant vers plus de propositions en 3D lorsque le temps le permettait. C’est alors que l’idée est venue de créer une page web en 3D.",
+            image: "https://picsum.photos/1000/2000"
+        }, what: {
+            text: "Étant le seul développeur sur ce projet, c’est avec un peu de pression que j’ai développé le site des vœux avec ThreeJS et React, une technologie que nous souhaitons intégrer progressivement dans les projets d'Altimax.\n" + "\n" + "Bien sûr, l'un des intérêts de faire un site en 3D est d'avoir un peu d’interaction avec l’utilisateur, donc il y a un mouvement de caméra en fonction du mouvement de la souris.\n" + "\n" + "Malheureusement, malgré quelques soucis d’optimisations, j’ai réussi à sortir le site en temps et en heure, épaulé par Rémi et en collaboration étroite avec Hugo pour traiter au mieux les problématiques de fluidité et de chargement.",
+            image: "https://picsum.photos/2000/3000"
+        }, credits: [{
+            link: "https://www.hugopinna.com/", content: "Hugo PINNA, Designer graphique"
+        }, {
+            link: "https://www.linkedin.com/in/morgan-orabona-765b6b197/", content: "Morgan ORABONA, Designer graphique"
+        }, {
+            link: "", content: "Rémi HERVAUD, Lead développeur Front-end"
+        },], inspiration: [{
+            url: "https://raw.githack.com/gonnavis/three.js/SSRPass/examples/webgl_postprocessing_ssr.html",
+            title: "three.js webgl postprocessing SSR"
+        }, {
+            url: "https://codesandbox.io/p/sandbox/starwars-fslt99?", title: "DRCMDA - Starwars"
+        },], links: [{
+            url: "https://voeux24.altimax.com/", title: "Voir le site"
+        }]
+    },
+    color: "#28F5AA",
+    isPromoted: true,
+    imageUrl: "https://picsum.photos/2000/3000"
+}, {
+    id: 6,
+    year: 2023,
+    client: "Altimax",
+    title: "Major CS2",
+    tags: ["Site internet", "Animation", "Interaction", "ThreeJS", "WebGL", "Lottie"],
+    content: {
+        description: {
+            text: "CDans une période plus creuse au sein d'Altimax, mon maître d'apprentissage et lead, Rémi Hervaud, ainsi que Morgan, le maître d'apprentissage d'Hugo, nous ont proposé de gagner en compétences avec une suite techniquement poussée sur un sujet que l'on apprécie, le mod de Counter-Strike 2.",
+            image: "https://picsum.photos/1000/3000"
+        }, history: {
+            text: "Depuis 2017, le jeu Counter-Strike organise des événements presque systématiquement biannuels. Il s'agit d'événements eSport où les meilleures équipes du monde se rencontrent pour déterminer qui repartira avec le trophée et le prestigieux titre de meilleure équipe du monde. C'est à l'occasion du nouveau jeu de la licence Counter-Strike que le premier Major sur le nouvel opus est organisé dans la ville de Copenhague, au Danemark.",
+            image: "https://picsum.photos/2000/1500"
+        }, why: {
+            text: "Le but était clair : proposer une conception graphique et technique originale pour le site promotionnel du premier tournoi majeur de Counter-Strike 2.",
+            image: "https://picsum.photos/2000/1750"
+        }, how: {
+            text: "Avec de nombreuses informations parfois un peu complexes à expliquer, il a fallu réfléchir à l'agencement et réaliser un gros travail de veille pour être force de proposition à la fois sur le plan graphique et technique. Des éléments innovants ont alors émergé, tels qu'un descriptif statistique des joueurs présenté sous forme de cartes Pokémon ou un effet de fumée sur le site, faisant référence aux grenades fumigènes présentes dans le jeu.",
+            image: "https://picsum.photos/1000/2000"
+        }, what: {
+            text: "Un effet de 3D en CSS a été rapidement ajouté au slider des joueurs pour avoir un rendu qui se rapprochait bien plus d'une carte physique.\n" + "L'effet de fumée a lui été codé en C# pour la gestion du fluide. Cette partie manque de fluidité, surtout sur des ordinateurs peu performants.\n" + "Enfin, un modèle en 3 dimensions d'un skin de couteau, élément emblématique de Counter-Strike, a été intégré au site avec une animation progressive en fonction du scroll. De plus, plusieurs animations de survol faites en JavaScript et CSS élèvent encore d'un cran l'interactivité du site web.\n\nCependant, le site ne possède pas de version mobile viable pour des soucis de temps.",
+            image: "https://picsum.photos/2000/3000"
+        }, credits: [{
+            link: "https://www.hugopinna.com/", content: "Hugo PINNA, Designer graphique"
+        }, {
+            link: "https://www.linkedin.com/in/morgan-orabona-765b6b197/",
+            content: "Morgan ORABONA,Référent designer graphique"
+        }, {
+            link: "", content: "Rémi HERVAUD, Référent et lead développeur Front-end"
+        },], inspiration: [{
+            url: "https://codepen.io/simeydotme/pen/PrQKgo", title: "Pokemon Card Holo Effect"
+        }, {
+            url: "https://codepen.io/PavelDoGreat/pen/zdWzEL", title: "WebGL Fluid Simulation"
+        },], links: [{
+            url: "http://cs2.brph6005.odns.fr/", title: "Voir le site"
+        },]
+    },
+    color: "#e31836",
+    isPromoted: false,
     imageUrl: "https://picsum.photos/2000/3000"
 },];
 
