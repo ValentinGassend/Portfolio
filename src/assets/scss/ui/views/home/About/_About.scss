@@ -53,6 +53,7 @@
       align-content: center;
 
       &:first-child {
+        position: relative;
         z-index: 10;
       }
 
