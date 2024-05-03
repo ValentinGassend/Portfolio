@@ -1,45 +1,51 @@
 import React from "react";
+import DynamicHover from "../../DynamicHover.jsx";
 
 const MenuSection = () => {
 
 
-    return (
-        <div className={"MenuSection"}>
-            <div className={"MenuSection-item"}>
-                <p className={"MenuSection-item--text Uppercase"}>Développeur web créatif</p>
-                <p className={"MenuSection-item--text Uppercase"}>Basé à annecy</p>
-            </div>
-            <a href="/" className={"MenuSection-item"}>
-                <h1 className={"MenuSection-item--title Uppercase"}>
-
-                    Accueil
-                </h1>
-
-            </a>
-            <a href="/projects" className={"MenuSection-item"}>
-                <h1 className={"MenuSection-item--title Uppercase"}>
-                    Projets
-
-                </h1>
-            </a>
-            <a href="/about" className={"MenuSection-item"}>
-                <h1 className={"MenuSection-item--title Uppercase"}>
-
-                    à propos
-                </h1>
-
-            </a>
-            <a href="#" className={"MenuSection-item"}>
-                <h1 className={"MenuSection-item--title Uppercase"}>
-                    Labo
-                </h1>
-
-            </a>
-            <div className={"MenuSection-item"}>
-                <p className={"MenuSection-item--text Uppercase"}>En recherche d'alternance</p>
-                <p className={"MenuSection-item--text Uppercase"}>Portfolio</p>
-            </div>
+    return (<div className={"MenuSection"}>
+        <div className={"MenuSection-item"}>
+            <p className={"MenuSection-item--text Uppercase"}>Développeur web créatif</p>
+            <p className={"MenuSection-item--text Uppercase"}>Basé à annecy</p>
         </div>
-    )
+        <a href="/" className={"MenuSection-item"}>
+            <div className={"MenuSection-item--title Uppercase"}>
+                <DynamicHover text={"Accueil"} parentClass={"MenuSection-item--title"}
+                              hoverTriggerClass={"MenuSection-item"}
+                />
+            </div>
+
+        </a>
+        <a href="/projects" className={"MenuSection-item"}>
+            <div className={"MenuSection-item--title Uppercase"}>
+                <DynamicHover text={"Projets"} parentClass={"MenuSection-item--title"}
+                              hoverTriggerClass={"MenuSection-item"}/>
+
+
+            </div>
+        </a>
+        <a href="/about" className={"MenuSection-item"}>
+            <div className={"MenuSection-item--title Uppercase"}>
+                <DynamicHover text={"A propos"} parentClass={"MenuSection-item--title"}
+                              hoverTriggerClass={"MenuSection-item"}/>
+
+
+            </div>
+
+        </a>
+        <a href="#" className={"MenuSection-item"}>
+            <div className={"MenuSection-item--title Uppercase"}>
+                <DynamicHover text={"Labo"} parentClass={"MenuSection-item--title"}
+                              hoverTriggerClass={"MenuSection-item"}/>
+
+            </div>
+
+        </a>
+        <div className={"MenuSection-item"}>
+            <p className={"MenuSection-item--text Uppercase"}>En recherche d'alternance</p>
+            <p className={"MenuSection-item--text Uppercase"}>Portfolio</p>
+        </div>
+    </div>)
 }
 export default MenuSection

@@ -1,0 +1,34 @@
+.DynamicHover {
+  overflow: hidden;
+  padding: 0 1rem;
+  position: relative;
+  &.__Active {
+    .DynamicHover-original {
+      transform: translateY(-100%);
+    }
+
+    .DynamicHover-hover {
+      transform: translateY(-100%);
+
+
+    }
+  }
+
+  &-original, &-hover {
+    pointer-events: none;
+    will-change: transform;
+
+  }
+
+  &-original {
+    transition: transform .5s ease;
+    transform: translateY(0%);
+
+  }
+
+  &-hover {
+    transition: transform 0.5s ease;
+    position: absolute;
+    transform: translateY(0%);
+  }
+}

@@ -1,4 +1,5 @@
 import React, {useEffect} from "react";
+import DynamicHover from "../../../components/DynamicHover.jsx";
 
 const ProjectSingle = ({project, index}) => {
     const projectStyle = {
@@ -10,7 +11,9 @@ const ProjectSingle = ({project, index}) => {
         <div className={"ProjectSingle-header"}>
             {project.year} - {project.client}
         </div>
-        <h3 className={"ProjectSingle-title"}>{project.title}</h3>
+        <div className={"ProjectSingle-title"}>
+            <DynamicHover text={project.title} parentClass={"ProjectSingle-title"} hoverTriggerClass={"ProjectSingle"}/>
+        </div>
 
 
         <div className={"ProjectSingle-subtitle"}>
