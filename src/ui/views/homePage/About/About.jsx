@@ -36,18 +36,21 @@ const About = () => {
             });
         }
         document.getElementsByClassName("__AboutCursorContainer")[0].addEventListener("mousemove", handleMouseMove)
+        if (document.getElementsByClassName("__AboutSticky")[0]) {
+            gsap.to(".__AboutSticky", {
+                immediateRender: true, overwrite: true, opacity: 0.06, filter: "blur(8px)", scrollTrigger: {
+                    trigger: ".__AboutSticky",
+                    scrub: true,
+                    start: "top top",
+                    end: "bottom top",
+                    markers: true,
+                    pin: ".__AboutSticky",
+                    pinSpacer:false
+                }, onComplete: () => {
 
-        gsap.to(".__AboutSticky", {
-            immediateRender: true, overwrite: true, opacity: 0.06, filter: "blur(8px)", scrollTrigger: {
-                trigger: ".__AboutSticky",
-                scrub: true,
-                start: "top top",
-                end: "bottom top",
-                pin: ".__AboutSticky",
-            }, onComplete: () => {
-
-            }
-        });
+                }
+            });
+        }
 
         gsap.to(".__AboutToProjectSticky", {
             immediateRender: true, overwrite: true, scrollTrigger: {
