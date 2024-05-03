@@ -39,7 +39,7 @@
     align-items: center;
     justify-content: center;
     justify-items: center;
-    align-content: space-around;
+    align-content: space-between;
     position: relative;
 
     &--item {
@@ -52,8 +52,8 @@
       justify-items: center;
       align-content: center;
 
+
       &:first-child {
-        position: relative;
         z-index: 10;
       }
 
