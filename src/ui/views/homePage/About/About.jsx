@@ -41,7 +41,7 @@ const About = () => {
                 immediateRender: true, overwrite: true, opacity: 0.06, filter: "blur(8px)", scrollTrigger: {
                     trigger: ".__AboutSticky",
                     scrub: true,
-                    start: "top top",
+                    start: "center center",
                     end: "bottom top",
                     markers: true,
                     pin: ".__AboutSticky",
