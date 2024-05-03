@@ -67,54 +67,55 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
         if (menu) {
             const menuOpener = document.querySelector(".__MenuOpener");
             const menuCloser = document.querySelector(".__MenuCloser");
+            if (menuOpener && menuCloser) {
+                menuOpener
+                    .addEventListener("click", openMenu);
 
-            menuOpener
-                .addEventListener("click", openMenu);
+                const handleMagneticEffect = () => {
+                    const rectOpener = menuOpener.getBoundingClientRect();
+                    const distanceToMouseOpener = Math.sqrt(Math.pow(mousePosition.x - (rectOpener.left + rectOpener.width / 2), 2) + Math.pow(mousePosition.y - (rectOpener.top + rectOpener.height / 2), 2));
 
-            const handleMagneticEffect = () => {
-                const rectOpener = menuOpener.getBoundingClientRect();
-                const distanceToMouseOpener = Math.sqrt(Math.pow(mousePosition.x - (rectOpener.left + rectOpener.width / 2), 2) + Math.pow(mousePosition.y - (rectOpener.top + rectOpener.height / 2), 2));
+                    const rectCloser = menuCloser.getBoundingClientRect();
+                    const distanceToMouseCloser = Math.sqrt(Math.pow(mousePosition.x - (rectCloser.left + rectCloser.width / 2), 2) + Math.pow(mousePosition.y - (rectCloser.top + rectCloser.height / 2), 2));
 
-                const rectCloser = menuCloser.getBoundingClientRect();
-                const distanceToMouseCloser = Math.sqrt(Math.pow(mousePosition.x - (rectCloser.left + rectCloser.width / 2), 2) + Math.pow(mousePosition.y - (rectCloser.top + rectCloser.height / 2), 2));
+                    const distanceThreshold = 100; // Adjust this threshold as needed
 
-                const distanceThreshold = 100; // Adjust this threshold as needed
+                    if (distanceToMouseOpener < distanceThreshold) {
+                        const dxOpener = mousePosition.x - (rectOpener.left + rectOpener.width / 2);
+                        const dyOpener = mousePosition.y - (rectOpener.top + rectOpener.height / 2);
 
-                if (distanceToMouseOpener < distanceThreshold) {
-                    const dxOpener = mousePosition.x - (rectOpener.left + rectOpener.width / 2);
-                    const dyOpener = mousePosition.y - (rectOpener.top + rectOpener.height / 2);
+                        gsap.to(menuOpener, {
+                            duration: 0.3, x: dxOpener * 0.2, y: dyOpener * 0.2, ease: 'power2.out'
+                        });
+                    } else {
+                        gsap.to(menuOpener, {
+                            duration: 0.3, x: 0, y: 0, ease: 'power2.out'
+                        });
+                    }
 
-                    gsap.to(menuOpener, {
-                        duration: 0.3, x: dxOpener * 0.2, y: dyOpener * 0.2, ease: 'power2.out'
-                    });
-                } else {
-                    gsap.to(menuOpener, {
-                        duration: 0.3, x: 0, y: 0, ease: 'power2.out'
-                    });
-                }
+                    if (distanceToMouseCloser < distanceThreshold) {
+                        const dxCloser = mousePosition.x - (rectCloser.left + rectCloser.width / 2);
+                        const dyCloser = mousePosition.y - (rectCloser.top + rectCloser.height / 2);
 
-                if (distanceToMouseCloser < distanceThreshold) {
-                    const dxCloser = mousePosition.x - (rectCloser.left + rectCloser.width / 2);
-                    const dyCloser = mousePosition.y - (rectCloser.top + rectCloser.height / 2);
+                        gsap.to(menuCloser, {
+                            duration: 0.3, x: dxCloser * 0.2, y: dyCloser * 0.2, ease: 'power2.out'
+                        });
+                    } else {
+                        gsap.to(menuCloser, {
+                            duration: 0.3, x: 0, y: 0, ease: 'power2.out'
+                        });
+                    }
+                };
+                window.addEventListener('mousemove', handleMagneticEffect);
+                return () => {
+                    window.removeEventListener('mousemove', handleMagneticEffect);
+                    document
+                        .querySelector(".__MenuOpener")
+                        .removeEventListener("click", openMenu);
+                };
+            }
 
-                    gsap.to(menuCloser, {
-                        duration: 0.3, x: dxCloser * 0.2, y: dyCloser * 0.2, ease: 'power2.out'
-                    });
-                } else {
-                    gsap.to(menuCloser, {
-                        duration: 0.3, x: 0, y: 0, ease: 'power2.out'
-                    });
-                }
-            };
 
-            window.addEventListener('mousemove', handleMagneticEffect);
-
-            return () => {
-                window.removeEventListener('mousemove', handleMagneticEffect);
-                document
-                    .querySelector(".__MenuOpener")
-                    .removeEventListener("click", openMenu);
-            };
         }
     }, [menu, mousePosition]);
     return (<>
@@ -162,7 +163,7 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
                                         <p className={`Overlay-right--upper---item----text Uppercase`}>{project.title}</p>
 
                                     </div>
-                                    <div className={`Overlay-right--upper---item __MenuOpener`}>
+                                    <div className={`Overlay-right--upper---item`}>
                                         <p className={`Overlay-right--upper---item----text Uppercase`}>{project.year}</p>
                                         <p className={`Overlay-right--upper---item----text Uppercase`}>{project.client}</p>
                                     </div>
