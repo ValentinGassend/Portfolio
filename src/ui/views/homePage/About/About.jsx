@@ -10,7 +10,7 @@ import {SplitText} from "gsap/SplitText";
 const About = () => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         let AboutSplitText
         if (document.getElementsByClassName("__AboutSplitText") && !document.getElementsByClassName("__AboutSplitText-word")[0]) {
             AboutSplitText = new SplitText(".__AboutSplitText", {
