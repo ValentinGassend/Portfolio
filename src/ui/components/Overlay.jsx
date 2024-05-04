@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import ProjectSingle from "../views/projectsPage/projectSingle/projectSingle.jsx";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
+import ColorManager from "../../managers/ColorManager.jsx";
 
 const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project, about = false}) => {
 
@@ -41,6 +42,18 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
             gsap.to(".Overlay", {
                 opacity: 0, zIndex: -1, scrollTrigger: {
                     trigger: ".Contact", start: "top center", end: "bottom bottom", scrub: true,
+                }
+            })
+        }
+        if (projectsPage) {
+            gsap.to(".Overlay-upper--item---text", {
+                color: ColorManager.$color_neutral1, scrollTrigger: {
+                    trigger: ".Projects-landing", start: "bottom center", end: "bottom top", scrub: true,
+                }
+            })
+            gsap.to(".Overlay-lower--item---text", {
+                color: ColorManager.$color_neutral1, scrollTrigger: {
+                    trigger: ".Projects-landing", start: "bottom center", end: "bottom top", scrub: true,
                 }
             })
         }
