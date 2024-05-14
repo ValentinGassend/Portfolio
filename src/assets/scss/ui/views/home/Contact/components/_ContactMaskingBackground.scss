@@ -93,10 +93,15 @@
       width: 100%;
       height: 100%;
       color: $color_accent4;
-      @include font($ff_1, 188px, 800, 146px);
-      letter-spacing: -7.52px;
       text-align: center;
+      @include font($ff_1_C_10pt, 148px, 800, 124px);
+      letter-spacing: -5px;
 
+      @include media(">ultra-large") {
+        @include font($ff_1_C_10pt, 188px, 800, 146px);
+        letter-spacing: -7.52px;
+
+      }
       @include media("<=medium") {
         @include font($ff_1, 80px, 800, 74px);
         letter-spacing: -3.2px;
