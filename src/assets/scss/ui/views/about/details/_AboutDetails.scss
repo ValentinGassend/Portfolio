@@ -40,7 +40,7 @@
     padding: 0 64px;
 
     grid-template-columns: fit-content(100%) fit-content(33%);
-    @include media(">1600px") {
+    @include media(">ultra-large") {
       padding: 0 100px;
       grid-column-gap: 96px;
 
@@ -68,8 +68,8 @@
       justify-content: center;
       justify-items: center;
       align-content: center;
-      grid-row-gap: 58px;
-      @include media(">1600px") {
+      grid-row-gap: 32px;
+      @include media(">ultra-large") {
         grid-row-gap: 64px;
 
       }
@@ -94,7 +94,7 @@
           color: $color_black;
           @include font($ff_1_C_10pt, 148px, 800, 124px);
 
-          @include media(">1600px") {
+          @include media(">ultra-large") {
             @include font($ff_1_C_10pt, 188px, 800, 146px);
 
           }
@@ -115,9 +115,9 @@
         text-decoration: unset;
         width: fit-content;
         z-index: 10;
-        @include font($ff_1, 28px, 400, normal);
+        @include font($ff_1, 24px, 400, normal);
 
-        @include media(">1600px") {
+        @include media(">ultra-large") {
           @include font($ff_1, 32px, 400, normal);
 
         }
@@ -132,8 +132,6 @@
         }
 
         @include media("<=small") {
-          //@include font($ff_1, 32px, 400, normal);
-          //letter-spacing: -1.6px;
           @include font($ff_1, 14px, 400, normal);
 
         }
