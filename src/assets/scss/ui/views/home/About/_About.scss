@@ -69,9 +69,14 @@
         z-index: 1;
         text-decoration: unset;
         color: $color_black;
-        @include font($ff_1_C_10pt, 188px, 800, 146px);
 
-        letter-spacing: -7.52px;
+        @include font($ff_1_C_10pt, 132px, 800, 112px);
+        letter-spacing: -5px;
+        @include media(">ultra-large") {
+          @include font($ff_1_C_10pt, 188px, 800, 164px);
+          letter-spacing: -7.52px;
+
+        }
         @include media("<=medium") {
           @include font($ff_1_C_10pt, 80px, 800, 68px);
           letter-spacing: -3.2px;
@@ -103,9 +108,10 @@
         .__AboutSplitText-word {
           padding: 0 10px;
           transform: translateY(110%);
-          @include font($ff_1_C_10pt, 164px, 800, 164px);
-          @include media(">1980px") {
-            @include font($ff_1_C_10pt, 188px, 800, 188px);
+          @include font($ff_1_C_10pt, 148px, 800, 95%);
+
+          @include media(">ultra-large") {
+            @include font($ff_1_C_10pt, 188px, 800, 90%);
           }
           @include media("<=medium") {
             @include font($ff_1_C_10pt, 80px, 800, normal);
