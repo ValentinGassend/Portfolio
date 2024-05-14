@@ -37,7 +37,6 @@
     height: fit-content;
     pointer-events: none;
     max-width: 1060px;
-    @include font($ff_1_C_10pt, 188px, 800, 146px);
     letter-spacing: -7.52px;
     width: fit-content;
     display: flex;
@@ -45,6 +44,12 @@
     justify-content: center;
     text-transform: uppercase;
     text-align: center;
+    @include font($ff_1_C_10pt, 148px, 800, 124px);
+
+    @include media(">ultra-large") {
+      @include font($ff_1_C_10pt, 188px, 800, 146px);
+
+    }
     @include media("<=medium") {
       @include font($ff_1_C_10pt,64px,800,90%);
       letter-spacing: -2.56px;
