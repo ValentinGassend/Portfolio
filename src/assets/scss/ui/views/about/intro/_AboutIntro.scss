@@ -27,7 +27,7 @@
       justify-items: center;
       align-content: center;
 
-      @include media(">1600px") {
+      @include media(">ultra-large") {
         padding: 0 220px;
 
       }
@@ -83,11 +83,10 @@
           background-clip: text;
         }
 
-        @include font($ff_1, 48px, 400, normal);
+        @include font($ff_1, 42px, 400, normal);
 
-        @include media(">1600px") {
+        @include media(">ultra-large") {
           max-width: 66vw;
-          //margin: 0 40px;
           @include font($ff_1, 56px, 400, normal);
         }
 
