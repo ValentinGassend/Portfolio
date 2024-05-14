@@ -42,8 +42,12 @@
       }
 
       &---title {
-        @include font($ff_1_C_10pt, 48px, 800, normal);
+        @include font($ff_1_C_10pt, 44px, 800, normal);
         letter-spacing: -1.92px;
+        @include media(">ultra-large") {
+          @include font($ff_1_C_10pt, 48px, 800, normal);
+
+        }
         @include media("<=small") {
           @include font($ff_1_C_10pt, 40px, 800, normal);
 
@@ -51,7 +55,13 @@
 
       }
       &---text {
-        @include font($ff_1, 32px, 500, normal);
+        @include font($ff_1, 28px, 500, normal);
+
+        @include media(">ultra-large") {
+          @include font($ff_1, 32px, 500, normal);
+
+
+        }
         @include media("<=small") {
           @include font($ff_1, 24px, 500, normal);
 
