@@ -25,7 +25,12 @@
 
     &--title {
       color: $color_black;
-      @include font($ff_1_C_10pt, 188px, 800, 146px);
+      @include font($ff_1_C_10pt, 148px, 800, 124px);
+
+      @include media(">ultra-large") {
+        @include font($ff_1_C_10pt, 188px, 800, 146px);
+
+      }
       letter-spacing: -7.52px;
       @include media("<=medium") {
         @include font($ff_1_C_10pt, 80px, 800, 68px);
