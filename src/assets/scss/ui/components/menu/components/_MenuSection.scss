@@ -38,6 +38,7 @@
         &--text {
             color: $color_black;
             @include font($ff_1_C_10pt, 24px, 700, normal);
+
             @include media("<=small") {
                 @include font($ff_1_C_10pt, 20px, 700, normal);
 
@@ -52,10 +53,14 @@
 
         &--title {
             padding: 15px 0 22px 20px;
-            @include font($ff_1_C_10pt, 188px, 800, 146px);
+            @include font($ff_1_C_10pt, 148px, 800, 124px);
+
             height: fit-content;
             width: fit-content;
             letter-spacing: -7.52px;
+            @include media(">ultra-large") {
+                @include font($ff_1_C_10pt, 188px, 800, 146px);
+            }
 
             @include media("<=small") {
                 @include font($ff_1_C_10pt, 80px, 800, 68px);
