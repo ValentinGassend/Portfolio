@@ -25,8 +25,12 @@
       grid-auto-flow: row;
       grid-row-gap: 8px;
       &---title {
-        @include font($ff_1_C_10pt, 48px, 800, normal);
+        @include font($ff_1_C_10pt, 44px, 800, normal);
         letter-spacing: -1.92px;
+        @include media(">ultra-large") {
+          @include font($ff_1_C_10pt, 48px, 800, normal);
+
+        }
         @include media("<=small") {
           @include font($ff_1_C_10pt, 40px, 800, normal);
 
@@ -37,6 +41,10 @@
         text-decoration: unset;
         color: $color_black;
         @include font($ff_1, 18px, 500, normal);
+        @include media(">ultra-large") {
+          @include font($ff_1, 20px, 500, normal);
+
+        }
         @include media("<=small") {
           @include font($ff_1, 16px, 500, normal);
 
