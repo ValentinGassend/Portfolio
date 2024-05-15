@@ -52,6 +52,10 @@
         }
 
         &--title {
+            //&.Disable {
+            //    width: 100%;
+            //    cursor: default;
+            //}
             padding: 15px 0 22px 20px;
             @include font($ff_1_C_10pt, 148px, 800, 124px);
 
