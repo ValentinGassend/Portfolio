@@ -34,8 +34,8 @@ const MenuSection = () => {
             </div>
 
         </a>
-        <a href="#" className={"MenuSection-item"}>
-            <div className={"MenuSection-item--title Uppercase"}>
+        <a  className={"MenuSection-item"}>
+            <div className={"MenuSection-item--title Disable Uppercase"}>
                 <DynamicHover text={"Labo"} parentClass={"MenuSection-item--title"}
                               hoverTriggerClass={"MenuSection-item"}/>
 
