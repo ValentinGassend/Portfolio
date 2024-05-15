@@ -130,9 +130,10 @@
 
       &.__clicked {
         opacity: 1;
+      }
+      .BackgroundFull & {
         pointer-events: all;
       }
-
       &---title {
         width: 100%;
         @include font($ff_1, 132px, 800, 146px);
