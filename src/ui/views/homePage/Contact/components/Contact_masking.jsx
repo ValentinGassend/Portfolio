@@ -149,7 +149,7 @@ const ContactMasking = () => {
         });
     };
     return (<>
-        <div className={"ContactMasking"}>
+        <div className={`ContactMasking ${clickCount > 3 ? "BackgroundFull" : ''}`}>
             <div className={`ContactMasking-frontground ${cursorClicked ? "__clicked" : ''}`}>
                     <span
                         className={`ContactMasking-frontground--content Center Uppercase ${cursorClicked ? "__clicked" : ''}`}>Faisons connaissance !</span>
