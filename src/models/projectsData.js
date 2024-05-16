@@ -66,7 +66,8 @@ const projects = [{
             url: "https://liveo-website.vercel.app/", title: "Voir le site promotionnel",
         }],
     }, color: "#333896", isPromoted: true, imageUrl: "https://picsum.photos/2000/3000"
-}, {
+},
+    {
     id: 3,
     year: 2024,
     client: "Hugo PINNA",
@@ -99,7 +100,8 @@ const projects = [{
     color: "#E70000",
     isPromoted: true,
     imageUrl: "https://picsum.photos/2000/3000"
-}, {
+},
+    {
     id: 4,
     year: 2022,
     client: "Altimax",
@@ -137,7 +139,8 @@ const projects = [{
     color: "#FA60BE",
     isPromoted: false,
     imageUrl: "https://picsum.photos/2000/3000"
-}, {
+},
+    {
     id: 5,
     year: 2023,
     client: "Altimax",
@@ -182,25 +185,25 @@ const projects = [{
     tags: ["Site internet", "Animation", "Interaction", "ThreeJS", "WebGL", "Lottie"],
     content: {
         description: {
-            text: "CDans une période plus creuse au sein d'Altimax, mon maître d'apprentissage et lead, Rémi Hervaud, ainsi que Morgan, le maître d'apprentissage d'Hugo, nous ont proposé de gagner en compétences avec une suite techniquement poussée sur un sujet que l'on apprécie, le mod de Counter-Strike 2.",
-            image: "https://picsum.photos/1000/3000"
+            text: "Dans une période plus creuse au sein d'Altimax, mon maître d'apprentissage et lead, Rémi Hervaud, ainsi que Morgan, le maître d'apprentissage d'Hugo, nous ont proposé de gagner en compétences avec une suite techniquement poussée sur un sujet que l'on apprécie, le mod de Counter-Strike 2.",
+            image: "/img/major-cs2/description.png"
         }, history: {
             text: "Depuis 2017, le jeu Counter-Strike organise des événements presque systématiquement biannuels. Il s'agit d'événements eSport où les meilleures équipes du monde se rencontrent pour déterminer qui repartira avec le trophée et le prestigieux titre de meilleure équipe du monde. C'est à l'occasion du nouveau jeu de la licence Counter-Strike que le premier Major sur le nouvel opus est organisé dans la ville de Copenhague, au Danemark.",
-            image: "https://picsum.photos/2000/1500"
+            image: "/img/major-cs2/history.png"
         }, why: {
             text: "Le but était clair : proposer une conception graphique et technique originale pour le site promotionnel du premier tournoi majeur de Counter-Strike 2.",
-            image: "https://picsum.photos/2000/1750"
+            image: "/img/major-cs2/why.png"
         }, how: {
             text: "Avec de nombreuses informations parfois un peu complexes à expliquer, il a fallu réfléchir à l'agencement et réaliser un gros travail de veille pour être force de proposition à la fois sur le plan graphique et technique. Des éléments innovants ont alors émergé, tels qu'un descriptif statistique des joueurs présenté sous forme de cartes Pokémon ou un effet de fumée sur le site, faisant référence aux grenades fumigènes présentes dans le jeu.",
-            image: "https://picsum.photos/1000/2000"
+            image: "/img/major-cs2/how.png"
         }, what: {
             text: "Un effet de 3D en CSS a été rapidement ajouté au slider des joueurs pour avoir un rendu qui se rapprochait bien plus d'une carte physique.\n" + "L'effet de fumée a lui été codé en C# pour la gestion du fluide. Cette partie manque de fluidité, surtout sur des ordinateurs peu performants.\n" + "Enfin, un modèle en 3 dimensions d'un skin de couteau, élément emblématique de Counter-Strike, a été intégré au site avec une animation progressive en fonction du scroll. De plus, plusieurs animations de survol faites en JavaScript et CSS élèvent encore d'un cran l'interactivité du site web.\n\nCependant, le site ne possède pas de version mobile viable pour des soucis de temps.",
-            image: "https://picsum.photos/2000/3000"
+            image: "/img/major-cs2/what.png"
         }, credits: [{
             link: "https://www.hugopinna.com/", content: "Hugo PINNA, Designer graphique"
         }, {
             link: "https://www.linkedin.com/in/morgan-orabona-765b6b197/",
-            content: "Morgan ORABONA,Référent designer graphique"
+            content: "Morgan ORABONA, Référent designer graphique"
         }, {
             link: "", content: "Rémi HERVAUD, Référent et lead développeur Front-end"
         },], inspiration: [{
@@ -213,7 +216,7 @@ const projects = [{
     },
     color: "#e31836",
     isPromoted: false,
-    imageUrl: "https://picsum.photos/2000/3000"
+    imageUrl: "/img/major-cs2/preview.png"
 },];
 
 export default projects;
