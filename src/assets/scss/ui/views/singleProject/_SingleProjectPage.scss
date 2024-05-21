@@ -42,6 +42,7 @@
       //z-index: 110;
       z-index: 0;
 
+      background-color: $color_neutral1;
       @include media("<=small") {
         display: none;
 
@@ -52,11 +53,33 @@
         width: 50vw;
         opacity: 0;
         height: 100%;
-        object-fit: cover;
-        transition: opacity 300ms ease-out;
-        &:first-child {
-          opacity: 1;
+        background-color: $color_neutral1;
+        z-index: 5;
+
+        &:before {
+          z-index: 1;
+          position: relative;
+
+          left: 0;
+          top: 50vh;
+          background: linear-gradient(0deg, #EFE4D1 0%, rgba(239, 228, 209, 0.00) 100%);
+          width: 50vw;
+          height: 50vh;
         }
+        &----img {
+          position: absolute;
+          top: 0;
+          width: 50vw;
+          opacity: 0;
+          height: 100%;
+          object-fit: contain;
+          transition: opacity 300ms ease-out;
+          z-index: 10;
+          &:first-child {
+            opacity: 1;
+          }
+        }
+
       }
     }
 

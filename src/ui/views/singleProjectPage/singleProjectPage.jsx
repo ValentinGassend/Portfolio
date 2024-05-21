@@ -67,20 +67,52 @@ const SingleProjectPage = () => {
                 <BackgroundLine colorName={ColorManager.$color_neutral2} verticalCount={2} horizontalCount={2}/> :
                 <BackgroundLine colorName={ColorManager.$color_neutral2}/>}
             <div className={`SingleProjectPage-background`}>
-                <p className={`SingleProjectPage-background--back Uppercase __SingleProjectBack`} onClick={() => navigate(-1)}>Retour</p>
+                <p className={`SingleProjectPage-background--back Uppercase __SingleProjectBack`}
+                   onClick={() => navigate(-1)}>Retour</p>
                 <div className={`SingleProjectPage-background--container __SingleProjectImageContainer`}>
-                    <img src={project.content.description.image}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
-                    <img src={project.content.history.image}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
-                    <img src={project.content.why.image}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
-                    <img src={project.content.how.image}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
-                    <img src={project.content.what.image}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
-                    <img src={project.imageUrl}
-                         className={`SingleProjectPage-background--container---image __SingleProjectImage`} alt={""}/>
+                    {project.content.description.image && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.content.description.image}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+                    {project.content.history.image && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.content.history.image}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+                    {project.content.why.image && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.content.why.image}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+                    {project.content.how.image && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.content.how.image}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+                    {project.content.what.image && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.content.what.image}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+                    {project.imageUrl && (
+                        <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
+                            <img src={project.imageUrl}
+                                 className={`SingleProjectPage-background--container---image----img`} alt={""}/>
+                        </div>
+                    )}
+
+
 
                 </div>
             </div>
