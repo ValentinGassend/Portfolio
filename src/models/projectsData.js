@@ -131,7 +131,7 @@ const projects = [{
                 text: "Le site des vœux 2023 est un projet réalisé au sein de l’agence Altimax. L’objectif est de souhaiter une bonne année à l’ensemble de la clientèle par e-mail, en redirigeant vers un site web via un QR code imprimé sur des chocolats reçus par la cible. Ce projet est créativement libre, il doit simplement correspondre à la direction éditoriale de l’agence.",
                 image: "/img/voeux2023/description.png"
 
-            }, history: {}, why: {
+            },history: {text: "", image: ""}, why: {
 
                 text: "Le site des vœux devient peu à peu un rituel au sein de l’entreprise, permettant de rappeler notre présence auprès des clients et de mettre en avant de nouvelles compétences techniques au sein de l’équipe.",
                 image: "/img/voeux2023/why.png"
