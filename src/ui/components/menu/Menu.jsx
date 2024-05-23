@@ -7,11 +7,11 @@ import 'swiper/css';
 import 'swiper/css/autoplay';
 import {Autoplay} from "swiper/modules";
 
-const Menu = () => {
-
+const Menu = ({scrollPosition}) => {
 
     const [menu, setMenu] = useState(null);
 
+    // const [scrollPosition, setScrollPosition] = useState(0);
     useEffect(() => {
         const menuElement = document.querySelector('.Menu');
         setMenu(menuElement);
@@ -20,6 +20,9 @@ const Menu = () => {
     const closeMenu = (evt) => {
         if (menu && menu.classList.contains("active")) {
             menu.classList.remove("active");
+            document.getElementById('root').classList.remove('no-scroll');
+            window.scrollTo(0, scrollPosition);
+            console.log(scrollPosition);
         }
     };
     useEffect(() => {
@@ -29,7 +32,8 @@ const Menu = () => {
                 document.querySelector('.__MenuCloser').removeEventListener("click", closeMenu);
             };
         }
-    }, [menu]);
+    }, [menu, scrollPosition]);
+
     return (<div className={"Menu"}>
         <Swiper
             slidesPerView={'auto'}

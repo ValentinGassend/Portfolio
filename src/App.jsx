@@ -12,21 +12,27 @@ import Projects from "./ui/views/projectsPage/projects.jsx";
 import About from "./ui/views/aboutPage/aboutPage.jsx";
 import AboutPage from "./ui/views/aboutPage/aboutPage.jsx";
 import SingleProjectPage from "./ui/views/singleProjectPage/singleProjectPage.jsx";
+import Lenis from "lenis";
 
 function App() {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
     CustomEase.create("hop", ".235, .615, .185, .995")
     useEffect(() => {
-        if (document.getElementsByClassName("__ScrollSmooth")[0]) {
 
-            ScrollSmoother.create({
-                content: ".__ScrollSmooth", smooth: 0.5, effects: true, speed: 1.2, ease: "hop"
-            });
+        const lenis = new Lenis()
+        lenis.on('scroll', (e) => {
+            ScrollTrigger.update() // pour resynchroniser le scrolltrigger de gsap
+        })
+
+        function raf(time) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
         }
+
+        requestAnimationFrame(raf)
 
     }, []);
     return (<>
-        <Menu/>
             <BrowserRouter>
                 <Routes>
                     <Route path={"/"} element={<Home/>}/>

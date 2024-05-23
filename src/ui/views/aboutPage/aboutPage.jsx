@@ -31,33 +31,28 @@ const AboutPage = () => {
     return (<>
         <Overlay about={true}/>
 
-        <div className={`__ScrollSmooth`}>
-            <section className={"About"}>
+        <section className={"About"}>
 
-                <AboutLanding/>
-                <Swiper
-                    slidesPerView={'auto'}
-                    // loop={true}
-                    freeMode={true}
-                    modules={[Mousewheel, FreeMode]}
-                    mousewheel={{
-                        enabled: true,
-                        releaseOnEdges: true,
-                        eventsTarget:".About-swiper",
-                        sensitivity:7.5
-                    }}
+            <AboutLanding/>
+            <Swiper
+                slidesPerView={'auto'}
+                // loop={true}
+                freeMode={true}
+                modules={[Mousewheel, FreeMode]}
+                mousewheel={{
+                    enabled: true, releaseOnEdges: true, eventsTarget: ".About-swiper", sensitivity: 7.5
+                }}
                 className={`About-swiper`}
-                >
-                    <SwiperSlide>
-                        <AboutIntro/>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <AboutDetails/>
-                    </SwiperSlide>
+            >
+                <SwiperSlide>
+                    <AboutIntro/>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <AboutDetails/>
+                </SwiperSlide>
 
-                </Swiper>
-            </section>
-        </div>
+            </Swiper>
+        </section>
     </>);
 };
 

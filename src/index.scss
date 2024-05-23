@@ -1,5 +1,8 @@
 @import "./assets/scss/main";
 
+.no-scroll {
+    overflow: hidden;
+}
 .slide-in {
     position: fixed;
     top: 0;

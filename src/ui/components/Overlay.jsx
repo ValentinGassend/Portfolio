@@ -3,11 +3,14 @@ import ProjectSingle from "../views/projectsPage/projectSingle/projectSingle.jsx
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import ColorManager from "../../managers/ColorManager.jsx";
+import Menu from "./menu/Menu.jsx";
 
 const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false, project, about = false}) => {
 
     const [menu, setMenu] = useState(null);
     const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+    const [scrollPosition, setScrollPosition] = useState(0);
+
     gsap.registerPlugin(ScrollToPlugin)
     useEffect(() => {
         const menuElement = document.querySelector(".Menu");
@@ -72,7 +75,10 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
     };
     const openMenu = (evt) => {
         if (menu && !menu.classList.contains("active")) {
+            console.log(window.scrollY)
+            setScrollPosition(window.scrollY);
             menu.classList.add("active");
+            document.getElementById("root").classList.add("no-scroll");
         }
     };
 
@@ -132,6 +138,7 @@ const Overlay = ({projectsPage = false, projectsList, singleProjectPage = false,
         }
     }, [menu, mousePosition]);
     return (<>
+        <Menu scrollPosition={scrollPosition}/>
         {about ? <div className={`Overlay About`}>
             <div className={`Overlay-upper`}>
                 <div className={`Overlay-upper--item __MenuOpener`}>

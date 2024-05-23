@@ -9,13 +9,11 @@ const Home = () => {
 
 
     return (<section className={"Home"}>
-        <div className={`__ScrollSmooth`}>
 
-            <Landing/>
-            <About/>
-            <ProjectList/>
-            <Contact/>
-        </div>
+        <Landing/>
+        <About/>
+        <ProjectList/>
+        <Contact/>
         <Overlay/>
 
     </section>)
