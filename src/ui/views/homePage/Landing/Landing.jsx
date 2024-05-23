@@ -24,11 +24,11 @@ const Landing = () => {
                 {
                     ease: "power2.inOut",
                     keyframes: [
-                        { scale: 1, rotation: 0, duration: 0.125 }, // 0% -> 25%
-                        { scale: 1.05, rotation: 2.5, duration: 0.125 }, // 25% -> 50%
-                        { scale: 1.1, rotation: 0, duration: 0.125 }, // 50% -> 75%
-                        { scale: 1.05, rotation: -2.5, duration: 0.125 }, // 75% -> 100%
-                        { scale: 1, rotation: 0, duration: 0.125 } // 100%
+                        { scale: 1, rotation: 0, duration: 0.125 },
+                        { scale: 1.05, rotation: 2.5, duration: 0.125 },
+                        { scale: 1.1, rotation: 0, duration: 0.125 },
+                        { scale: 1.05, rotation: -2.5, duration: 0.125 },
+                        { scale: 1, rotation: 0, duration: 0.125 }
                     ],
                     repeat: 0 // Nécessaire pour que l'animation ne se répète pas (0% à 100%)
                 }
