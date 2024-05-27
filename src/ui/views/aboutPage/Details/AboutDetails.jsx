@@ -10,7 +10,12 @@ const AboutDetails = () => {
 
     gsap.registerPlugin(ScrollTrigger)
     useEffect(() => {
-
+        document.getElementsByClassName("Back")[0].addEventListener("click", (e) => {
+            //     ajoute la position en x et y de la souris au click au style de l'element
+            e.preventDefault()
+            e.target.style.setProperty("--x", e.clientX - e.target.offsetLeft + "px");
+            e.target.style.setProperty("--y", e.clientY - e.target.offsetTop + "px");
+        });
     }, []);
 
 
@@ -43,7 +48,7 @@ const AboutDetails = () => {
                 </div>
 
                 <div className={"AboutDetails-container--item"}>
-                    <a href={`/`} className={"AboutDetails-container--item---content Uppercase"}> Retour
+                    <a href={`/`} className={"AboutDetails-container--item---content Back Uppercase"}> Retour
                         a l'accueil</a>
                 </div>
             </div>
