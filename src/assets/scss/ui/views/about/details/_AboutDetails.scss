@@ -122,8 +122,12 @@
                 z-index: 10;
                 @include font($ff_1, 24px, 400, normal);
 
-                @include media(">ultra-large") {
+                @include media(">ultra-ultra-large") {
                     @include font($ff_1, 32px, 400, normal);
+
+                }
+                @include media(">ultra-large") {
+                    @include font($ff_1, 28px, 400, normal);
 
                 }
 
