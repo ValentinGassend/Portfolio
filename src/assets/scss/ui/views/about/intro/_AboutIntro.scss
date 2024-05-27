@@ -85,7 +85,7 @@
 
         @include font($ff_1, 42px, 400, normal);
 
-        @include media(">ultra-large") {
+        @include media(">ultra-ultra-large") {
           max-width: 66vw;
           @include font($ff_1, 56px, 400, normal);
         }

@@ -10,7 +10,27 @@ const AboutDetails = () => {
 
     gsap.registerPlugin(ScrollTrigger)
     useEffect(() => {
+        const element = document.getElementsByClassName("Back")[0];
+        element.style.setProperty("--x", "0px");
+        element.style.setProperty("--y", "0px");
+        element.style.setProperty("--blackPercent", '0%');
+        element.style.setProperty("--colorEnd", ColorManager.$color_black);
 
+        element.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.target.classList.add("Clicked");
+            e.target.style.setProperty("--x", e.clientX - e.target.offsetLeft + "px");
+            e.target.style.setProperty("--y", e.clientY - e.target.offsetTop + "px");
+
+            gsap.to(element, {
+                duration: 1, // Durée de l'animation en secondes
+                "--blackPercent": '100%',
+                ease: "power4.easeInOut",
+                onComplete: () => {
+                    window.location.href = e.target.href;
+                }
+            });
+        });
     }, []);
 
 
@@ -43,7 +63,7 @@ const AboutDetails = () => {
                 </div>
 
                 <div className={"AboutDetails-container--item"}>
-                    <a href={`/`} className={"AboutDetails-container--item---content Uppercase"}> Retour
+                    <a href={`/`} className={"AboutDetails-container--item---content Back Uppercase"}> Retour
                         a l'accueil</a>
                 </div>
             </div>

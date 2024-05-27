@@ -6,7 +6,7 @@ const ProjectSingle = ({project, index}) => {
         "--color": project.color, // Utilisation de la couleur définie dans le projet
     };
 
-    return (<a href={`/project/${project.id}`} className={"ProjectSingle"} style={projectStyle} id={`project${index}`}>
+    return (<a href={`/project/${project.id}`} className={"ProjectSingle After"} style={projectStyle} id={`project${index}`}>
 
         <div className={"ProjectSingle-header"}>
             {project.year} - {project.client}

@@ -135,6 +135,8 @@
       }
 
       &--item, &--item---text {
+        will-change: opacity;
+        transition: opacity 300ms ease-in-out;
         color: $color_neutral1;
         display: grid;
         grid-auto-flow: row;
@@ -151,7 +153,12 @@
 
             content: "<";
           }
+
+          &:hover {
+            opacity: 1 !important;
+          }
         }
+
       }
 
     }
