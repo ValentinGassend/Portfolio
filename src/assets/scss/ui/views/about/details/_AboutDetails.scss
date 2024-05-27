@@ -92,10 +92,11 @@
                 .AboutDetails-container--item---content {
                     text-align: right;
                     color: transparent;
-                    background: radial-gradient(circle at var(--x) var(--y), $color_accent1 0%, $color_black 1%),
+                    background: radial-gradient(circle at var(--x) var(--y), $color_accent1 0%, var(--colorEnd) var(--blackPercent)),
                     radial-gradient(circle, $color_black 0%, $color_black 0%);
                     background-position: 0px 0px;
                     background-clip: text;
+                    transition: background-size 0.5s, background 0.5s;
                     @include font($ff_1_C_10pt, 148px, 800, 124px);
 
                     @include media(">ultra-large") {

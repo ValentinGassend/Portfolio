@@ -10,11 +10,27 @@ const AboutDetails = () => {
 
     gsap.registerPlugin(ScrollTrigger)
     useEffect(() => {
-        document.getElementsByClassName("Back")[0].addEventListener("click", (e) => {
-            //     ajoute la position en x et y de la souris au click au style de l'element
-            e.preventDefault()
+        const element = document.getElementsByClassName("Back")[0];
+        element.style.setProperty("--x", "0px");
+        element.style.setProperty("--y", "0px");
+        element.style.setProperty("--blackPercent", '0%');
+        element.style.setProperty("--colorEnd", ColorManager.$color_black);
+
+        element.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.target.classList.add("Clicked");
             e.target.style.setProperty("--x", e.clientX - e.target.offsetLeft + "px");
             e.target.style.setProperty("--y", e.clientY - e.target.offsetTop + "px");
+
+            gsap.to(element, {
+                duration: 1, // Durée de l'animation en secondes
+                "--blackPercent": '100%',
+                "--colorEnd": ColorManager.$color_accent1,
+                ease: "power4.easeInOut",
+                onComplete: () => {
+                    // window.location.href = e.target.href;
+                }
+            });
         });
     }, []);
 
