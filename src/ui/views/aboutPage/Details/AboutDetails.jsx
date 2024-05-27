@@ -25,10 +25,9 @@ const AboutDetails = () => {
             gsap.to(element, {
                 duration: 1, // Durée de l'animation en secondes
                 "--blackPercent": '100%',
-                "--colorEnd": ColorManager.$color_accent1,
                 ease: "power4.easeInOut",
                 onComplete: () => {
-                    window.location.href = e.target.href;
+                    // window.location.href = e.target.href;
                 }
             });
         });
