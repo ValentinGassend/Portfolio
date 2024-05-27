@@ -27,7 +27,7 @@ const AboutDetails = () => {
                 "--blackPercent": '100%',
                 ease: "power4.easeInOut",
                 onComplete: () => {
-                    // window.location.href = e.target.href;
+                    window.location.href = e.target.href;
                 }
             });
         });
