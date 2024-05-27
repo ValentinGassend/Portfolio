@@ -28,7 +28,7 @@ const AboutDetails = () => {
                 "--colorEnd": ColorManager.$color_accent1,
                 ease: "power4.easeInOut",
                 onComplete: () => {
-                    // window.location.href = e.target.href;
+                    window.location.href = e.target.href;
                 }
             });
         });
