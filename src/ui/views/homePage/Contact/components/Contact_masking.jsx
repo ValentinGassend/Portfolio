@@ -4,8 +4,10 @@ import ContactMaskingBackground from "./Contact_masking_background.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 import gsap from "gsap";
 import {IsMobile} from "../../../../../utils/utils.jsx";
+import TextPlugin from "gsap/TextPlugin";
 
 const ContactMasking = () => {
+    gsap.registerPlugin(TextPlugin);
     const [cursorClicked, setCursorClicked] = useState(false);
 
     const [clickCount, setClickCount] = useState(1);
@@ -103,8 +105,32 @@ const ContactMasking = () => {
         }
     };
     useEffect(() => {
+        const backgroundTitle = document.getElementsByClassName("ContactMaskingBackground-content--title")[0]
         if (clickCount === 3 || IsMobile()) {
             setCursorClicked(true);
+        }
+        switch (clickCount) {
+            case 2:
+                gsap.to(backgroundTitle, {
+                    duration: 2,
+                    text: "essaye encore",
+                    ease: "power4.inOut",
+                });
+                break;
+            case 3:
+                gsap.to(backgroundTitle, {
+                    duration: 2,
+                    text: "ça devient intreressant !",
+                    ease: "power4.inOut",
+                });
+                break;
+            case 4:
+                gsap.to(backgroundTitle, {
+                    duration: 2,
+                    text: "Tu as bien fait !",
+                    ease: "power4.inOut",
+                });
+
         }
         if (!cursorClicked) {
             document.getElementsByClassName("Contact")[0].addEventListener("mousemove", handleMouseMove)

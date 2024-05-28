@@ -44,7 +44,8 @@ const ContactMaskingBackground = ({cursorClicked}) => {
             </div>
             <div className="ContactMaskingBackground-content">
                 <h3 className="ContactMaskingBackground-content--title Center Uppercase">
-                    ça devient interessant !
+                    click pour voir
+
                 </h3>
                 <div className={`ContactMaskingBackground-content--bottom ${cursorClicked ? "__clicked" : ''}`}>
 
