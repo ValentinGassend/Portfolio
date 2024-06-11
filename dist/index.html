@@ -1,15 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8"/>
-    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
     <title>Portfolio - Valentin Gassend</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif à la recherche d'une alternance :)"/>
+    <meta name="author" content="Valentin Gassend">
+    <meta name="robots" content="index, follow"/>
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Portfolio - Valentin Gassend">
+    <meta name="twitter:description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif à la recherche d'une alternance :)">
+    <meta name="twitter:image" content="https://valentingassend.com/img/landing.webp">
+    <!-- Balises pour Discord -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Portfolio - Valentin Gassend">
+    <meta property="og:description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif à la recherche d'une alternance :)">
+    <meta property="og:image" content="https://valentingassend.com/img/landing.webp">
+    <meta property="og:url" content="https://valentingassend.com">
+    <!-- Balises pour Facebook -->
+    <link rel="canonical" href="https://valentingassend.com">
+
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Valentin Gassend",
+            "jobTitle": "Développeur Front-End",
+            "description": "Développeur front-end créatif à la recherche d'une alternance.",
+            "url": "https://valentingassend.com",
+            "sameAs": [
+                "https://www.linkedin.com/in/valentin-gassend/",
+                "https://github.com/ValentinGassend"
+            ]
+        }
+    </script>
     <script>
         // Fonction pour changer le titre après un certain temps d'inactivité
         function changerTitreSiInactif() {
             // Durée d'inactivité en millisecondes (par exemple, 5 minutes)
-            var dureeInactivite = 1 * 60 * 1000; // 1 minute en millisecondes
+            var dureeInactivite = 2 * 60 * 1000; // 1 minute en millisecondes
 
             // Enregistrement du moment où la page a été chargée
             var dernierActif = Date.now();
@@ -19,7 +51,7 @@
                 var maintenant = Date.now();
                 if (maintenant - dernierActif > dureeInactivite) {
                     // Changer le titre
-                    document.title = "Futur alternant - Valentin Gassend";
+                    document.title = "Votre Futur alternant - Valentin Gassend";
                 }
             }
 
@@ -53,8 +85,8 @@
         // Appeler la fonction lorsque la page est chargée
         window.addEventListener("load", changerTitreSiInactif);
     </script>
-  <script type="module" crossorigin src="/assets/index-JtbzQ6KR.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-R61cVLQY.css">
+  <script type="module" crossorigin src="/assets/index-XFSCXUDB.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CVraIRul.css">
 </head>
 <body>
 <div id="root"></div>
