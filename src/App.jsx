@@ -13,6 +13,7 @@ import About from "./ui/views/aboutPage/aboutPage.jsx";
 import AboutPage from "./ui/views/aboutPage/aboutPage.jsx";
 import SingleProjectPage from "./ui/views/singleProjectPage/singleProjectPage.jsx";
 import Lenis from "lenis";
+import Functionality3d from "./ui/views/fonctionality/Functionality3d.jsx";
 
 function App() {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
@@ -38,6 +39,7 @@ function App() {
                     <Route path={"/"} element={<Home/>}/>
                     <Route path={"/projects"} element={<Projects/>}/>
                     <Route path={"/about"} element={<AboutPage/>}/>
+                    <Route path={"/func3d"} element={<Functionality3d/>}/>
                     <Route path={"/project/:id"}  element={<SingleProjectPage/>}/>
                 </Routes>
             </BrowserRouter>

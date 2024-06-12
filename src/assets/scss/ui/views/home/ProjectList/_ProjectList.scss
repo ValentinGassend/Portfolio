@@ -7,7 +7,11 @@
     display: grid;
     align-items: center;
     width: 100%;
-
+    canvas {
+      position: absolute;
+      top: 0;
+      pointer-events: none;
+    }
     &--separator {
       height: 3px;
       background-color: $color_neutral2;

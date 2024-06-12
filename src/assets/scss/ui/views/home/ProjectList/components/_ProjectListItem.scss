@@ -8,6 +8,7 @@
   width: 100%;
   max-width: 100vw;
   transition: padding 600ms ease, color 300ms ease, background-color 600ms ease;
+
   @include media("<=medium") {
     justify-content: start;
   }
