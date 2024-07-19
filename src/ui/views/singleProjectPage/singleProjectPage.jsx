@@ -72,42 +72,42 @@ const SingleProjectPage = () => {
                 <div className={`SingleProjectPage-background--container __SingleProjectImageContainer`}>
                     {project.content.description.image && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.content.description.image}
+                            <img loading={"lazy"} src={project.content.description.image}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
 
                     {project.content.history.image && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.content.history.image}
+                            <img loading={"lazy"} src={project.content.history.image}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
 
                     {project.content.why.image && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.content.why.image}
+                            <img loading={"lazy"} src={project.content.why.image}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
 
                     {project.content.how.image && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.content.how.image}
+                            <img loading={"lazy"} src={project.content.how.image}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
 
                     {project.content.what.image && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.content.what.image}
+                            <img loading={"lazy"} src={project.content.what.image}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
 
                     {project.imageUrl && (
                         <div className={`SingleProjectPage-background--container---image Before __SingleProjectImage`}>
-                            <img src={project.imageUrl}
+                            <img loading={"lazy"} src={project.imageUrl}
                                  className={`SingleProjectPage-background--container---image----img`} alt={""}/>
                         </div>
                     )}
