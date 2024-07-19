@@ -21,6 +21,8 @@
     }
 
     &-vertical {
+        animation: VerticalScale 1.6s $juicy-ease-out-1;
+
         grid-template-columns: repeat(var(--verticalCount), 1fr);
         grid-template-rows: repeat(var(--verticalCount), 100%);
         &--item {
@@ -31,7 +33,7 @@
     }
 
     &-horizontal {
-
+        animation: HorizontalScale 1.6s $juicy-ease-out-1;
         grid-template-rows: repeat(var(--horizontalCount), 1fr);
         grid-template-columns: repeat(var(--horizontalCount), 100%);
         grid-auto-flow: column;

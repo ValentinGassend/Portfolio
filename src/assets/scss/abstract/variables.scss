@@ -20,3 +20,74 @@ $color_accent3: #06BA63;
 $color_accent4: #FBD038;
 
 
+
+// Juicy Ease Variations
+$juicy-ease-1: cubic-bezier(0.35, 0, 0.25, 1);
+$juicy-ease-2: cubic-bezier(0.45, 0, 0.35, 1);
+$juicy-ease-3: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+// Juicy Ease In Variations
+$juicy-ease-in-1: cubic-bezier(0.6, 0, 0.4, 1);
+$juicy-ease-in-2: cubic-bezier(0.7, 0, 0.5, 1);
+$juicy-ease-in-3: cubic-bezier(0.5, 0, 0.3, 1);
+
+// Juicy Ease Out Variations
+$juicy-ease-out-1: cubic-bezier(0, 0, 0.2, 1);
+$juicy-ease-out-2: cubic-bezier(0, 0, 0.3, 1);
+$juicy-ease-out-3: cubic-bezier(0, 0, 0.4, 1);
+$juicy-ease-out-4: cubic-bezier(0, 0, 0.5, 1);
+
+// Juicy Ease In Out Variations
+$juicy-ease-in-out-1: cubic-bezier(0.78, 0, 0.58, 1);
+$juicy-ease-in-out-2: cubic-bezier(0.88, 0, 0.68, 1);
+$juicy-ease-in-out-3: cubic-bezier(0.68, 0, 0.48, 1);
+
+// Juicy Linear Variations
+$juicy-linear-1: cubic-bezier(0.1, 0.8, 0.2, 1);
+$juicy-linear-2: cubic-bezier(0.2, 0.6, 0.4, 1);
+$juicy-linear-3: cubic-bezier(0.3, 0.4, 0.6, 1);
+
+// Juicy Sine Variations
+$juicy-sine-1: cubic-bezier(0.39, 0, 0.6, 1);
+$juicy-sine-2: cubic-bezier(0.47, 0, 0.745, 0.715);
+$juicy-sine-3: cubic-bezier(0.45, 0, 0.55, 1);
+
+// Juicy Quad Variations
+$juicy-quad-1: cubic-bezier(0.75, 0.25, 0.9, 0.7);
+$juicy-quad-2: cubic-bezier(0.85, 0.15, 1, 0.6);
+$juicy-quad-3: cubic-bezier(0.65, 0.35, 0.8, 0.8);
+
+// Juicy Cubic Variations
+$juicy-cubic-1: cubic-bezier(0.68, 0.15, 0.87, 0.5);
+$juicy-cubic-2: cubic-bezier(0.78, 0.05, 0.97, 0.4);
+$juicy-cubic-3: cubic-bezier(0.58, 0.25, 0.77, 0.6);
+
+// Juicy Quart Variations
+$juicy-quart-1: cubic-bezier(0.88, 0.1, 0.88, 0.3);
+$juicy-quart-2: cubic-bezier(0.98, 0.2, 0.98, 0.4);
+$juicy-quart-3: cubic-bezier(0.78, 0, 0.78, 0.2);
+
+// Juicy Quint Variations
+$juicy-quint-1: cubic-bezier(0.95, 0.05, 0.95, 0.2);
+$juicy-quint-2: cubic-bezier(1, 0.1, 1, 0.3);
+$juicy-quint-3: cubic-bezier(0.9, 0, 0.9, 0.1);
+
+// Juicy Expo Variations
+$juicy-expo-1: cubic-bezier(0.96, 0.05, 0.95, 0.01);
+$juicy-expo-2: cubic-bezier(1, 0.1, 1, 0);
+$juicy-expo-3: cubic-bezier(0.92, 0, 0.91, 0.02);
+
+// Juicy Circ Variations
+$juicy-circ-1: cubic-bezier(0.68, 0.15, 0.68, 0.8);
+$juicy-circ-2: cubic-bezier(0.78, 0.25, 0.78, 0.9);
+$juicy-circ-3: cubic-bezier(0.58, 0.05, 0.58, 0.7);
+
+// Juicy Back Variations
+$juicy-back-1: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+$juicy-back-2: cubic-bezier(0.78, -0.7, 0.42, 1.7);
+$juicy-back-3: cubic-bezier(0.58, -0.5, 0.22, 1.5);
+
+// Juicy Elastic Variations
+$juicy-elastic-1: cubic-bezier(1, -0.6, 0, 1.6);
+$juicy-elastic-2: cubic-bezier(1, -0.7, 0, 1.7);
+$juicy-elastic-3: cubic-bezier(1, -0.5, 0, 1.5);
