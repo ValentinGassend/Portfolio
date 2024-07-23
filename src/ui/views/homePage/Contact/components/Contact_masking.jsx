@@ -132,15 +132,8 @@ const ContactMasking = () => {
                     ease: "power4.inOut",
                 });
                 gsap.to(cursor, {
-                    top: "50%",
-                    bottom: "50%",
-                    translateY: "-50%",
-
-                    left: "50%",
-                    right: "50%",
-                    translateX: "-50%",
-                    width: IsMobile() ? `60vh` : `75vh`,
-                    height: IsMobile() ? `60vh` : `75vh`,
+                    width: IsMobile() ? `60vh` : `66vh`,
+                    height: IsMobile() ? `60vh` : `66vh`,
                     overwrite: true
                 });
                 break;

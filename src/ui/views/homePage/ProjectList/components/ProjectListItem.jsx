@@ -1,55 +1,61 @@
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 import Effect from "../../../fonctionality/Effect.jsx";
-import ImageHoverEffect from "../../../fonctionality/ImageHoverEffect.jsx";
+import sharedEffectManager from "../../../fonctionality/SharedEffectManager";
+
 // Adding the map method to Number prototype
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
     return ((this - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 };
 
-const ProjectListItem = ({project, onMouseEnter, onMouseLeave, mousePosition = {x: 0, y: 0}}) => {
+const ProjectListItem = ({ project }) => {
     const imgRef = useRef(null);
-
     const containerRef = useRef(null);
     const itemsWrapperRef = useRef(null);
+
     useEffect(() => {
-        const effect = new Effect(containerRef.current, itemsWrapperRef.current);
+        // Initialize Effect with shared data
+        const effect = new Effect(containerRef.current, itemsWrapperRef.current, {}, sharedEffectManager);
+
+        // Add resize event listener
+        window.addEventListener('resize', effect.onWindowResize.bind(effect));
+
+        // Cleanup on unmount
         return () => {
-            window.removeEventListener('resize', effect.onWindowResize);
+            window.removeEventListener('resize', effect.onWindowResize.bind(effect));
         };
     }, []);
 
     return (
-
-        <div ref={containerRef} style={{position: 'relative', width: '100%'}}>
+        <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
             <div ref={itemsWrapperRef}>
-
                 <a
-                   href={`project/${project.id}`}
-                   className="ProjectListItem Center"
-                   style={{"--color": project.color, position: 'relative', width: '100%'}}
+                    href={`project/${project.id}`}
+                    className="ProjectListItem Center"
+                    style={{ "--color": project.color, position: 'relative', width: '100%' }}
                 >
-                    {/*<>*/}
-                    {/*<ImageHoverEffect/>*/}
-                    <div className={"ProjectListItem-header"}>
+                    <div className="ProjectListItem-header">
                         {project.year} - {project.client}
                     </div>
-                    <h3 className={"ProjectListItem-title TxtCenter Uppercase Before After"}>
+                    <h3 className="ProjectListItem-title TxtCenter Uppercase Before After">
                         {project.title}
                     </h3>
-                    <div className={"ProjectListItem-subtitle"}>
+                    <div className="ProjectListItem-subtitle">
                         {project.tags.map((tag, index) => (
-                            <p key={index} className={"ProjectListItem-subtitle--tag Before"}>
+                            <p key={index} className="ProjectListItem-subtitle--tag Before">
                                 {tag}
-                            </p>))}
+                            </p>
+                        ))}
                     </div>
                     <img
-                        className={"ProjectListItem-img"}
+                        className="ProjectListItem-img"
                         src={project.imageUrl}
                         alt={project.name}
+                        ref={imgRef}
                     />
                 </a>
             </div>
-        </div>);
+        </div>
+    );
 };
 
 export default ProjectListItem;

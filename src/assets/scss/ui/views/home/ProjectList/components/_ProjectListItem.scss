@@ -175,3 +175,12 @@
     }
   }
 }
+.webgl-canvas {
+  position:fixed;
+  top: 50%;
+  bottom: 50%;
+  pointer-events: none;
+  transform: translateY(-50%) translateZ(0);
+  transform-origin: center;
+  z-index: 110;
+}
