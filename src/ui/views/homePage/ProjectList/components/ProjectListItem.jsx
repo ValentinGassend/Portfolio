@@ -49,7 +49,7 @@ const ProjectListItem = ({ project }) => {
                     <img
                         className="ProjectListItem-img"
                         src={project.imageUrl}
-                        alt={project.name}
+                        alt={project.title}
                         ref={imgRef}
                     />
                 </a>
