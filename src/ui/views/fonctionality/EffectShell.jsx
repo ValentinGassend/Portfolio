@@ -11,15 +11,12 @@ class EffectShell {
 
         this.setup();
         this.initEffectShell().then(() => {
-            console.log('load finished');
             this.isLoaded = true;
         });
         this.createEventsListeners();
     }
 
     setup() {
-        console.log('setup')
-        console.log(this.sharedData)
         if (!this.sharedData) {
             this.sharedData = {
                 renderer: new THREE.WebGLRenderer({ antialias: true, alpha: true }),

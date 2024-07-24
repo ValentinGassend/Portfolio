@@ -21,6 +21,9 @@
         height: fit-content;
         bottom: 0;
         margin: auto;
+        opacity: 0;
+        animation: opacity 900ms $juicy-ease-out-1 600ms forwards;
+
         @include media("<=small") {
             display: flex;
             align-items: center;
