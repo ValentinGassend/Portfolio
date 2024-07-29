@@ -25,7 +25,7 @@ const SingleProjectContent = ({ project }) => {
                         />
                     </div>
 
-                    <img src={project.content.history.image}
+                    <img loading={"lazy"} src={project.content.history.image}
                          className={`SingleProjectContent-history--image`} alt={""}/>
                 </div>
             )}
@@ -44,7 +44,7 @@ const SingleProjectContent = ({ project }) => {
                         />
                     </div>
 
-                    <img src={project.content.why.image}
+                    <img loading={"lazy"} src={project.content.why.image}
                          className={`SingleProjectContent-why--image`} alt={""}/>
                 </div>
             )}
@@ -63,7 +63,7 @@ const SingleProjectContent = ({ project }) => {
                         />
                     </div>
 
-                    <img src={project.content.how.image}
+                    <img loading={"lazy"} src={project.content.how.image}
                          className={`SingleProjectContent-how--image`} alt={""}/>
                 </div>
             )}
@@ -82,7 +82,7 @@ const SingleProjectContent = ({ project }) => {
                         />
                     </div>
 
-                    <img src={project.content.what.image}
+                    <img loading={"lazy"} src={project.content.what.image}
                          className={`SingleProjectContent-what--image`} alt={""}/>
                 </div>
             )}

@@ -1,11 +1,14 @@
 import * as THREE from "three";
 
 class EffectShell {
-    constructor(container = document.body, itemsWrapper = null) {
+    constructor(container = document.body, itemsWrapper = null, sharedData = null) {
         this.container = container;
         this.itemsWrapper = itemsWrapper;
+        this.sharedData = sharedData;
         this.mouse = {x: 0, y: 0};
+
         if (!this.container || !this.itemsWrapper) return;
+
         this.setup();
         this.initEffectShell().then(() => {
             console.log('load finished');
@@ -15,39 +18,28 @@ class EffectShell {
     }
 
     setup() {
-        window.addEventListener('resize', this.onWindowResize.bind(this), false);
-        this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-
-        this.renderer.domElement.style.position = 'fixed';
-        this.renderer.domElement.style.top = '50%';
-        this.renderer.domElement.style.bottom = '50%';
-        this.renderer.domElement.style.pointerEvents = 'none';
-        this.renderer.domElement.style.transform = 'translateY(-50%)';
-        this.renderer.domElement.style.transformOrigin = 'center';
-
-        this.renderer.domElement.style.zIndex = 110;
-        document.body.appendChild(this.renderer.domElement);
-
-        // scene
-        this.scene = new THREE.Scene();
-
-        // camera
-        this.camera = new THREE.PerspectiveCamera(
-            40,
-            this.viewport.aspectRatio,
-            0.1,
-            100
-        );
-        this.camera.position.set(0, 0, 3);
-
-        // animation loop
-        this.renderer.setAnimationLoop(this.render.bind(this));
+        console.log('setup')
+        console.log(this.sharedData)
+        if (!this.sharedData) {
+            this.sharedData = {
+                renderer: new THREE.WebGLRenderer({ antialias: true, alpha: true }),
+                scene: new THREE.Scene(),
+                camera: new THREE.PerspectiveCamera(40, 16/9, 0.1, 100),
+            };
+            this.sharedData.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.sharedData.renderer.setPixelRatio(window.devicePixelRatio);
+            this.sharedData.renderer.domElement.classList.add('webgl-canvas');
+            document.body.appendChild(this.sharedData.renderer.domElement);
+            this.sharedData.camera.position.set(0, 0, 3);
+            this.sharedData.renderer.setAnimationLoop(this.render.bind(this));
+        } else {
+            this.renderer = this.sharedData.renderer;
+            this.scene = this.sharedData.scene;
+            this.camera = this.sharedData.camera;
+        }
     }
 
     render() {
-        // called every frame
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -70,7 +62,6 @@ class EffectShell {
 
     get itemsElements() {
         const items = [...this.itemsWrapper.querySelectorAll('.ProjectListItem')];
-
         return items.map((item, index) => ({
             element: item,
             img: item.querySelector('img') || null,
@@ -95,7 +86,6 @@ class EffectShell {
             Promise.all(promises).then((textures) => {
                 textures.forEach((textureData, index) => {
                     this.items[index].texture = textureData.texture;
-                    // Mettez à jour l'élément HTML avec la texture chargée
                     this.items[index].img.src = textureData.texture.image.src;
                 });
                 resolve();
@@ -103,18 +93,16 @@ class EffectShell {
         });
     }
 
-
     loadTexture(loader, url, index) {
         return new Promise((resolve, reject) => {
             if (!url) {
-                resolve({texture: null, index});
+                resolve({ texture: null, index });
                 return;
             }
-
             loader.load(
                 url,
                 (texture) => {
-                    resolve({texture, index});
+                    resolve({ texture, index });
                 },
                 undefined,
                 (error) => {
@@ -154,7 +142,6 @@ class EffectShell {
     _onMouseMove(event) {
         this.mouse.x = (event.x / this.viewport.width) * 2 - 1;
         this.mouse.y = -(event.y / this.viewport.height) * 2 + 1;
-
         this.onMouseMove(event);
     }
 
@@ -166,9 +153,8 @@ class EffectShell {
         let distance = this.camera.position.z;
         let vFov = (this.camera.fov * Math.PI) / 180;
         let height = 2 * Math.tan(vFov / 2) * distance;
-
         let width = height * this.viewport.aspectRatio;
-        return {width, height, vFov};
+        return { width, height, vFov };
     }
 }
 

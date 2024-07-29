@@ -1,0 +1,5 @@
+# robots.txt pour www.example.com
+
+# Interdire à tous les robots d'explorer tout le site
+User-agent: *
+Disallow:

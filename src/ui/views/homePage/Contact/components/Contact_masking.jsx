@@ -1,11 +1,13 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {lazy, useEffect, useLayoutEffect, useState} from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
-import ContactMaskingBackground from "./Contact_masking_background.jsx";
+// import ContactMaskingBackground from "./Contact_masking_background.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 import gsap from "gsap";
 import {IsMobile} from "../../../../../utils/utils.jsx";
 import TextPlugin from "gsap/TextPlugin";
 
+
+const ContactMaskingBackground = lazy(() => import("./Contact_masking_background.jsx"));
 const ContactMasking = () => {
     gsap.registerPlugin(TextPlugin);
     const [cursorClicked, setCursorClicked] = useState(false);
@@ -105,6 +107,7 @@ const ContactMasking = () => {
         }
     };
     useEffect(() => {
+        let cursor = document.getElementsByClassName("__ContactMaskingCursor")[0]
         const backgroundTitle = document.getElementsByClassName("ContactMaskingBackground-content--title")[0]
         if (clickCount === 3 || IsMobile()) {
             setCursorClicked(true);
@@ -116,12 +119,22 @@ const ContactMasking = () => {
                     text: "essaye encore",
                     ease: "power4.inOut",
                 });
+                gsap.to(cursor, {
+                    width: IsMobile() ? `50vh` : `50vh`,
+                    height: IsMobile() ? `50vh` : `50vh`,
+                    overwrite: true
+                });
                 break;
             case 3:
                 gsap.to(backgroundTitle, {
                     duration: 2,
                     text: "ça devient intreressant !",
                     ease: "power4.inOut",
+                });
+                gsap.to(cursor, {
+                    width: IsMobile() ? `60vh` : `66vh`,
+                    height: IsMobile() ? `60vh` : `66vh`,
+                    overwrite: true
                 });
                 break;
             case 4:
@@ -187,7 +200,7 @@ const ContactMasking = () => {
 
                 <div
                     className={`ContactMasking-background __ContactMaskedBackground ${cursorClicked ? "__clicked" : ''}`}>
-                    <ContactMaskingBackground cursorClicked={cursorClicked}/>
+                    <ContactMaskingBackground cursorClicked={cursorClicked} />
 
                 </div>
 

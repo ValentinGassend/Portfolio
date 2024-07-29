@@ -43,7 +43,7 @@ const SingleProjectLanding = ({project}) => {
                     />
                 </div>
             </div>
-            <img src={project.content.description.image}
+            <img loading={"lazy"} src={project.content.description.image}
                  className={`SingleProjectLanding-image`} alt={""}/>
         </section>
 
