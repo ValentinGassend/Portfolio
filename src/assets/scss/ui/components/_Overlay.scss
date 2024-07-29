@@ -10,7 +10,8 @@
   grid-auto-flow: row;
   align-content: space-between;
   pointer-events: none;
-
+  opacity: 0;
+  animation: opacity 600ms ease-out 1.1s forwards;
   &-upper, &-lower {
     width: 100%;
     display: grid;
