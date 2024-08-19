@@ -1,56 +1,66 @@
 .ProjectList {
-  width: 100%;
-  background-color: $color_neutral1;
-  z-index: 10;
-
-  &-container {
-    display: grid;
-    align-items: center;
     width: 100%;
-    canvas {
-      position: absolute;
-      top: 0;
-      pointer-events: none;
-    }
-    &--separator {
-      height: 3px;
-      background-color: $color_neutral2;
-      width: 100%;
+    background-color: $color_neutral1;
+    z-index: 10;
 
-    }
-
-    &--more {
-      width: fit-content;
-      margin:  36px auto;
-      color: $color_accent3;
-      text-decoration: none;
-      @include font($ff_1_C_10pt, 48px, 800, normal);
-      letter-spacing: -1.92px;
-      display: grid;
-      grid-auto-flow: column;
-      grid-column-gap: 8px;
-      justify-content: center;
-      align-items: center;
-
-      @include media("<=small") {
-        margin:  38px auto 28px;
-
-        @include font($ff_1_C_10pt,24px,800,normal);
-        letter-spacing: -0.96px;
-      }
-      &:before, &:after {
-        display: flex;
-        justify-content: center;
+    &-container {
+        display: grid;
         align-items: center;
-        @include font($ff_1, 72px, 200, normal);
-        content: "+";
-        @include media("<=small") {
-          @include font($ff_1,36px,200,normal);
-          letter-spacing: -0.96px;
+        width: 100%;
+
+        canvas {
+            position: absolute;
+            top: 0;
+            pointer-events: none;
         }
-      }
+
+        &--separator {
+            height: 3px;
+            background-color: $color_neutral2;
+            width: 100%;
+
+        }
+
+        &--more {
+            width: fit-content;
+            margin: 36px auto;
+            color: $color_accent3;
+            text-decoration: none;
+            @include font($ff_1_C_10pt, 48px, 800, normal);
+            letter-spacing: -1.92px;
+            display: grid;
+            grid-auto-flow: column;
+            grid-column-gap: 8px;
+            justify-content: center;
+            align-items: center;
+
+            @include media("<=small") {
+                margin: 38px auto 28px;
+
+                @include font($ff_1_C_10pt, 24px, 800, normal);
+                letter-spacing: -0.96px;
+            }
+
+            &:before, &:after {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                @include font($ff_1, 72px, 200, normal);
+                content: "+";
+                @include media("<=small") {
+                    @include font($ff_1, 36px, 200, normal);
+                    letter-spacing: -0.96px;
+                }
+            }
+        }
     }
-  }
+}
+
+@include media("<=medium") {
+
+    .webgl-canvas {
+        display: none!important;
+    }
 }
 
 @import "./components/ProjectListItem";

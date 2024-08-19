@@ -104,6 +104,35 @@ const ContactMasking = () => {
 
                 ease: "power2.inOut", overwrite: true
             });
+        } else if (!IsMobile()) {
+            gsap.to(cursor, {
+                delay: !IsMobile() ? 1.6 : 0,
+                duration: 0.5,
+                top: "50%",
+                bottom: "50%",
+                translateY: "-50%",
+
+                left: "50%",
+                right: "50%",
+                translateX: "-50%",
+                width: IsMobile() ? `200vh` : `200vw`,
+                height: IsMobile() ? `200vh` : `200vw`,
+                ease: "power2.inOut",
+                overwrite: true
+            });
+
+            // Animation pour le background
+            gsap.to(".__ContactMaskedBackground", {
+                delay: !IsMobile() ? 1.6 : 0, duration: 0.5, top: "0", bottom: "0",
+
+                left: "50%", right: "50%", // scale:0.25,
+
+                translateX: "-50%",
+
+                // translate:"-50%, -50%",
+
+                ease: "power2.inOut", overwrite: true
+            });
         }
     };
     useEffect(() => {
@@ -112,39 +141,48 @@ const ContactMasking = () => {
         if (clickCount === 3 || IsMobile()) {
             setCursorClicked(true);
         }
-        switch (clickCount) {
-            case 2:
-                gsap.to(backgroundTitle, {
-                    duration: 2,
-                    text: "essaye encore",
-                    ease: "power4.inOut",
-                });
-                gsap.to(cursor, {
-                    width: IsMobile() ? `50vh` : `50vh`,
-                    height: IsMobile() ? `50vh` : `50vh`,
-                    overwrite: true
-                });
-                break;
-            case 3:
-                gsap.to(backgroundTitle, {
-                    duration: 2,
-                    text: "ça devient intreressant !",
-                    ease: "power4.inOut",
-                });
-                gsap.to(cursor, {
-                    width: IsMobile() ? `60vh` : `66vh`,
-                    height: IsMobile() ? `60vh` : `66vh`,
-                    overwrite: true
-                });
-                break;
-            case 4:
-                gsap.to(backgroundTitle, {
-                    duration: 2,
-                    text: "Tu as bien fait !",
-                    ease: "power4.inOut",
-                });
+        if (!IsMobile()) {
+            switch (clickCount) {
+                case 2:
+                    gsap.to(backgroundTitle, {
+                        duration: 2,
+                        text: "essaye encore",
+                        ease: "power4.inOut",
+                    });
+                    gsap.to(cursor, {
+                        width: IsMobile() ? `50vh` : `50vh`,
+                        height: IsMobile() ? `50vh` : `50vh`,
+                        overwrite: true
+                    });
+                    break;
+                case 3:
+                    gsap.to(backgroundTitle, {
+                        duration: 2,
+                        text: "ça devient intreressant !",
+                        ease: "power4.inOut",
+                    });
+                    gsap.to(cursor, {
+                        width: IsMobile() ? `60vh` : `66vh`,
+                        height: IsMobile() ? `60vh` : `66vh`,
+                        overwrite: true
+                    });
+                    break;
+                case 4:
+                    gsap.to(backgroundTitle, {
+                        duration: 2,
+                        text: "Tu as bien fait !",
+                        ease: "power4.inOut",
+                    });
 
+            }
+        } else {
+            gsap.to(backgroundTitle, {
+                duration: 2,
+                text: "Faisons connaissance !",
+                ease: "power4.inOut",
+            });
         }
+
         if (!cursorClicked) {
             document.getElementsByClassName("Contact")[0].addEventListener("mousemove", handleMouseMove)
             document.getElementsByClassName("ContactMasking")[0].addEventListener("click", handleClick)
@@ -200,7 +238,7 @@ const ContactMasking = () => {
 
                 <div
                     className={`ContactMasking-background __ContactMaskedBackground ${cursorClicked ? "__clicked" : ''}`}>
-                    <ContactMaskingBackground cursorClicked={cursorClicked} />
+                    <ContactMaskingBackground cursorClicked={cursorClicked}/>
 
                 </div>
 

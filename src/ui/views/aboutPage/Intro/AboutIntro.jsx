@@ -35,7 +35,7 @@ const AboutIntro = () => {
         <div className={"AboutIntro __HorizontalPanel"}>
             <div className={"AboutIntro-container __AboutTextAppearContainer"}>
                 <div className={"AboutIntro-container--item After"}>
-                    <img loading={"lazy"} src={`https://picsum.photos/1800/1800`}
+                    <img loading={"lazy"} src={`https://assets.lummi.ai/assets/QmVk6vqdUogb9tJD7js8o5Jm8iWdn9rrLe2BsJK6Az8MMk?auto=format&w=1500`}
                          className={`AboutIntro-container--item---background `} alt={""}/>
                     <p className={"AboutIntro-container--item---content __AboutTextAppear"}> Je suis Valentin
                         Gassend,étudiant et
