@@ -62,17 +62,20 @@ const ContactMaskingBackground = ({cursorClicked}) => {
                         spaceBetween={30}
                         loop={true}
                         modules={[Autoplay]}
-                        speed={7500}
+                        speed={10000}
 
                     >
                         <SwiperSlide>
-                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
+                            <h4 className={"After Before"}>Développement créatif</h4>
                         </SwiperSlide>
                         <SwiperSlide>
-                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
+                            <h4 className={"After Before"}>À l'écoute de tes idées</h4>
                         </SwiperSlide>
                         <SwiperSlide>
-                            <h4 className={"After Before"}>Besoin d'un developpeur passionne ? Tu n'as plus qu'a me contacter</h4>
+                            <h4 className={"After Before"}>Développement créatif</h4>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <h4 className={"After Before"}>À l'écoute de tes idées</h4>
                         </SwiperSlide>
                     </Swiper>
                 </div>
