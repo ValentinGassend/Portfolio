@@ -224,7 +224,7 @@ const Overlay = ({ projectsPage = false, projectsList, singleProjectPage = false
                                     </div>
                                     <div className={`Overlay-lower`}>
                                         <div className={`Overlay-lower--item`}>
-                                            <p className={`Overlay-lower--item---text Uppercase`}>En recherche d'alternance</p>
+                                            <p className={`Overlay-lower--item---text Uppercase`}>Disponible en freelance</p>
                                         </div>
                                         <div className={`Overlay-lower--item`}>
                                             <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>

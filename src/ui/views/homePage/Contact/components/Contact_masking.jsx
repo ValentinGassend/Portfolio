@@ -123,11 +123,13 @@ const ContactMasking = () => {
 
             // Animation pour le background
             gsap.to(".__ContactMaskedBackground", {
-                delay: !IsMobile() ? 1.6 : 0, duration: 0.5, top: "0", bottom: "0",
+                delay: !IsMobile() ? 1.6 : 0, duration: 0.5,
+                // top: "0", bottom: "0",
 
-                left: "50%", right: "50%", // scale:0.25,
+                // left: "50%",
+                // right: "50%", // scale:0.25,
 
-                translateX: "-50%",
+                translateX: "-0%",
 
                 // translate:"-50%, -50%",
 
@@ -158,7 +160,7 @@ const ContactMasking = () => {
                 case 3:
                     gsap.to(backgroundTitle, {
                         duration: 2,
-                        text: "ça devient intreressant !",
+                        text: "Petit curieux !",
                         ease: "power4.inOut",
                     });
                     gsap.to(cursor, {
@@ -170,7 +172,7 @@ const ContactMasking = () => {
                 case 4:
                     gsap.to(backgroundTitle, {
                         duration: 2,
-                        text: "Tu as bien fait !",
+                        text: "Allez, contact moi !",
                         ease: "power4.inOut",
                     });
 

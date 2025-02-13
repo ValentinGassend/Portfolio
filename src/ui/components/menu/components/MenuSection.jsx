@@ -43,7 +43,7 @@ const MenuSection = () => {
 
         </a>
         <div className={"MenuSection-item"}>
-            <p className={"MenuSection-item--text Uppercase"}>En recherche d'alternance</p>
+            <p className={"MenuSection-item--text Uppercase"}>disponible en freelance</p>
             <p className={"MenuSection-item--text Uppercase"}>Portfolio</p>
         </div>
     </div>)
