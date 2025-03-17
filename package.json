@@ -7,7 +7,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "generate-sitemap": "node generateSitemap.js",
-    "postbuild": "npm run generate-sitemap && cp /public/sitemap.xml dist/ && cp /public/robots.txt dist/",
+    "postbuild": "npm run generate-sitemap && cp public/sitemap.xml dist/ && cp public/robots.txt dist/",
     "lint": "eslint Portfolio --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
