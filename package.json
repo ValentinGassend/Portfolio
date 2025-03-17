@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "generate-sitemap": "node generateSitemap.js",
+    "postbuild": "npm run generate-sitemap && cp /public/sitemap.xml dist/ && cp /public/robots.txt dist/",
     "lint": "eslint Portfolio --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -16,6 +18,7 @@
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "react-router-dom": "^6.23.0",
     "swiper": "^11.1.1",
     "three": "^0.165.0",

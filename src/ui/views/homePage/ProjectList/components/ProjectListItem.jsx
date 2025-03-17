@@ -26,35 +26,40 @@ const ProjectListItem = ({ project }) => {
     }, []);
 
     return (
-        <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
+        <article ref={containerRef} style={{ position: 'relative', width: '100%' }}>
             <div ref={itemsWrapperRef}>
                 <a
                     href={`project/${project.id}`}
                     className="ProjectListItem Center"
                     style={{ "--color": project.color, position: 'relative', width: '100%' }}
+                    aria-labelledby={`project-title-${project.id}`}
                 >
-                    <div className="ProjectListItem-header">
-                        {project.year} - {project.client}
-                    </div>
-                    <h3 className="ProjectListItem-title TxtCenter Uppercase Before After">
+                    <header className="ProjectListItem-header">
+                        <time dateTime={`${project.year}`}>{project.year}</time> - {project.client}
+                    </header>
+
+                    <h3 id={`project-title-${project.id}`} className="ProjectListItem-title TxtCenter Uppercase Before After">
                         {project.title}
                     </h3>
-                    <div className="ProjectListItem-subtitle">
+
+                    <div className="ProjectListItem-subtitle" role="list" aria-label="Technologies utilisées">
                         {project.tags.map((tag, index) => (
-                            <p key={index} className="ProjectListItem-subtitle--tag Before">
+                            <p key={index} className="ProjectListItem-subtitle--tag Before" role="listitem">
                                 {tag}
                             </p>
                         ))}
                     </div>
+
                     <img
                         className="ProjectListItem-img"
                         src={project.imageUrl}
-                        alt={project.title}
+                        alt={`Aperçu du projet ${project.title}`}
                         ref={imgRef}
+                        loading="lazy"
                     />
                 </a>
             </div>
-        </div>
+        </article>
     );
 };
 
