@@ -2,19 +2,36 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"/>
+    <!-- Préchargement des ressources critiques -->
+    <link rel="preconnect" href="https://assets.lummi.ai">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
+    <!-- Icône de favori optimisée -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+
+    <!-- Informations de base -->
     <title>Portfolio - Valentin Gassend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance"/>
     <meta name="author" content="Valentin Gassend">
     <meta name="robots" content="index, follow"/>
+    <meta name="theme-color" content="#ffffff">
 
+    <!-- Préchargement des ressources importantes -->
+    <link rel="preload" href="/assets/js/vendor.js" as="script">
+    <link rel="preload" href="/assets/css/main.css" as="style">
+
+    <!-- Préchargement de l'image principale -->
+    <link rel="preload" href="/img/landing.png" as="image" fetchpriority="high">
+
+    <!-- Balises Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Portfolio - Valentin Gassend">
     <meta name="twitter:description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance">
     <meta name="twitter:image" content="https://www.valentingassend.com/img/landing.png">
-    <!-- Balises pour Discord -->
+
+    <!-- Balises Open Graph pour Facebook et Discord -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Portfolio - Valentin Gassend">
     <meta property="og:description" content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance">
@@ -22,9 +39,10 @@
     <meta property="og:url" content="https://valentingassend.com">
     <meta property="og:locale" content="fr_FR">
 
-    <!-- Balises pour Facebook -->
+    <!-- URL canonique -->
     <link rel="canonical" href="https://valentingassend.com">
 
+    <!-- Données structurées Schema.org -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -39,57 +57,44 @@
             ]
         }
     </script>
-    <script>
-        // Fonction pour changer le titre après un certain temps d'inactivité
-        function changerTitreSiInactif() {
-            // Durée d'inactivité en millisecondes (par exemple, 5 minutes)
-            var dureeInactivite = 2 * 60 * 1000; // 1 minute en millisecondes
 
-            // Enregistrement du moment où la page a été chargée
-            var dernierActif = Date.now();
-
-            // Fonction pour vérifier l'inactivité et changer le titre si nécessaire
-            function verifierInactivite() {
-                var maintenant = Date.now();
-                if (maintenant - dernierActif > dureeInactivite) {
-                    // Changer le titre
-                    document.title = "Votre Futur dev - Valentin Gassend";
-                }
-            }
-
-            setInterval(verifierInactivite, 1000); // Vérifier toutes les secondes
-
-            window.addEventListener("focus", function() {
-                document.title = "Portfolio - Valentin Gassend";
-                dernierActif = Date.now();
-            });
-
-            window.addEventListener("mousemove", function() {
-                document.title = "Portfolio - Valentin Gassend";
-                dernierActif = Date.now();
-            });
-            window.addEventListener("wheel", function() {
-                document.title = "Portfolio - Valentin Gassend";
-                dernierActif = Date.now();
-            });
-
-            window.addEventListener("keydown", function() {
-                document.title = "Portfolio - Valentin Gassend";
-                dernierActif = Date.now();
-            });
-
-            window.addEventListener("touchstart", function() {
-                document.title = "Portfolio - Valentin Gassend";
-                dernierActif = Date.now();
-            });
-        }
-
-        // Appeler la fonction lorsque la page est chargée
-        window.addEventListener("load", changerTitreSiInactif);
-    </script>
+    <!-- Script pour changer le titre - Déplacé en fin de page -->
 </head>
 <body>
 <div id="root"></div>
-<script type="module" src="/src/main.jsx"></script>
+
+<!-- Script principal avec attribut defer pour ne pas bloquer le rendu -->
+<script type="module" src="/src/main.jsx" defer></script>
+
+<!-- Script pour changer le titre déplacé ici et optimisé -->
+<!--<script>-->
+<!--    // Fonction pour changer le titre après un certain temps d'inactivité-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        var dureeInactivite = 2 * 60 * 1000; // 2 minutes-->
+<!--        var dernierActif = Date.now();-->
+<!--        var titreOriginal = document.title;-->
+<!--        var titreInactif = "Votre Futur dev - Valentin Gassend";-->
+<!--        var inactif = false;-->
+
+<!--        // Utilisation d'un seul gestionnaire d'événements pour toutes les interactions-->
+<!--        ['focus', 'mousemove', 'wheel', 'keydown', 'touchstart'].forEach(function(evt) {-->
+<!--            window.addEventListener(evt, function() {-->
+<!--                dernierActif = Date.now();-->
+<!--                if (inactif) {-->
+<!--                    document.title = titreOriginal;-->
+<!--                    inactif = false;-->
+<!--                }-->
+<!--            }, { passive: true });  // L'option passive améliore les performances-->
+<!--        });-->
+
+<!--        // Vérification périodique mais moins fréquente (5 secondes au lieu de 1)-->
+<!--        setInterval(function() {-->
+<!--            if (!inactif && Date.now() - dernierActif > dureeInactivite) {-->
+<!--                document.title = titreInactif;-->
+<!--                inactif = true;-->
+<!--            }-->
+<!--        }, 5000);-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>

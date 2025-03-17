@@ -1,16 +1,23 @@
-import React, {useEffect} from 'react'
-import Home from "./ui/views/homePage/Home.jsx";
+import {lazy, useEffect} from 'react'
+// import Home from "./ui/views/homePage/Home.jsx";
 import gsap from "gsap";
 import {ScrollSmoother} from "gsap/ScrollSmoother";
 import {ScrollTrigger} from "gsap/ScrollTrigger";
 import CustomEase from "gsap/CustomEase";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Projects from "./ui/views/projectsPage/projects.jsx";
-import AboutPage from "./ui/views/aboutPage/aboutPage.jsx";
-import SingleProjectPage from "./ui/views/singleProjectPage/singleProjectPage.jsx";
+// import Projects from "./ui/views/projectsPage/projects.jsx";
+// import AboutPage from "./ui/views/aboutPage/aboutPage.jsx";
+// import SingleProjectPage from "./ui/views/singleProjectPage/singleProjectPage.jsx";
 import Lenis from "lenis";
 import {WebglCanvasRemover} from "./utils/utils.jsx";
 import {Helmet} from "react-helmet";
+
+
+
+const Home = lazy(() => import('./ui/views/homePage/Home.jsx'));
+const Projects = lazy(() => import('./ui/views/projectsPage/projects.jsx'));
+const AboutPage = lazy(() => import('./ui/views/aboutPage/aboutPage.jsx'));
+const SingleProjectPage = lazy(() => import('./ui/views/singleProjectPage/singleProjectPage.jsx'));
 
 function App() {
 
