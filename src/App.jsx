@@ -1,28 +1,20 @@
 import {lazy, Suspense, useEffect, useState} from 'react'
-// Importer GSAP avec un chargement dynamique
-const gsap = window.gsap || import('gsap').then(m => m.default);
-
-// Chargement seulement lorsque nécessaires
-const ScrollSmoother = import('gsap/ScrollSmoother').then(m => m.ScrollSmoother);
-const ScrollTrigger = import('gsap/ScrollTrigger').then(m => m.ScrollTrigger);
-const CustomEase = import('gsap/CustomEase').then(m => m.CustomEase);
-
+import gsap from "gsap";
+import {ScrollSmoother} from "gsap/ScrollSmoother";
+import {ScrollTrigger} from "gsap/ScrollTrigger";
+import CustomEase from "gsap/CustomEase";
 import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
-// Chargement différé de Lenis
-const Lenis = lazy(() => import('lenis'));
-
+import Lenis from "lenis";
 import {WebglCanvasRemover} from "./utils/utils.jsx";
 import {Helmet} from "react-helmet";
 
-// Prefetch Home en priorité, puis les autres pages avec un délai
 const Home = lazy(() => import('./ui/views/homePage/Home.jsx'));
 const Projects = lazy(() => import('./ui/views/projectsPage/projects.jsx'));
 const AboutPage = lazy(() => import('./ui/views/aboutPage/aboutPage.jsx'));
 const SingleProjectPage = lazy(() => import('./ui/views/singleProjectPage/singleProjectPage.jsx'));
 
-// Component d'affichage pendant le chargement
 const LoadingSpinner = () => (
-    <div className="loading-spinner" aria-label="Chargement en cours">
+    <div className="loading-spinner">
         <div className="spinner"></div>
     </div>
 );
@@ -63,18 +55,6 @@ const SEOHandler = () => {
         }
 
         setSeo(newSeo);
-
-        // Définir l'élément LCP pour les mesures de performance
-        if (path === "/") {
-            // Trouver l'élément principal de la page d'accueil après rendu
-            setTimeout(() => {
-                const homeElement = document.querySelector('.home-hero-image, .home-main-content');
-                if (homeElement) {
-                    homeElement.setAttribute('elementtiming', 'LCP-element');
-                    homeElement.setAttribute('fetchpriority', 'high');
-                }
-            }, 100);
-        }
     }, [location.pathname]);
 
     return (
@@ -97,77 +77,30 @@ const SEOHandler = () => {
     );
 };
 
-// Chargement des plugins GSAP de manière asynchrone
-const initGSAP = async () => {
-    if (typeof gsap.then === 'function') {
-        // GSAP est une promesse, il faut l'attendre
-        const gsapModule = await gsap;
-        window.gsap = gsapModule;
-
-        const ScrollTriggerModule = await ScrollTrigger;
-        const ScrollSmootherModule = await ScrollSmoother;
-        const CustomEaseModule = await CustomEase;
-
-        gsapModule.registerPlugin(ScrollTriggerModule, ScrollSmootherModule, CustomEaseModule);
-        CustomEaseModule.create("hop", ".235, .615, .185, .995");
-    } else {
-        // GSAP est déjà chargé (depuis CDN)
-        const ScrollTriggerModule = await ScrollTrigger;
-        const ScrollSmootherModule = await ScrollSmoother;
-        const CustomEaseModule = await CustomEase;
-
-        gsap.registerPlugin(ScrollTriggerModule, ScrollSmootherModule, CustomEaseModule);
-        CustomEaseModule.create("hop", ".235, .615, .185, .995");
-    }
-};
-
 function App() {
     // Récupérer l'état préchargé si disponible (pour le SEO avec les pages statiques)
     const preloadedState = window.__PRELOADED_STATE__;
-    const [gsapInitialized, setGsapInitialized] = useState(false);
+
+    WebglCanvasRemover()
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
+    CustomEase.create("hop", ".235, .615, .185, .995")
 
     useEffect(() => {
-        WebglCanvasRemover();
+        const lenis = new Lenis()
+        lenis.on('scroll', (e) => {
+            ScrollTrigger.update() // pour resynchroniser le scrolltrigger de gsap
+        })
 
-        // Initialiser GSAP de manière asynchrone
-        initGSAP().then(() => {
-            setGsapInitialized(true);
-        });
+        function raf(time) {
+            lenis.raf(time)
+            requestAnimationFrame(raf)
+        }
+
+        requestAnimationFrame(raf)
+        return () => {
+            // Nettoyage si nécessaire
+        };
     }, []);
-
-    // Configuration de Lenis une fois que GSAP est initialisé
-    useEffect(() => {
-        if (!gsapInitialized) return;
-
-        // Charger Lenis de manière optimisée
-        import('lenis').then((LenisModule) => {
-            const Lenis = LenisModule.default;
-            const lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smoothWheel: true,
-                wheelMultiplier: 0.8
-            });
-
-            lenis.on('scroll', (e) => {
-                if (window.gsap && window.gsap.ScrollTrigger) {
-                    window.gsap.ScrollTrigger.update();
-                }
-            });
-
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-
-            requestAnimationFrame(raf);
-
-            return () => {
-                // Cleanup lenis si nécessaire
-                lenis.destroy();
-            };
-        });
-    }, [gsapInitialized]);
 
     return (
         <>

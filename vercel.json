@@ -23,5 +23,5 @@
       ]
     }
   ],
-  "buildCommand": "npm install --legacy-peer-deps && npm run build:static"
+  "buildCommand": "npm run build:static"
 }

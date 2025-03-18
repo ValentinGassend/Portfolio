@@ -2,6 +2,7 @@ import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import viteImagemin from 'vite-plugin-imagemin';
 
+// Notez que nous ne générons pas le sitemap ici pour éviter les problèmes de timing
 export default defineConfig({
     plugins: [
         react(),
@@ -37,49 +38,35 @@ export default defineConfig({
         })
     ],
     build: {
-        sourcemap: false,
-        minify: 'terser', // Utiliser terser au lieu d'esbuild pour une meilleure minification
-        terserOptions: {
-            compress: {
-                drop_console: true, // Supprimer les console.log
-                drop_debugger: true,
-                pure_funcs: ['console.log', 'console.debug', 'console.info'] // Supprime ces fonctions
-            }
-        },
+        sourcemap: false, // Désactivez les sourcemaps en production
+        chunkSizeWarningLimit: 1000,
+        // Enable CSS code splitting
         cssCodeSplit: true,
-        // Suppression de cssMinify: 'lightningcss' qui causait l'erreur
+        // Enable brotli compression for static files
+        brotliSize: true,
         rollupOptions: {
             output: {
-                manualChunks: (id) => {
-                    // Séparation plus fine des chunks
-                    if (id.includes('node_modules')) {
-                        if (id.includes('react')) return 'vendor-react';
-                        if (id.includes('gsap')) return 'vendor-gsap';
-                        if (id.includes('three')) return 'vendor-three';
-                        if (id.includes('swiper') || id.includes('lenis')) return 'vendor-ui';
-                        return 'vendor';
-                    }
+                manualChunks: {
+                    vendor: ['react', 'react-dom', 'react-router-dom'],
+                    gsap: ['gsap', 'gsap/ScrollTrigger', 'gsap/ScrollSmoother'],
+                    three: ['three'],
+                    utilities: ['lenis', 'swiper']
                 },
                 // Customize the asset file names
                 assetFileNames: (assetInfo) => {
                     const extType = assetInfo.name.split('.').pop();
                     if (extType === 'css') {
                         return 'assets/css/[name].[hash][extname]';
-                    } else if (/\.(png|jpe?g|gif|svg|webp|ico)$/.test(assetInfo.name)) {
-                        return 'assets/img/[name].[hash][extname]';
-                    } else if (/\.(woff2?|eot|ttf|otf)$/.test(assetInfo.name)) {
-                        return 'assets/fonts/[name].[hash][extname]';
+                    } else if (extType === 'js') {
+                        return 'assets/js/[name].[hash][extname]';
                     } else {
                         return 'assets/[name].[hash][extname]';
                     }
                 },
+                // Use long-term caching for assets
                 chunkFileNames: 'assets/js/[name].[hash].js',
                 entryFileNames: 'assets/js/[name].[hash].js'
             }
         }
-    },
-    optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom', 'gsap'],
-        exclude: [] // Exclure gsap pour charger depuis CDN
     }
 });
