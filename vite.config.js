@@ -1,9 +1,8 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import viteImagemin from 'vite-plugin-imagemin';
-import generateSitemap from "./generateSitemap.js";
 
-generateSitemap();
+// Notez que nous ne générons pas le sitemap ici pour éviter les problèmes de timing
 export default defineConfig({
     plugins: [
         react(),

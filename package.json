@@ -7,6 +7,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "generate-sitemap": "node generateSitemap.js",
+    "static-export": "node static-export.js",
+    "build:static": "npm run build && npm run static-export",
     "postbuild": "npm run generate-sitemap && cp public/sitemap.xml dist/ && cp public/robots.txt dist/",
     "lint": "eslint Portfolio --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -34,6 +36,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "sass": "^1.72.0",
-    "vite": "^5.2.0"
+    "vite": "6.0.9"
   }
 }
