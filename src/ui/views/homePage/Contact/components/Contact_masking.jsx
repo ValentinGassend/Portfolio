@@ -1,7 +1,6 @@
 import React, {lazy, useEffect, useLayoutEffect, useState} from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
 // import ContactMaskingBackground from "./Contact_masking_background.jsx";
-import BackgroundLine from "../../../../components/BackgroundLine.jsx";
 import gsap from "gsap";
 import {IsMobile} from "../../../../../utils/utils.jsx";
 import TextPlugin from "gsap/TextPlugin";
