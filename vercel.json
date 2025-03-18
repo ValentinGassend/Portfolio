@@ -2,7 +2,6 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ],
-  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)\\.(?:jpg|jpeg|gif|png|svg|webp|avif)$",
