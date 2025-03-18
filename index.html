@@ -7,6 +7,8 @@
     <link rel="preload" as="image" href="/img/landing.png" fetchpriority="high">
     <link rel="preload" href="/assets/css/main.css" as="style">
     <link rel="preload" href="/src/main.jsx" as="script">
+    <link rel="preload" href="/img/landing.png" as="image" fetchpriority="high">
+
 
     <!-- Connexions anticipées -->
     <link rel="preconnect" href="https://assets.lummi.ai">
@@ -117,6 +119,55 @@
             }
         } catch (e) {
             console.warn('Erreur lors de la mesure du LCP:', e);
+        }
+    });
+</script>
+<script>
+    // Force la reconnaissance du LCP
+    document.addEventListener('DOMContentLoaded', () => {
+        const lcpImage = document.getElementById('preloaded-lcp');
+        if (lcpImage) {
+            // Force un reflow
+            void lcpImage.offsetHeight;
+
+            // Masquer l'image préchargée une fois que React est chargé
+            const observer = new MutationObserver(() => {
+                const root = document.getElementById('root');
+                if (root && root.childNodes.length > 0) {
+                    lcpImage.style.opacity = '0';
+                    lcpImage.style.transition = 'opacity 0.5s';
+                    setTimeout(() => {
+                        lcpImage.style.display = 'none';
+                    }, 500);
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(document.getElementById('root'), {
+                childList: true,
+                subtree: true
+            });
+
+            // Diagnostic LCP
+            if ('PerformanceObserver' in window) {
+                try {
+                    const po = new PerformanceObserver((list) => {
+                        for (const entry of list.getEntries()) {
+                            if (entry.entryType === 'largest-contentful-paint') {
+                                console.log('LCP détecté:', entry.element);
+                                console.log('LCP timing:', entry.startTime);
+
+                                if (entry.element === lcpImage) {
+                                    console.log('✅ Image préchargée correctement identifiée comme LCP!');
+                                }
+                            }
+                        }
+                    });
+                    po.observe({type: 'largest-contentful-paint', buffered: true});
+                } catch (e) {
+                    console.warn('PerformanceObserver non supporté', e);
+                }
+            }
         }
     });
 </script>
