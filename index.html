@@ -80,20 +80,20 @@
     </script>
 </head>
 <body>
-<div id="root">
-    <!-- Contenu de fallback pour améliorer le FCP et LCP -->
-    <div class="loading-skeleton" aria-label="Chargement du contenu">
-        <div class="skeleton-header"></div>
-        <div class="skeleton-hero">
-            <div class="skeleton-title"></div>
-            <div class="skeleton-subtitle"></div>
-        </div>
-        <div class="skeleton-content">
-            <div class="skeleton-block"></div>
-            <div class="skeleton-block"></div>
-        </div>
-    </div>
-</div>
+<div id="root"></div>
+
+<!-- Image pré-rendue pour garantir un LCP -->
+<img
+        src="/img/landing.png"
+        alt="Valentin Gassend - Développeur créatif"
+        width="1200"
+        height="800"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        id="pre-lcp-element"
+        class="pre-lcp-image"
+/>
 
 <!-- Script principal avec attributs optimisés -->
 <script type="module" src="/src/main.jsx"></script>
