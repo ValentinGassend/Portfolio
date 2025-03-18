@@ -2,10 +2,15 @@ import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import viteImagemin from 'vite-plugin-imagemin';
 
-// Notez que nous ne générons pas le sitemap ici pour éviter les problèmes de timing
+// Configuration optimisée pour les performances
 export default defineConfig({
     plugins: [
-        react(),
+        react({
+            // Activer la Fast Refresh uniquement en développement
+            fastRefresh: process.env.NODE_ENV !== 'production',
+            // Minimiser la taille du bundle en production
+            jsxRuntime: process.env.NODE_ENV === 'production' ? 'automatic' : 'classic',
+        }),
         viteImagemin({
             gifsicle: {
                 optimizationLevel: 7,
@@ -25,6 +30,7 @@ export default defineConfig({
                 plugins: [
                     {
                         name: 'removeViewBox',
+                        active: false, // Ne pas supprimer viewBox pour maintenir le responsive
                     },
                     {
                         name: 'removeEmptyAttrs',
@@ -38,35 +44,107 @@ export default defineConfig({
         })
     ],
     build: {
-        sourcemap: false, // Désactivez les sourcemaps en production
+        // Désactiver les sourcemaps en production pour réduire la taille
+        sourcemap: false,
+        // Augmenter la limite d'avertissement pour les gros chunks
         chunkSizeWarningLimit: 1000,
-        // Enable CSS code splitting
+        // Activer la division du CSS pour améliorer le chargement
         cssCodeSplit: true,
-        // Enable brotli compression for static files
+        // Activer la compression brotli pour les fichiers statiques
         brotliSize: true,
+        // Optimisations pour les assets
+        assetsInlineLimit: 4096, // Inliner les fichiers de moins de 4kb
+        // Configuration Rollup pour optimiser le découpage des bundles
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vendor: ['react', 'react-dom', 'react-router-dom'],
-                    gsap: ['gsap', 'gsap/ScrollTrigger', 'gsap/ScrollSmoother'],
-                    three: ['three'],
-                    utilities: ['lenis', 'swiper']
+                // Stratégie plus fine de découpage des chunks
+                manualChunks: (id) => {
+                    // Séparer les bibliothèques en chunks spécifiques
+                    if (id.includes('node_modules')) {
+                        if (id.includes('three')) return 'vendor-three';
+                        if (id.includes('gsap')) return 'vendor-gsap';
+                        if (id.includes('lenis')) return 'vendor-lenis';
+                        if (id.includes('swiper')) return 'vendor-swiper';
+                        if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+                        if (id.includes('react-router')) return 'vendor-router';
+                        return 'vendor'; // Autres bibliothèques
+                    }
+
+                    // Regrouper les composants par fonction
+                    if (id.includes('/ui/views/homePage/')) return 'home-page';
+                    if (id.includes('/ui/views/projectsPage/')) return 'projects-page';
+                    if (id.includes('/ui/views/aboutPage/')) return 'about-page';
+                    if (id.includes('/ui/views/singleProjectPage/')) return 'project-page';
+                    if (id.includes('/ui/components/')) return 'components';
                 },
-                // Customize the asset file names
+                // Personnaliser les noms de fichiers d'assets
                 assetFileNames: (assetInfo) => {
                     const extType = assetInfo.name.split('.').pop();
                     if (extType === 'css') {
                         return 'assets/css/[name].[hash][extname]';
-                    } else if (extType === 'js') {
-                        return 'assets/js/[name].[hash][extname]';
+                    } else if (/\.(woff2?|ttf|otf|eot)$/.test(assetInfo.name)) {
+                        return 'assets/fonts/[name].[hash][extname]';
+                    } else if (/\.(png|jpe?g|gif|svg|webp|avif)$/.test(assetInfo.name)) {
+                        return 'assets/images/[name].[hash][extname]';
                     } else {
                         return 'assets/[name].[hash][extname]';
                     }
                 },
-                // Use long-term caching for assets
+                // Utiliser un cache long-term pour les assets
                 chunkFileNames: 'assets/js/[name].[hash].js',
                 entryFileNames: 'assets/js/[name].[hash].js'
             }
-        }
-    }
+        },
+        // Optimisations générales pour la production
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true, // Supprimer les console.log en production
+                drop_debugger: true, // Supprimer les debugger en production
+            },
+        },
+        // Métadonnées pour PWA
+        manifest: {
+            name: 'Portfolio - Valentin Gassend',
+            short_name: 'VG Portfolio',
+            description: 'Portfolio de Valentin Gassend, développeur front-end créatif',
+            theme_color: '#ffffff',
+            icons: [
+                {
+                    src: '/favicon.svg',
+                    sizes: 'any',
+                    type: 'image/svg+xml',
+                },
+            ],
+        },
+    },
+    // Optimisations pour le serveur de développement
+    server: {
+        // Compression en développement pour simuler des conditions de production
+        cors: true,
+        // Optimiser l'utilisation de la mémoire
+        hmr: {
+            overlay: true,
+        },
+    },
+    // Optimiser le préchargement des modules
+    optimizeDeps: {
+        include: [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            'gsap',
+            'lenis',
+            'swiper',
+            'react-helmet'
+        ],
+    },
+    // Prévention des erreurs de CORS lors de l'utilisation de fonts et autres assets
+    css: {
+        devSourcemap: true,
+    },
+    // Configuration des ressources statiques
+    publicDir: 'public',
+    // Chemin d'accès de base
+    base: '/',
 });

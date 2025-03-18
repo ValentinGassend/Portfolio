@@ -1,25 +1,144 @@
-import {lazy, Suspense, useEffect, useState} from 'react'
-import gsap from "gsap";
-import {ScrollSmoother} from "gsap/ScrollSmoother";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import CustomEase from "gsap/CustomEase";
-import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
-import Lenis from "lenis";
-import {WebglCanvasRemover} from "./utils/utils.jsx";
-import {Helmet} from "react-helmet";
+// Modification de App.jsx pour optimiser le LCP et réduire le TBT
 
+import React, {lazy, Suspense, useEffect, useState} from 'react'
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
+import {Helmet} from "react-helmet";
+// N'importez pas GSAP et les plugins ici pour réduire le JS initial
+// import gsap from "gsap";
+// import {ScrollSmoother} from "gsap/ScrollSmoother";
+// import {ScrollTrigger} from "gsap/ScrollTrigger";
+// import CustomEase from "gsap/CustomEase";
+// import Lenis from "lenis";
+
+import {WebglCanvasRemover} from "./utils/utils.jsx";
+
+// Utiliser React.lazy pour les composants à charger en différé
 const Home = lazy(() => import('./ui/views/homePage/Home.jsx'));
 const Projects = lazy(() => import('./ui/views/projectsPage/projects.jsx'));
 const AboutPage = lazy(() => import('./ui/views/aboutPage/aboutPage.jsx'));
 const SingleProjectPage = lazy(() => import('./ui/views/singleProjectPage/singleProjectPage.jsx'));
 
-const LoadingSpinner = () => (
-    <div className="loading-spinner">
-        <div className="spinner"></div>
+// Composant de skeleton plus élaboré pour améliorer la perception de vitesse
+const LoadingFallback = () => (
+    <div className="loading-skeleton" aria-label="Chargement du contenu">
+        <div className="skeleton-header"></div>
+        <div className="skeleton-hero">
+            <div className="skeleton-title"></div>
+            <div className="skeleton-subtitle"></div>
+        </div>
+        <div className="skeleton-content">
+            <div className="skeleton-block"></div>
+            <div className="skeleton-block"></div>
+        </div>
     </div>
 );
 
-// Composant pour gérer les métadonnées dynamiques
+// Composant pour gérer les métriques de performance
+const PerformanceMetrics = () => {
+    useEffect(() => {
+        // Importer la bibliothèque web-vitals uniquement après le chargement initial
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(async () => {
+                const { onCLS, onFID, onLCP } = await import('web-vitals');
+
+                function sendToAnalytics({name, delta, value, id}) {
+                    // Envoyer les métriques à votre service d'analytics
+                    // console.log(name, delta, value, id);
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        event: 'web-vitals',
+                        eventCategory: 'Web Vitals',
+                        eventAction: name,
+                        eventValue: Math.round(value),
+                        eventLabel: id,
+                        nonInteraction: true,
+                    });
+                }
+
+                onCLS(sendToAnalytics);
+                onFID(sendToAnalytics);
+                onLCP(sendToAnalytics);
+            });
+        }
+    }, []);
+
+    return null; // Ce composant ne rend rien visuellement
+};
+
+// Composant pour charger GSAP et Lenis progressivement
+const ProgressiveEnhancement = () => {
+    useEffect(() => {
+        // Marquer la fin du chargement initial
+        if ('performance' in window && 'mark' in performance) {
+            performance.mark('app-loaded');
+        }
+
+        // Charger GSAP et les animations de manière progressive
+        const loadAnimationLibraries = async () => {
+            try {
+                // Chargement dynamique de GSAP
+                const gsapModule = await import('gsap');
+                const gsap = gsapModule.default;
+
+                // Chargement des plugins GSAP uniquement lorsqu'ils sont nécessaires
+                const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+                const { ScrollSmoother } = await import('gsap/ScrollSmoother');
+                const { CustomEase } = await import('gsap/CustomEase');
+
+                // Enregistrer les plugins
+                gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
+                CustomEase.create("hop", ".235, .615, .185, .995");
+
+                // Initialiser Lenis après que GSAP soit chargé
+                const { default: Lenis } = await import('lenis');
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    orientation: 'vertical',
+                    smoothTouch: false
+                });
+
+                lenis.on('scroll', (e) => {
+                    ScrollTrigger.update();
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+
+                requestAnimationFrame(raf);
+
+                // Marquer la fin du chargement des animations
+                if ('performance' in window && 'mark' in performance) {
+                    performance.mark('animations-loaded');
+                    performance.measure('animations-load-time', 'app-loaded', 'animations-loaded');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des bibliothèques d\'animation:', error);
+            }
+        };
+
+        // Utiliser requestIdleCallback pour charger les animations
+        // seulement quand le navigateur est inactif
+        if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+                loadAnimationLibraries();
+            }, { timeout: 2000 }); // Timeout pour s'assurer que ça se charge même sur les appareils lents
+        } else {
+            // Fallback pour les navigateurs qui ne supportent pas requestIdleCallback
+            setTimeout(loadAnimationLibraries, 1000);
+        }
+
+        return () => {
+            // Nettoyage si nécessaire
+        };
+    }, []);
+
+    return null; // Ce composant ne rend rien visuellement
+};
+
+// SEO Handler component (existant, avec légères optimisations)
 const SEOHandler = () => {
     const location = useLocation();
     const [seo, setSeo] = useState({
@@ -33,6 +152,7 @@ const SEOHandler = () => {
         const path = location.pathname;
         let newSeo = {...seo};
 
+        // Logique existante...
         if (path === "/about") {
             newSeo = {
                 title: "À Propos - Valentin Gassend",
@@ -81,26 +201,8 @@ function App() {
     // Récupérer l'état préchargé si disponible (pour le SEO avec les pages statiques)
     const preloadedState = window.__PRELOADED_STATE__;
 
-    WebglCanvasRemover()
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother, CustomEase);
-    CustomEase.create("hop", ".235, .615, .185, .995")
-
-    useEffect(() => {
-        const lenis = new Lenis()
-        lenis.on('scroll', (e) => {
-            ScrollTrigger.update() // pour resynchroniser le scrolltrigger de gsap
-        })
-
-        function raf(time) {
-            lenis.raf(time)
-            requestAnimationFrame(raf)
-        }
-
-        requestAnimationFrame(raf)
-        return () => {
-            // Nettoyage si nécessaire
-        };
-    }, []);
+    // Retirer le canvas WebGL pour économiser des ressources
+    WebglCanvasRemover();
 
     return (
         <>
@@ -113,11 +215,17 @@ function App() {
                 </Helmet>
             )}
 
+            {/* Composant pour charger les animations progressivement */}
+            <ProgressiveEnhancement />
+
+            {/* Composant pour mesurer les métriques de performance */}
+            <PerformanceMetrics />
+
             <BrowserRouter>
                 {/* Handler SEO dynamique qui s'active après le premier rendu */}
                 {!preloadedState && <SEOHandler />}
 
-                <Suspense fallback={<LoadingSpinner/>}>
+                <Suspense fallback={<LoadingFallback/>}>
                     <Routes>
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/projects"} element={<Projects/>}/>

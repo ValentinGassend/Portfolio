@@ -2,7 +2,13 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"/>
-    <!-- Préchargement des ressources critiques -->
+
+    <!-- Préchargement des ressources critiques prioritaires -->
+    <link rel="preload" as="image" href="/img/landing.png" fetchpriority="high">
+    <link rel="preload" href="/assets/css/main.css" as="style">
+    <link rel="preload" href="/src/main.jsx" as="script">
+
+    <!-- Connexions anticipées -->
     <link rel="preconnect" href="https://assets.lummi.ai">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -18,12 +24,21 @@
     <meta name="robots" content="index, follow"/>
     <meta name="theme-color" content="#ffffff">
 
-    <!-- Préchargement des ressources importantes -->
-    <link rel="preload" href="/assets/js/vendor.js" as="script">
-    <link rel="preload" href="/assets/css/main.css" as="style">
+    <!-- Styles critiques inlinés pour le rendu initial -->
+    <style>
+        /* Styles minimaux pour le premier rendu */
+        body, html { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .loading-skeleton { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .skeleton-header { height: 60px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .skeleton-hero { margin: 40px 0; }
+        .skeleton-title { height: 40px; width: 80%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; margin-bottom: 20px; }
+        .skeleton-subtitle { height: 20px; width: 60%; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        .skeleton-block { height: 200px; margin: 20px 0; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    </style>
 
-    <!-- Préchargement de l'image principale -->
-    <link rel="preload" href="/img/landing.png" as="image" fetchpriority="high">
+    <!-- Chargement des styles principaux -->
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <!-- Balises Twitter -->
     <meta name="twitter:card" content="summary_large_image">
@@ -58,43 +73,52 @@
         }
     </script>
 
-    <!-- Script pour changer le titre - Déplacé en fin de page -->
+    <!-- Metrics de performance -->
+    <script>
+        // Marqueur de performance - début du chargement
+        performance.mark('page-start');
+    </script>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+    <!-- Contenu de fallback pour améliorer le FCP et LCP -->
+    <div class="loading-skeleton" aria-label="Chargement du contenu">
+        <div class="skeleton-header"></div>
+        <div class="skeleton-hero">
+            <div class="skeleton-title"></div>
+            <div class="skeleton-subtitle"></div>
+        </div>
+        <div class="skeleton-content">
+            <div class="skeleton-block"></div>
+            <div class="skeleton-block"></div>
+        </div>
+    </div>
+</div>
 
-<!-- Script principal avec attribut defer pour ne pas bloquer le rendu -->
-<script type="module" src="/src/main.jsx" defer></script>
+<!-- Script principal avec attributs optimisés -->
+<script type="module" src="/src/main.jsx"></script>
 
-<!-- Script pour changer le titre déplacé ici et optimisé -->
-<!--<script>-->
-<!--    // Fonction pour changer le titre après un certain temps d'inactivité-->
-<!--    document.addEventListener('DOMContentLoaded', function() {-->
-<!--        var dureeInactivite = 2 * 60 * 1000; // 2 minutes-->
-<!--        var dernierActif = Date.now();-->
-<!--        var titreOriginal = document.title;-->
-<!--        var titreInactif = "Votre Futur dev - Valentin Gassend";-->
-<!--        var inactif = false;-->
+<!-- Script de mesure de performance -->
+<script>
+    // Mesurer le temps de chargement initial
+    window.addEventListener('load', function() {
+        performance.mark('page-loaded');
+        performance.measure('page-load-time', 'page-start', 'page-loaded');
 
-<!--        // Utilisation d'un seul gestionnaire d'événements pour toutes les interactions-->
-<!--        ['focus', 'mousemove', 'wheel', 'keydown', 'touchstart'].forEach(function(evt) {-->
-<!--            window.addEventListener(evt, function() {-->
-<!--                dernierActif = Date.now();-->
-<!--                if (inactif) {-->
-<!--                    document.title = titreOriginal;-->
-<!--                    inactif = false;-->
-<!--                }-->
-<!--            }, { passive: true });  // L'option passive améliore les performances-->
-<!--        });-->
-
-<!--        // Vérification périodique mais moins fréquente (5 secondes au lieu de 1)-->
-<!--        setInterval(function() {-->
-<!--            if (!inactif && Date.now() - dernierActif > dureeInactivite) {-->
-<!--                document.title = titreInactif;-->
-<!--                inactif = true;-->
-<!--            }-->
-<!--        }, 5000);-->
-<!--    });-->
-<!--</script>-->
+        // Collecter LCP
+        try {
+            const lcpEntry = performance.getEntriesByType('largest-contentful-paint')[0];
+            if (lcpEntry) {
+                console.log('LCP:', lcpEntry.startTime);
+                const lcpElement = lcpEntry.element;
+                if (lcpElement) {
+                    lcpElement.setAttribute('data-lcp', 'true');
+                }
+            }
+        } catch (e) {
+            console.warn('Erreur lors de la mesure du LCP:', e);
+        }
+    });
+</script>
 </body>
 </html>
