@@ -1,6 +1,8 @@
 import {defineConfig} from 'vite';
 import react from '@vitejs/plugin-react';
 import viteImagemin from 'vite-plugin-imagemin';
+import { createHtmlPlugin } from 'vite-plugin-html';
+
 
 // Configuration optimisée pour les performances
 export default defineConfig({
@@ -47,7 +49,7 @@ export default defineConfig({
             inject: {
                 data: {
                     injectHeadPreload: '<link rel="preload" href="/img/landing.webp" as="image" fetchpriority="high">',
-                    injectBodyLcp: '<img src="/img/landing.webp" alt="Valentin Gassend" width="1200" height="800" id="preloaded-lcp" style="position:absolute; z-index:1; width:100%; height:100vh; object-fit:cover;" fetchpriority="high" decoding="async">'
+                    injectBodyLcp: '<img src="/img/landing.webp" alt="Valentin Gassend" width="1080" height="1080" id="preloaded-lcp" style="position:absolute; z-index:1; width:100%; height:100vh; object-fit:cover;" fetchpriority="high" decoding="async">'
                 }
             }
         }),
