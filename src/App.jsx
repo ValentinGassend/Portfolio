@@ -11,6 +11,7 @@ import {Helmet} from "react-helmet";
 // import Lenis from "lenis";
 
 import {WebglCanvasRemover} from "./utils/utils.jsx";
+import Lab from "./ui/views/labPage/lab.jsx";
 
 // Utiliser React.lazy pour les composants à charger en différé
 const Home = lazy(() => import('./ui/views/homePage/Home.jsx'));
@@ -230,6 +231,7 @@ function App() {
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/projects"} element={<Projects/>}/>
                         <Route path={"/about"} element={<AboutPage/>}/>
+                        <Route path={"/lab"} element={<Lab/>}/>
                         <Route path={"/project/:id"} element={<SingleProjectPage/>}/>
                     </Routes>
                 </Suspense>
