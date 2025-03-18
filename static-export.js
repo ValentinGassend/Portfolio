@@ -21,6 +21,34 @@ if (!fs.existsSync(distDir)) {
 // Lire le fichier index.html généré par Vite
 const indexHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
 
+// Fonction pour injecter un en-tête de diagnostic pour le LCP
+const injectLCPDiagnosticHeader = (html) => {
+  return html.replace('</head>', `
+    <script>
+      // LCP diagnostic script
+      (() => {
+        try {
+          const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lcpEntry = entries[entries.length - 1];
+            console.log('LCP Element:', lcpEntry.element);
+            console.log('LCP Time:', lcpEntry.startTime);
+            
+            // Ajouter un attribut data-lcp à l'élément LCP pour le rendre identifiable
+            if (lcpEntry.element) {
+              lcpEntry.element.setAttribute('data-lcp', 'true');
+            }
+          });
+          
+          observer.observe({type: 'largest-contentful-paint', buffered: true});
+        } catch(e) {
+          console.warn('LCP Diagnostic failed:', e);
+        }
+      })();
+    </script>
+  </head>`);
+};
+
 // Fonction pour personnaliser le HTML en fonction de la route
 function customizeHtml(route, type = 'page', id = null) {
   let html = indexHtml;
@@ -92,8 +120,66 @@ function customizeHtml(route, type = 'page', id = null) {
   const stateScript = `<script>window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState)};</script>`;
   html = html.replace('</head>', `${stateScript}\n  </head>`);
 
+  // Injecter un contenu initial pour améliorer le LCP
+  let placeholderContent = '';
+  if (type === 'page') {
+    if (route === 'about') {
+      placeholderContent = `
+        <div style="max-width:1200px;margin:0 auto;padding:80px 20px">
+          <h1 style="font-size:2.5rem;margin-bottom:1rem;opacity:0.01">À Propos - Valentin Gassend</h1>
+          <div style="height:400px;background:#f5f5f5;width:100%;margin-bottom:2rem;opacity:0.01"></div>
+          <p style="margin-bottom:1rem;max-width:800px;opacity:0.01">Développeur front-end créatif disponible en freelance.</p>
+        </div>
+      `;
+    } else if (route === 'projects') {
+      placeholderContent = `
+        <div style="max-width:1200px;margin:0 auto;padding:80px 20px">
+          <h1 style="font-size:2.5rem;margin-bottom:2rem;opacity:0.01">Projets - Valentin Gassend</h1>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;opacity:0.01">
+            <div style="height:250px;background:#f5f5f5;width:100%"></div>
+            <div style="height:250px;background:#f5f5f5;width:100%"></div>
+            <div style="height:250px;background:#f5f5f5;width:100%"></div>
+          </div>
+        </div>
+      `;
+    }
+  } else if (type === 'project') {
+    placeholderContent = `
+      <div style="max-width:1200px;margin:0 auto;padding:80px 20px">
+        <h1 style="font-size:2.5rem;margin-bottom:1rem;opacity:0.01">Projet ${id} - Valentin Gassend</h1>
+        <div style="height:500px;background:#f5f5f5;width:100%;margin-bottom:2rem;opacity:0.01"></div>
+        <p style="margin-bottom:1rem;max-width:800px;opacity:0.01">Détails du projet ${id}.</p>
+      </div>
+    `;
+  }
+
+  html = html.replace('<div id="root">', `<div id="root">
+    <!-- Contenu initial pour améliorer le LCP -->
+    ${placeholderContent}
+  `);
+
+  // Ajouter le diagnostic LCP
+  html = injectLCPDiagnosticHeader(html);
+
   return html;
 }
+
+// Optimiser le chargement des scripts
+const optimizeScripts = (html) => {
+  // Ajouter fetchpriority="high" aux scripts critiques
+  html = html.replace(
+      /<script type="module" src="(\/assets\/js\/[^"]+)" defer>/g,
+      '<script type="module" src="$1" defer fetchpriority="high">'
+  );
+
+  // Ajouter async aux scripts non critiques
+  html = html.replace(
+      /<script type="module" src="(\/assets\/js\/vendor[^"]+)">/g,
+      '<script type="module" src="$1" async>'
+  );
+
+  return html;
+};
 
 // Créer des dossiers pour chaque route et y mettre un HTML personnalisé
 for (const route of routes) {
@@ -103,7 +189,9 @@ for (const route of routes) {
     fs.mkdirSync(routeDir, { recursive: true });
   }
 
-  const customHtml = customizeHtml(route, 'page');
+  let customHtml = customizeHtml(route, 'page');
+  customHtml = optimizeScripts(customHtml);
+
   fs.writeFileSync(path.join(routeDir, 'index.html'), customHtml);
   console.log(`✅ Créé page statique pour /${route}`);
 }
@@ -121,10 +209,33 @@ for (const id of projectIds) {
     fs.mkdirSync(idDir, { recursive: true });
   }
 
-  const customHtml = customizeHtml(null, 'project', id);
+  let customHtml = customizeHtml(null, 'project', id);
+  customHtml = optimizeScripts(customHtml);
+
   fs.writeFileSync(path.join(idDir, 'index.html'), customHtml);
   console.log(`✅ Créé page statique pour /project/${id}`);
 }
+
+// Optimiser la page d'accueil également
+let homeHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
+homeHtml = injectLCPDiagnosticHeader(homeHtml);
+homeHtml = optimizeScripts(homeHtml);
+
+// Ajouter un contenu initial pour la page d'accueil
+const homeContent = `
+  <div style="max-width:1200px;margin:0 auto;padding:80px 20px">
+    <h1 style="font-size:3rem;margin-bottom:2rem;opacity:0.01">DEVELOPPEUR CREATIF - VALENTIN GASSEND</h1>
+    <div style="height:600px;background:#f5f5f5;width:100%;margin-bottom:2rem;opacity:0.01"></div>
+  </div>
+`;
+
+homeHtml = homeHtml.replace('<div id="root">', `<div id="root">
+  <!-- Contenu initial pour améliorer le LCP -->
+  ${homeContent}
+`);
+
+fs.writeFileSync(path.join(distDir, 'index.html'), homeHtml);
+console.log('✅ Page d\'accueil optimisée');
 
 // Améliorer robots.txt
 const robotsTxt = `# robots.txt pour valentingassend.com
@@ -148,21 +259,56 @@ try {
     fs.mkdirSync(publicDir, { recursive: true });
   }
 
-  // Vérifier si le sitemap existe dans public, sinon le générer
-  const sitemapPublicPath = path.join(publicDir, 'sitemap.xml');
-  if (!fs.existsSync(sitemapPublicPath)) {
-    console.log('ℹ️ Sitemap non trouvé dans /public, génération en cours...');
-    // Importer et exécuter le générateur de sitemap
+  // Générer le sitemap si nécessaire
+  try {
+    // Importer et exécuter le générateur de sitemap si possible
     const generateSitemap = (await import('./generateSitemap.js')).default;
     generateSitemap();
+    console.log('✅ sitemap.xml généré');
+  } catch (error) {
+    console.warn('⚠️ Impossible de générer automatiquement le sitemap:', error);
   }
 
-  // Copier le sitemap vers dist
-  fs.copyFileSync(path.join(publicDir, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
-  console.log('✅ sitemap.xml copié dans dist/');
+  // Copier le sitemap vers dist s'il existe
+  if (fs.existsSync(path.join(publicDir, 'sitemap.xml'))) {
+    fs.copyFileSync(path.join(publicDir, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
+    console.log('✅ sitemap.xml copié dans dist/');
+  } else {
+    console.warn('⚠️ sitemap.xml non trouvé dans public/');
+  }
 } catch (error) {
   console.warn('⚠️ Erreur lors de la gestion du sitemap:', error);
-  console.warn('⚠️ Assurez-vous que generateSitemap.js est correctement configuré');
 }
+
+// Créer un fichier headers pour Vercel afin d'optimiser la mise en cache
+const headersContent = `# Headers for better performance
+/*
+  Cache-Control: public, max-age=604800, s-maxage=604800
+  X-Content-Type-Options: nosniff
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+`;
+
+fs.writeFileSync(path.join(distDir, '_headers'), headersContent);
+console.log('✅ Fichier _headers généré pour optimiser la mise en cache');
 
 console.log('🎉 Export statique terminé ! Votre site est prêt à être déployé.');
