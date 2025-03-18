@@ -287,12 +287,22 @@ const Lab = () => {
             let attempts = 0;
             const maxAttempts = 1000;
 
+            // Min et max tailles pour normaliser le facteur de parallaxe
+            const minSize = 100; // Taille minimale de projet
+            const maxSize = 250; // Taille maximale de projet
+            const sizeRange = maxSize - minSize;
+
             // Create random positions for images within the pattern
             for (let i = 0; i < imageCount && attempts < maxAttempts; i++) {
                 // Random size between 100px and 250px
                 const width = 100 + Math.random() * 150;
                 const height = width * (0.7 + Math.random() * 0.6); // Random aspect ratio
 
+                // Calculer le facteur de parallaxe basé sur la taille
+                // Plus le projet est petit, plus il est proche du facteur de la grille (0.7)
+                // Plus le projet est grand, plus il est proche de 1.0 (pas de parallaxe)
+                const sizeRatio = (width - minSize) / sizeRange;
+                const parallaxFactor = 0.7 + (sizeRatio * 0.3); // Entre 0.7 et 1.0
                 let found = false;
                 let newRect = null;
                 let attemptsForThisRect = 0;
@@ -362,19 +372,20 @@ const Lab = () => {
                         createSplitChannelCanvas(imageCanvas);
                     // Add to images array
                     images.push({
-                        canvas: imageCanvas,     // Original canvas
-                        redCanvas: redCanvas,    // Red channel canvas
-                        blueCanvas: blueCanvas,  // Blue channel canvas
-                        redSplitCanvas,          // Red channel only (purplish)
-                        greenSplitCanvas,        // Green channel only (accent3 green)
-                        blueSplitCanvas,         // Blue channel only
-                        patternX: newRect.x,     // Original position within the pattern
+                        canvas: imageCanvas,
+                        redCanvas: redCanvas,
+                        blueCanvas: blueCanvas,
+                        redSplitCanvas,
+                        greenSplitCanvas,
+                        blueSplitCanvas,
+                        patternX: newRect.x,
                         patternY: newRect.y,
                         width: newRect.width,
                         height: newRect.height,
-                        opacity: 0,              // Start with 0 opacity for fade-in effect
-                        visible: false,          // Track if image is visible in viewport
-                        rotation: 0              // For 3D effect
+                        opacity: 0,
+                        visible: false,
+                        rotation: 0,
+                        parallaxFactor: parallaxFactor // Nouveau paramètre
                     });
 
                     // Signal that this image is "loaded"
@@ -517,27 +528,33 @@ const Lab = () => {
 
         // Function to draw just the grid
         // Function to draw just the grid - CORRIGÉ POUR DÉPLACEMENT DANS LE MÊME SENS
+        // Function to draw just the grid with parallax effect
         const drawGrid = (ctx, offsetX, offsetY) => {
             ctx.beginPath();
-            // Utiliser une couleur de grille plus subtile pour ne pas interférer avec l'effet de traînée
-            ctx.strokeStyle = `rgba(${parseInt(COLOR_PALETTE.neutral2.slice(1, 3), 16)}, ${parseInt(COLOR_PALETTE.neutral2.slice(3, 5), 16)}, ${parseInt(COLOR_PALETTE.neutral2.slice(5, 7), 16)}, 0.5)`; // Plus transparent
-            ctx.lineWidth = 1; // Ligne plus fine
+            // Utiliser une couleur de grille plus subtile
+            ctx.strokeStyle = `rgba(${parseInt(COLOR_PALETTE.neutral2.slice(1, 3), 16)}, ${parseInt(COLOR_PALETTE.neutral2.slice(3, 5), 16)}, ${parseInt(COLOR_PALETTE.neutral2.slice(5, 7), 16)}, 0.5)`;
+            ctx.lineWidth = 4; // Ligne plus fine
 
-            // Pour que la grille se déplace dans le même sens que les images,
-            // on utilise les valeurs d'offset positives
+            // Facteur de parallaxe - la grille se déplace plus lentement que les images
+            // Une valeur de 0.7 signifie que la grille se déplace à 70% de la vitesse des images
+            const parallaxFactor = 0.7;
 
-            // Calculer le premier point de grille visible
+            // Appliquer le facteur de parallaxe aux offsets pour la grille
+            const gridOffsetX = offsetX * parallaxFactor;
+            const gridOffsetY = offsetY * parallaxFactor;
+
+            // Calculer le premier point de grille visible avec le décalage de parallaxe
             // Calculer le modulo correctement pour des valeurs négatives
-            const startGridX = ((offsetX % gridSizeX) + gridSizeX) % gridSizeX;
-            const startGridY = ((offsetY % gridSizeY) + gridSizeY) % gridSizeY;
+            const startGridX = ((gridOffsetX % gridSizeX) + gridSizeX) % gridSizeX;
+            const startGridY = ((gridOffsetY % gridSizeY) + gridSizeY) % gridSizeY;
 
-            // Dessiner les lignes verticales en déplaçant la grille dans le même sens que les images
+            // Dessiner les lignes verticales avec le décalage de parallaxe
             for (let x = startGridX; x <= canvas.width + gridSizeX; x += gridSizeX) {
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, canvas.height);
             }
 
-            // Dessiner les lignes horizontales en déplaçant la grille dans le même sens que les images
+            // Dessiner les lignes horizontales avec le décalage de parallaxe
             for (let y = startGridY; y <= canvas.height + gridSizeY; y += gridSizeY) {
                 ctx.moveTo(0, y);
                 ctx.lineTo(canvas.width, y);
@@ -605,16 +622,20 @@ const Lab = () => {
                 return;
             }
 
+            // Ajuster la force de l'effet en fonction du facteur de parallaxe
+            // Plus un élément est proche de la caméra (parallaxFactor proche de 1),
+            // plus son effet de traînée est prononcé
+            const effectMultiplier = (image.parallaxFactor - 0.7) / 0.3; // Normaliser entre 0 et 1
+
             // Calculer la direction du décalage (opposée à la direction du mouvement)
             const dirX = velocity.x !== 0 ? -Math.sign(velocity.x) : 0;
             const dirY = velocity.y !== 0 ? -Math.sign(velocity.y) : 0;
 
-            // Force de l'effet basée sur la vitesse
-            const effectStrength = Math.min(velocityMagnitude / 10, 1.5);
+            // Force de l'effet basée sur la vitesse et la profondeur
+            const effectStrength = Math.min(velocityMagnitude / 10, 1.5) * effectMultiplier;
 
-            // CLEF DU PROBLÈME: Calculer l'amplitude de la traînée bien plus grande que l'image
-            // pour qu'elle s'étende bien au-delà des limites de l'image
-            const trailOffset = Math.max(10, Math.min(50, velocityMagnitude * 2.0));
+            // Ajuster l'amplitude de la traînée en fonction de la profondeur
+            const trailOffset = Math.max(10, Math.min(50, velocityMagnitude * 2.0 * effectMultiplier));
 
             // 1. Calculer les dimensions et positions des traînées (plus grandes que l'image)
             // Traînée violette
@@ -772,8 +793,10 @@ const Lab = () => {
             offscreenCtx.fillStyle = COLOR_PALETTE.neutral1;
             offscreenCtx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Dessiner la grille
-            drawGrid(offscreenCtx, offsetX, offsetY);
+            // 2. Dessiner la grille avec le facteur de parallaxe fixe pour la grille
+            const gridParallaxFactor = 0.7;
+            drawGrid(offscreenCtx, offsetX * gridParallaxFactor, offsetY * gridParallaxFactor);
+
 
             // Calculer la magnitude de la vitesse
             const velocityMagnitude = Math.sqrt(dragVelocityX * dragVelocityX + dragVelocityY * dragVelocityY);
@@ -797,17 +820,16 @@ const Lab = () => {
 
             for (let tileY = startTileY; tileY <= endTileY; tileY++) {
                 for (let tileX = startTileX; tileX <= endTileX; tileX++) {
-                    const tilePixelX = tileX * patternWidth + offsetX;
-                    const tilePixelY = tileY * patternHeight + offsetY;
-
-                    if (!isInViewport(tilePixelX, tilePixelY, patternWidth, patternHeight)) {
-                        continue;
-                    }
-
-                    debugInfo.visibleTiles++;
-
-                    // Dessiner toutes les images pour cette tuile
+                    // Au lieu d'utiliser offsetX et offsetY directement, les ajuster par image
                     images.forEach((image, index) => {
+                        // Appliquer le facteur de parallaxe propre à chaque image
+                        const imgOffsetX = offsetX * image.parallaxFactor;
+                        const imgOffsetY = offsetY * image.parallaxFactor;
+
+                        // Calculer la position avec ce nouveau décalage
+                        const tilePixelX = tileX * patternWidth + imgOffsetX;
+                        const tilePixelY = tileY * patternHeight + imgOffsetY;
+
                         const imgX = image.patternX + tilePixelX;
                         const imgY = image.patternY + tilePixelY;
 
@@ -815,9 +837,20 @@ const Lab = () => {
                             debugInfo.visibleInstances++;
                             visibleImages.add(index);
 
-                            // Dessiner simplement l'image normale
-                            offscreenCtx.globalAlpha = image.opacity;
-                            offscreenCtx.drawImage(image.canvas, imgX, imgY, image.width, image.height);
+                            // Dessiner l'image avec traînée si nécessaire
+                            drawImageWithColorTrail(
+                                offscreenCtx,
+                                image,
+                                imgX,
+                                imgY,
+                                image.width,
+                                image.height,
+                                {
+                                    x: dragVelocityX * image.parallaxFactor,
+                                    y: dragVelocityY * image.parallaxFactor
+                                },
+                                image.opacity
+                            );
                         }
                     });
                 }
