@@ -10,13 +10,14 @@ export const useCanvasAnimation = ({
                                        offscreenCanvasRef,
                                        animationFrameRef,
                                        projectImageRef,
-                                       projectImagesRef, // Add projectImagesRef to the parameters
+                                       projectImagesRef,
                                        projectImageLoaded,
                                        backgroundLoaded,
                                        setImagesLoaded,
                                        setTotalImages,
                                        prevOffsetXRef,
-                                       prevOffsetYRef
+                                       prevOffsetYRef,
+                                       gridLayoutActive
                                    }) => {
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
@@ -25,7 +26,6 @@ export const useCanvasAnimation = ({
 
     // Store current images in a ref to avoid dependency issues in the animation loop
     const imagesRef = useRef([]);
-
 
     // Interactive state refs
     const dragStartXRef = useRef(0);
@@ -50,6 +50,172 @@ export const useCanvasAnimation = ({
     const debugInfoRef = useRef({
         visibleTiles: 0, visibleInstances: 0, offsetX: 0, offsetY: 0, velocityMagnitude: 0, effectStrength: 0
     });
+    // Référence aux positions originales (important pour pouvoir revenir à l'état initial)
+    const originalPositionsRef = useRef([]);
+    // Référence aux positions cibles pour l'animation
+    const targetPositionsRef = useRef([]);
+    // État pour suivre si une animation de transition est en cours
+    const [isTransitioning, setIsTransitioning] = useState(false);
+    // Référence pour suivre le temps d'animation
+    const animationProgressRef = useRef(0);
+    // Référence pour stocker si on est actuellement en mode grille
+    const isGridModeRef = useRef(false);
+    // Add this reference to preserve the very first initial positions
+    const initialPositionsRef = useRef([]);
+
+    // Add this new function to store initial positions before any transformations
+    const storeInitialPositions = useCallback((imgs) => {
+        if (!originalPositionsRef.current || originalPositionsRef.current.length === 0) {
+            originalPositionsRef.current = imgs.map(img => ({
+                x: img.patternX,
+                y: img.patternY,
+                width: img.width,
+                height: img.height
+            }));
+
+            // Store a deep copy of the initial positions to ensure they're preserved
+            initialPositionsRef.current = JSON.parse(JSON.stringify(originalPositionsRef.current));
+        }
+    }, []);
+
+    // Fonction pour calculer le positionnement en grille
+    const calculateGridLayout = useCallback(() => {
+        if (images.length === 0) return [];
+
+        const canvas = canvasRef.current;
+        if (!canvas) return [];
+
+        // Stocker les positions d'origine si c'est la première fois
+        if (originalPositionsRef.current.length === 0) {
+            originalPositionsRef.current = images.map(img => ({
+                x: img.patternX,
+                y: img.patternY,
+                width: img.width,
+                height: img.height
+            }));
+        }
+
+        // Récupérer les dimensions du canvas
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        // Définir la taille des cellules de la grille
+        const gridCellSize = 50;
+
+        // Calculer combien de colonnes et de lignes nous pouvons avoir
+        const columns = Math.max(4, Math.floor(canvasWidth / gridCellSize) - 2);
+        const rows = Math.ceil(images.length / columns);
+
+        // Calculer les dimensions maximales pour chaque projet
+        const maxItemWidth = Math.floor(canvasWidth / columns) - 20; // 20px de marge
+        const maxItemHeight = Math.floor(canvasHeight / rows) - 20;
+
+        // Prévoir des marges pour centrer la grille
+        const horizontalMargin = (canvasWidth - (columns * maxItemWidth)) / 2;
+        const verticalMargin = (canvasHeight - (rows * maxItemHeight)) / 2;
+
+        // Calculer les nouvelles positions pour chaque image
+        return images.map((img, index) => {
+            // Calculer la position dans la grille
+            const col = index % columns;
+            const row = Math.floor(index / columns);
+
+            // Calculer la position en pixels
+            const x = horizontalMargin + col * maxItemWidth;
+            const y = verticalMargin + row * maxItemHeight;
+
+            // Calculer les dimensions en préservant le ratio d'aspect
+            const aspectRatio = img.width / img.height;
+            let newWidth = maxItemWidth - 10; // Marge interne
+            let newHeight = newWidth / aspectRatio;
+
+            if (newHeight > maxItemHeight - 10) {
+                newHeight = maxItemHeight - 10;
+                newWidth = newHeight * aspectRatio;
+            }
+
+            return {
+                x,
+                y,
+                width: newWidth,
+                height: newHeight
+            };
+        });
+    }, [images, canvasRef]);
+
+    // Modified version of updateImagesLayout
+    const updateImagesLayout = useCallback((useGridLayout) => {
+        // If we're already in the requested mode, do nothing
+        if (isGridModeRef.current === useGridLayout) {
+            return;
+        }
+
+        // Make sure we have stored the initial positions
+        storeInitialPositions(imagesRef.current);
+
+        // Update the mode reference
+        isGridModeRef.current = useGridLayout;
+
+        // Reset animation progress
+        animationProgressRef.current = 0;
+
+        // Store current positions as starting point for animation
+        originalPositionsRef.current = imagesRef.current.map(img => ({
+            x: img.patternX,
+            y: img.patternY,
+            width: img.width,
+            height: img.height
+        }));
+
+        if (useGridLayout) {
+            // Calculate grid layout
+            targetPositionsRef.current = calculateGridLayout();
+        } else {
+            // Going back to free layout - use the initial positions we saved
+            targetPositionsRef.current = initialPositionsRef.current.map(pos => ({...pos}));
+        }
+
+        // Start transition animation
+        setIsTransitioning(true);
+    }, [calculateGridLayout, storeInitialPositions]);
+
+    // This useEffect ensures we store initial positions when images first load
+    useEffect(() => {
+        if (images.length > 0 && !originalPositionsRef.current.length) {
+            storeInitialPositions(images);
+        }
+    }, [images, storeInitialPositions]);
+
+    // Effet d'animation de transition entre les layouts
+    useEffect(() => {
+        if (!isTransitioning) return;
+
+        let startTime = null;
+        const TRANSITION_DURATION = 800; // ms
+
+        const animateTransition = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsedTime = timestamp - startTime;
+            const progress = Math.min(elapsedTime / TRANSITION_DURATION, 1);
+
+            animationProgressRef.current = progress;
+
+            // Si la transition est terminée
+            if (progress >= 1) {
+                setIsTransitioning(false);
+                return;
+            }
+
+            // Continuer l'animation
+            requestAnimationFrame(animateTransition);
+        };
+
+        const animationId = requestAnimationFrame(animateTransition);
+
+        return () => {
+            cancelAnimationFrame(animationId);
+        };
+    }, [isTransitioning]);
 
     // Update the imagesRef when images state changes
     useEffect(() => {
@@ -72,8 +238,6 @@ export const useCanvasAnimation = ({
         const canvasX = x - canvasRect.left;
         const canvasY = y - canvasRect.top;
 
-        console.log("Canvas coordinates:", canvasX, canvasY);
-
         const patternWidth = window.innerWidth;
         const patternHeight = window.innerHeight;
 
@@ -90,11 +254,17 @@ export const useCanvasAnimation = ({
 
         for (let tileY = startTileY; tileY <= endTileY; tileY++) {
             for (let tileX = startTileX; tileX <= endTileX; tileX++) {
+                // En mode grille, ne considérer que la tuile centrale
+                if (isGridModeRef.current && (tileX !== 0 || tileY !== 0)) {
+                    continue;
+                }
+
                 // Pour chaque tuile, collecter les images visibles
                 imagesRef.current.forEach((image, index) => {
                     // Appliquer le facteur de parallaxe spécifique à chaque image
-                    const imgOffsetX = offsetX * image.parallaxFactor;
-                    const imgOffsetY = offsetY * image.parallaxFactor;
+                    const parallaxFactor = isGridModeRef.current ? 0.95 : image.parallaxFactor;
+                    const imgOffsetX = offsetX * parallaxFactor;
+                    const imgOffsetY = offsetY * parallaxFactor;
 
                     // Calculer la position avec ce décalage
                     const tilePixelX = tileX * patternWidth + imgOffsetX;
@@ -121,13 +291,9 @@ export const useCanvasAnimation = ({
         // Trier les images par taille dans l'ordre décroissant
         visibleImagesData.sort((a, b) => b.size - a.size);
 
-        console.log("Visible images:", visibleImagesData.length);
-
         // Vérifier les projets sous le pointeur
         for (const imgData of visibleImagesData) {
             if (isPointInImage(canvasX, canvasY, imgData.x, imgData.y, imgData.width, imgData.height)) {
-                console.log("Found clicked image:", imgData.index);
-
                 // Une fois qu'un projet est trouvé, appliquer directement le style du curseur
                 if (canvasRef.current) {
                     canvasRef.current.style.cursor = 'pointer';
@@ -264,13 +430,66 @@ export const useCanvasAnimation = ({
         prevOffsetXRef.current = offsetXRef.current;
         prevOffsetYRef.current = offsetYRef.current;
 
-        // Draw everything using the current images from ref
+        // If a transition is in progress, update image positions
+        let imagesToDraw = [...imagesRef.current];
+
+        if (isTransitioning && targetPositionsRef.current.length > 0) {
+            const progress = animationProgressRef.current;
+            // Use a smoother easing function - cubic easing
+            const easedProgress = progress < 0.5
+                ? 4 * progress * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+            // Create a modified copy of images with transition positions
+            imagesToDraw = imagesRef.current.map((img, index) => {
+                const origPos = originalPositionsRef.current[index] || {
+                    x: img.patternX,
+                    y: img.patternY,
+                    width: img.width,
+                    height: img.height
+                };
+                const targetPos = targetPositionsRef.current[index];
+
+                if (!targetPos) return img;
+
+                // Interpolate between current position and target position
+                const newX = origPos.x + (targetPos.x - origPos.x) * easedProgress;
+                const newY = origPos.y + (targetPos.y - origPos.y) * easedProgress;
+
+                // Also interpolate dimensions if they've changed
+                const newWidth = origPos.width + (targetPos.width - origPos.width) * easedProgress;
+                const newHeight = origPos.height + (targetPos.height - origPos.height) * easedProgress;
+
+                // Mark that this is an image in grid layout mode
+                const inGridLayout = isGridModeRef.current;
+
+                // Return image with new coordinates and dimensions
+                return {
+                    ...img,
+                    patternX: newX,
+                    patternY: newY,
+                    width: newWidth,
+                    height: newHeight,
+                    inGridLayout
+                };
+            });
+
+            // If transition is complete, permanently update image state
+            if (progress >= 1) {
+                setTimeout(() => {
+                    setImages(imagesToDraw);
+                    setIsTransitioning(false); // Explicitly mark transition as complete
+                }, 0);
+            }
+        }
+
+        // Draw everything using the current images
         const {updatedImages, debugInfo} = drawCanvas({
             canvas,
             offscreenCanvas: offscreenCanvasRef.current,
             ctx,
             offscreenCtx,
-            images: imagesRef.current,
+            images: imagesToDraw,  // Utiliser les images possiblement transformées
             offsetX: offsetXRef.current,
             offsetY: offsetYRef.current,
             dragVelocityX: dragVelocityXRef.current,
@@ -278,7 +497,8 @@ export const useCanvasAnimation = ({
             effectStrength: effectStrengthRef.current,
             fisheyeStrength: fisheyeStrengthRef.current,
             patternWidth,
-            patternHeight
+            patternHeight,
+            isGridMode: isGridModeRef.current  // Passer cette information à drawCanvas
         });
 
         // Store debug info
@@ -287,7 +507,7 @@ export const useCanvasAnimation = ({
         }
 
         // Update images with new opacity values - but use setTimeout to avoid React state update inside animation frame
-        if (updatedImages) {
+        if (updatedImages && !isTransitioning) {
             // Use a zero-timeout to break the synchronous state update in requestAnimationFrame
             setTimeout(() => {
                 setImages(updatedImages);
@@ -296,7 +516,7 @@ export const useCanvasAnimation = ({
 
         // Continue animation
         animationFrameRef.current = requestAnimationFrame(animate);
-    }, [isDragging, canvasRef, offscreenCanvasRef, animationFrameRef, prevOffsetXRef, prevOffsetYRef]);
+    }, [isDragging, canvasRef, offscreenCanvasRef, animationFrameRef, prevOffsetXRef, prevOffsetYRef, isTransitioning]);
 
     // Event handlers for mouse/touch interaction
     const handleMouseDown = useCallback((e) => {
@@ -356,6 +576,13 @@ export const useCanvasAnimation = ({
         };
     }, [canvasRef, offscreenCanvasRef, animationFrameRef, animate, images.length]);
 
+    // Mettre à jour le layout des images lorsque gridLayoutActive change
+    useEffect(() => {
+        if (images.length > 0) {
+            updateImagesLayout(gridLayoutActive);
+        }
+    }, [gridLayoutActive, images.length, updateImagesLayout]);
+
     // Export the event handlers to be used by the parent component
     const setDragHandlers = {
         mouseDown: handleMouseDown, mouseMove: handleMouseMove, mouseUp: handleMouseUp
@@ -364,9 +591,10 @@ export const useCanvasAnimation = ({
     return {
         images,
         isDragging,
-        hoveredProject, // Exposer l'état du projet survolé
+        hoveredProject,
         debugInfo: debugInfoRef.current,
         findClickedProject,
-        setDragHandlers
+        setDragHandlers,
+        updateImagesLayout
     };
 };

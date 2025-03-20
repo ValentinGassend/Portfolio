@@ -4,23 +4,23 @@ import {drawImageWithColorTrail} from "../effects/drawImageWithColorTrail.jsx";
 import {applyGlobalColorTrail} from "../effects/applyGlobalColorTrail.jsx";
 import {applyFisheye} from "../effects/applyFisheye.jsx";
 
-
 // Main function to draw the canvas
 const drawCanvas = ({
-                               canvas,
-                               offscreenCanvas,
-                               ctx,
-                               offscreenCtx,
-                               images,
-                               offsetX,
-                               offsetY,
-                               dragVelocityX,
-                               dragVelocityY,
-                               effectStrength,
-                               fisheyeStrength,
-                               patternWidth,
-                               patternHeight
-                           }) => {
+                        canvas,
+                        offscreenCanvas,
+                        ctx,
+                        offscreenCtx,
+                        images,
+                        offsetX,
+                        offsetY,
+                        dragVelocityX,
+                        dragVelocityY,
+                        effectStrength,
+                        fisheyeStrength,
+                        patternWidth,
+                        patternHeight,
+                        isGridMode
+                    }) => {
     if (!ctx || !offscreenCtx) return { visibleTiles: 0, visibleInstances: 0 };
 
     // Clear the canvas
@@ -44,7 +44,8 @@ const drawCanvas = ({
         offsetX: Math.round(offsetX),
         offsetY: Math.round(offsetY),
         velocityMagnitude: Math.round(velocityMagnitude * 100) / 100,
-        effectStrength: Math.round(effectStrength * 100) / 100
+        effectStrength: Math.round(effectStrength * 100) / 100,
+        isGridMode: isGridMode
     };
 
     // 3. Calculate visible tiles
@@ -61,13 +62,20 @@ const drawCanvas = ({
         for (let tileX = startTileX; tileX <= endTileX; tileX++) {
             debugInfo.visibleTiles++;
 
-            // For each tile, collect visible images
-            images.forEach((image, index) => {
-                // Apply the parallax factor specific to each image
-                const imgOffsetX = offsetX * image.parallaxFactor;
-                const imgOffsetY = offsetY * image.parallaxFactor;
+            // Si nous sommes en mode grille, ne considérer que la tuile centrale (0,0)
+            if (isGridMode && (tileX !== 0 || tileY !== 0)) {
+                continue;
+            }
 
-                // Calculate the position with this new offset
+            // Pour chaque tuile, collecter les images visibles
+            images.forEach((image, index) => {
+                // Appliquer le facteur de parallaxe spécifique à chaque image
+                // En mode grille, utiliser un facteur réduit pour moins d'effet
+                const parallaxFactor = isGridMode ? 0.95 : image.parallaxFactor;
+                const imgOffsetX = offsetX * parallaxFactor;
+                const imgOffsetY = offsetY * parallaxFactor;
+
+                // Calculer la position avec ce décalage
                 const tilePixelX = tileX * patternWidth + imgOffsetX;
                 const tilePixelY = tileY * patternHeight + imgOffsetY;
 
@@ -78,30 +86,36 @@ const drawCanvas = ({
                     debugInfo.visibleInstances++;
                     visibleIndices.add(index);
 
-                    // Add the image to the list of visible images with its position
+                    // Ajouter l'image à la liste des images visibles avec sa position
                     visibleImagesData.push({
                         image,
                         x: imgX,
                         y: imgY,
                         width: image.width,
                         height: image.height,
-                        size: image.size || image.width, // Use the size for sorting
+                        size: image.size || image.width,
                         velocity: {
-                            x: dragVelocityX * image.parallaxFactor,
-                            y: dragVelocityY * image.parallaxFactor
+                            x: dragVelocityX * parallaxFactor,
+                            y: dragVelocityY * parallaxFactor
                         },
                         opacity: image.opacity,
-                        index // Keep the original index for updating properties
+                        index
                     });
                 }
             });
         }
     }
 
-    // 5. Sort images by size (small to large so that large ones are on top)
-    visibleImagesData.sort((a, b) => a.size - b.size);
+    // 5. Sort images by size (small to large in free mode, large to small in grid mode)
+    if (isGridMode) {
+        // En mode grille, dessiner les grandes images d'abord pour éviter les superpositions
+        visibleImagesData.sort((a, b) => b.size - a.size);
+    } else {
+        // En mode libre, dessiner les petites images d'abord (grandes par-dessus)
+        visibleImagesData.sort((a, b) => a.size - b.size);
+    }
 
-    // 6. Draw images in the sorted order (small first, large last)
+    // 6. Draw images in the sorted order
     for (const imageData of visibleImagesData) {
         // Draw the image with trail if necessary
         drawImageWithColorTrail(
