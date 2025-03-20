@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ProjectSingle from "../views/projectsPage/projectSingle/projectSingle.jsx";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import ColorManager from "../../managers/ColorManager.jsx";
 import Menu from "./menu/Menu.jsx";
 
-const Overlay = ({ projectsPage = false, projectsList, singleProjectPage = false, project, about = false }) => {
+const Overlay = ({
+                     projectsPage = false, projectsList, singleProjectPage = false, project, about = false, lab = false
+                 }) => {
 
     const [menu, setMenu] = useState(null);
     const [scrollPosition, setScrollPosition] = useState(0);
-    const mousePosition = useRef({ x: 0, y: 0 });
+    const mousePosition = useRef({x: 0, y: 0});
 
     gsap.registerPlugin(ScrollToPlugin);
 
@@ -20,8 +22,8 @@ const Overlay = ({ projectsPage = false, projectsList, singleProjectPage = false
 
     useEffect(() => {
         const handleMouseMove = (event) => {
-            const { clientX: x, clientY: y } = event;
-            mousePosition.current = { x, y };
+            const {clientX: x, clientY: y} = event;
+            mousePosition.current = {x, y};
         };
 
         window.addEventListener('mousemove', handleMouseMove);
@@ -95,7 +97,7 @@ const Overlay = ({ projectsPage = false, projectsList, singleProjectPage = false
                 menuOpener.addEventListener("click", openMenu);
 
                 const handleMagneticEffect = () => {
-                    const { x, y } = mousePosition.current;
+                    const {x, y} = mousePosition.current;
 
                     const rectOpener = menuOpener.getBoundingClientRect();
                     const distanceToMouseOpener = Math.sqrt(Math.pow(x - (rectOpener.left + rectOpener.width / 2), 2) + Math.pow(y - (rectOpener.top + rectOpener.height / 2), 2));
@@ -147,103 +149,123 @@ const Overlay = ({ projectsPage = false, projectsList, singleProjectPage = false
         }
     }, [menu]);
 
-    return (
-        <>
-            <Menu scrollPosition={scrollPosition} />
-            {about ? (
-                <nav className={`Overlay About`} role="navigation" aria-label="Navigation principale">
-                    <div className={`Overlay-upper`}>
-                        <div className={`Overlay-upper--item __MenuOpener`}>
-                            <p className={`Overlay-upper--item---text Uppercase`}>ME<br />NU</p>
-                        </div>
+    return (<>
+        <Menu scrollPosition={scrollPosition}/>
+        {about ? (<nav className={`Overlay About`} role="navigation" aria-label="Navigation principale">
+            <div className={`Overlay-upper`}>
+                <div className={`Overlay-upper--item __MenuOpener`}>
+                    <p className={`Overlay-upper--item---text Uppercase`}>ME<br/>NU</p>
+                </div>
+            </div>
+        </nav>) : (<>
+            {projectsPage && projectsList ? (<nav className={`Overlay Projects`} role="navigation"
+                                                  aria-label="Navigation principale et liste des projets">
+                <div className={`Overlay-upper`}>
+                    <div className={`Overlay-upper--item`}>
+                        <a href={"/"} className={`Overlay-upper--item---text Uppercase`}>Développeur web
+                            créatif</a>
                     </div>
-                </nav>
-            ) : (
-                <>
-                    {projectsPage && projectsList ? (
-                        <nav className={`Overlay Projects`} role="navigation" aria-label="Navigation principale et liste des projets">
-                            <div className={`Overlay-upper`}>
-                                <div className={`Overlay-upper--item`}>
-                                    <a href={"/"} className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</a>
+                    <div className={`Overlay-upper--item __MenuOpener`}>
+                        <p className={`Overlay-upper--item---text Uppercase`} aria-label="Ouvrir le menu">ME<br/>NU
+                        </p>
+                    </div>
+                </div>
+                <div className={`Overlay-center`}>
+                    <nav className={`Overlay-center--item`} aria-label="Navigation rapide vers les projets">
+                        {projectsList.map((project, index) => (<a key={index}
+                                                                  href={`#project${index}`}
+                                                                  className={`Overlay-center--item---text Uppercase Before`}
+                                                                  aria-label={`Aller au projet ${project.title}`}>
+                            {project.title}
+                        </a>))}
+                    </nav>
+                </div>
+                <div className={`Overlay-lower`}>
+                    <div className={`Overlay-lower--item`}>
+                        <h2 className={`Overlay-lower--item---text Uppercase`}>Projects</h2>
+                    </div>
+                </div>
+            </nav>) : (<>
+                {singleProjectPage && project ? (
+                    <aside className={`Overlay SingleProject`} aria-label="Informations sur le projet">
+                        <div className={`Overlay-left`}></div>
+                        <div className={`Overlay-right`}>
+                            <header className={`Overlay-right--upper`}>
+                                <div className={`Overlay-right--upper---item`}>
+                                    <h1 className={`Overlay-right--upper---item----text Uppercase`}>{project.title}</h1>
                                 </div>
-                                <div className={`Overlay-upper--item __MenuOpener`}>
-                                    <p className={`Overlay-upper--item---text Uppercase`} aria-label="Ouvrir le menu">ME<br />NU</p>
+                                <div className={`Overlay-right--upper---item`}>
+                                    <time className={`Overlay-right--upper---item----text Uppercase`}
+                                          dateTime={`${project.year}`}>{project.year}</time>
+                                    <p className={`Overlay-right--upper---item----text Uppercase`}>{project.client}</p>
                                 </div>
+                            </header>
+                            <footer className={`Overlay-right--lower`}>
+                                <div className={`Overlay-right--lower---item`} role="list"
+                                     aria-label="Technologies utilisées">
+                                    {project.tags.map((tag, index) => (<p key={index}
+                                                                          className={`Overlay-right--lower---item----text Uppercase`}
+                                                                          role="listitem">{tag}</p>))}
+                                </div>
+                            </footer>
+                        </div>
+                    </aside>) : (<>
+                    {lab ? (<div className={`Overlay`} role="banner">
+                        <div className={`Overlay-upper`}>
+                            <div className={`Overlay-upper--item`}>
+                                <h1 className={`Overlay-upper--item---text Uppercase`}>Développeur
+                                    web créatif</h1>
                             </div>
-                            <div className={`Overlay-center`}>
-                                <nav className={`Overlay-center--item`} aria-label="Navigation rapide vers les projets">
-                                    {projectsList.map((project, index) => (
-                                        <a key={index}
-                                           href={`#project${index}`}
-                                           className={`Overlay-center--item---text Uppercase Before`}
-                                           aria-label={`Aller au projet ${project.title}`}>
-                                            {project.title}
-                                        </a>
-                                    ))}
-                                </nav>
+                            <div className={`Overlay-upper--item`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}>Basé à
+                                    Aix-Les-Bains</p>
                             </div>
-                            <div className={`Overlay-lower`}>
-                                <div className={`Overlay-lower--item`}>
-                                    <h2 className={`Overlay-lower--item---text Uppercase`}>Projects</h2>
-                                </div>
+                            <div className={`Overlay-upper--item __MenuOpener`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}
+                                   aria-label="Ouvrir le menu">ME<br/>NU</p>
                             </div>
-                        </nav>
-                    ) : (
-                        <>
-                            {singleProjectPage && project ? (
-                                <aside className={`Overlay SingleProject`} aria-label="Informations sur le projet">
-                                    <div className={`Overlay-left`}></div>
-                                    <div className={`Overlay-right`}>
-                                        <header className={`Overlay-right--upper`}>
-                                            <div className={`Overlay-right--upper---item`}>
-                                                <h1 className={`Overlay-right--upper---item----text Uppercase`}>{project.title}</h1>
-                                            </div>
-                                            <div className={`Overlay-right--upper---item`}>
-                                                <time className={`Overlay-right--upper---item----text Uppercase`} dateTime={`${project.year}`}>{project.year}</time>
-                                                <p className={`Overlay-right--upper---item----text Uppercase`}>{project.client}</p>
-                                            </div>
-                                        </header>
-                                        <footer className={`Overlay-right--lower`}>
-                                            <div className={`Overlay-right--lower---item`} role="list" aria-label="Technologies utilisées">
-                                                {project.tags.map((tag, index) => (
-                                                    <p key={index} className={`Overlay-right--lower---item----text Uppercase`} role="listitem">{tag}</p>
-                                                ))}
-                                            </div>
-                                        </footer>
-                                    </div>
-                                </aside>
-                            ) : (
-                                <div className={`Overlay`} role="banner">
-                                    <div className={`Overlay-upper`}>
-                                        <div className={`Overlay-upper--item`}>
-                                            <h1 className={`Overlay-upper--item---text Uppercase`}>Développeur web créatif</h1>
-                                        </div>
-                                        <div className={`Overlay-upper--item`}>
-                                            <p className={`Overlay-upper--item---text Uppercase`}>Basé à annecy</p>
-                                        </div>
-                                        <div className={`Overlay-upper--item __MenuOpener`}>
-                                            <p className={`Overlay-upper--item---text Uppercase`} aria-label="Ouvrir le menu">ME<br />NU</p>
-                                        </div>
-                                    </div>
-                                    <div className={`Overlay-lower`}>
-                                        <div className={`Overlay-lower--item`}>
-                                            <p className={`Overlay-lower--item---text Uppercase`}>Disponible en freelance</p>
-                                        </div>
-                                        <div className={`Overlay-lower--item`}>
-                                            <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>
-                                        </div>
-                                        <div className={`Overlay-lower--item`}>
-                                            <p className={`Overlay-lower--item---text Uppercase`}>2024</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </>
-            )}
-        </>
-    );
+                        </div>
+                        <div className={`Overlay-lower`}>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>Disponible en
+                                    freelance</p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
+                            </div>
+                        </div>
+                    </div>) : (<div className={`Overlay`} role="banner">
+                        <div className={`Overlay-upper`}>
+                            <div className={`Overlay-upper--item`}>
+                                <h1 className={`Overlay-upper--item---text Uppercase`}>Lab</h1>
+                            </div>
+                            <div className={`Overlay-upper--item`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}></p>
+                            </div>
+                            <div className={`Overlay-upper--item __MenuOpener`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}
+                                   aria-label="Ouvrir le menu">ME<br/>NU</p>
+                            </div>
+                        </div>
+                        <div className={`Overlay-lower`}>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>Disponible en
+                                    freelance</p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}></p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
+                            </div>
+                        </div>
+                    </div>)}
+                </>)} </>)}
+        </>)}
+    </>);
 };
 
 export default Overlay;

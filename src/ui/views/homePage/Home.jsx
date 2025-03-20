@@ -71,7 +71,7 @@ const Home = () => {
             <Helmet>
                 <title>Valentin Gassend | Développeur créatif </title>
                 <meta name="description"
-                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Annecy."/>
+                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Aix-Les-Bains."/>
                 <link rel="canonical" href="https://valentingassend.com/"/>
 
                 {/* Open Graph / Facebook */}
@@ -79,7 +79,7 @@ const Home = () => {
                 <meta property="og:url" content="https://valentingassend.com/"/>
                 <meta property="og:title" content="Portfolio - Valentin Gassend | Développeur front-end créatif"/>
                 <meta property="og:description"
-                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Annecy."/>
+                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Aix-Les-Bains."/>
                 <meta property="og:image" content="https://www.valentingassend.com/img/landing.png"/>
 
                 {/* Twitter */}
@@ -87,7 +87,7 @@ const Home = () => {
                 <meta name="twitter:url" content="https://valentingassend.com/"/>
                 <meta name="twitter:title" content="Portfolio - Valentin Gassend | Développeur front-end créatif"/>
                 <meta name="twitter:description"
-                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Annecy."/>
+                      content="Je m'appelle Valentin Gassend et voici mon portfolio. Je suis un développeur front-end créatif disponible en freelance basé à Aix-Les-Bains."/>
                 <meta name="twitter:image" content="https://www.valentingassend.com/img/landing.png"/>
             </Helmet>
 

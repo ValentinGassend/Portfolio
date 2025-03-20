@@ -7,7 +7,7 @@ const MenuSection = () => {
     return (<div className={"MenuSection"}>
         <div className={"MenuSection-item"}>
             <p className={"MenuSection-item--text Uppercase"}>Développeur web créatif</p>
-            <p className={"MenuSection-item--text Uppercase"}>Basé à annecy</p>
+            <p className={"MenuSection-item--text Uppercase"}>Basé à Aix-Les-Bains</p>
         </div>
         <a href="/" className={"MenuSection-item"}>
             <div className={"MenuSection-item--title Uppercase"}>
