@@ -929,22 +929,22 @@ const Lab = () => {
                 }
             });
 
-            // 9. Dessiner l'interface utilisateur
-            offscreenCtx.globalAlpha = 1.0;
-            offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-            offscreenCtx.font = '14px Arial';
-            offscreenCtx.fillText('Drag to explore the infinite gallery (with color shift effect)', 20, 30);
-
-            if (imagesLoaded < totalImages) {
-                offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                offscreenCtx.font = '14px Arial';
-                offscreenCtx.fillText(`Loading projects: ${imagesLoaded}/${totalImages}`, 20, 50);
-            }
-
-            // Debug info
-            offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            offscreenCtx.font = '12px monospace';
-            offscreenCtx.fillText(`Offset: (${debugInfo.offsetX}, ${debugInfo.offsetY}) | Velocity: ${debugInfo.velocityMagnitude} | Effect: ${debugInfo.effectStrength} | Tiles: ${debugInfo.visibleTiles} | Images: ${debugInfo.visibleInstances}`, 20, canvas.height - 20);
+            // // 9. Dessiner l'interface utilisateur
+            // offscreenCtx.globalAlpha = 1.0;
+            // offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            // offscreenCtx.font = '14px Arial';
+            // offscreenCtx.fillText('Drag to explore the infinite gallery (with color shift effect)', 20, 30);
+            //
+            // if (imagesLoaded < totalImages) {
+            //     offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            //     offscreenCtx.font = '14px Arial';
+            //     offscreenCtx.fillText(`Loading projects: ${imagesLoaded}/${totalImages}`, 20, 50);
+            // }
+            //
+            // // Debug info
+            // offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            // offscreenCtx.font = '12px monospace';
+            // offscreenCtx.fillText(`Offset: (${debugInfo.offsetX}, ${debugInfo.offsetY}) | Velocity: ${debugInfo.velocityMagnitude} | Effect: ${debugInfo.effectStrength} | Tiles: ${debugInfo.visibleTiles} | Images: ${debugInfo.visibleInstances}`, 20, canvas.height - 20);
 
             // 10. Appliquer l'effet fisheye si nécessaire
             if (fisheyeStrength > 0.01) {
