@@ -32,13 +32,13 @@ const Home = () => {
             const lcpObserver = new PerformanceObserver((entryList) => {
                 const entries = entryList.getEntries();
                 const lastEntry = entries[entries.length - 1];
-                console.log('LCP candidat:', lastEntry.element);
-                console.log('LCP timing:', lastEntry.startTime);
+
+
 
                 // Si on a une référence à notre élément, vérifier s'il correspond au LCP
                 if (lcpElementRef.current && lastEntry.element) {
                     const isOurLCPElement = lcpElementRef.current.contains(lastEntry.element);
-                    console.log('Notre élément est le LCP:', isOurLCPElement);
+
                 }
             });
 

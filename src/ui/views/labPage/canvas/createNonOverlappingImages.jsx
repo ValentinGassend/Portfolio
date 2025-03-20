@@ -18,7 +18,7 @@ export const createNonOverlappingImages = (projectImageRefs, patternWidth, patte
         ? projectImageRefs.current
         : [projectImageRefs.current];
 
-    console.log(`Creating projects from ${imageArray.length} loaded images`);
+
 
     const images = [];
     const existingRects = [];
@@ -57,7 +57,7 @@ export const createNonOverlappingImages = (projectImageRefs, patternWidth, patte
         const originalHeight = imgElement.height || 1;
         const aspectRatio = originalWidth / originalHeight;
 
-        console.log(`Image "${filename}" - Original dimensions: ${originalWidth}x${originalHeight}, ratio: ${aspectRatio.toFixed(2)}`);
+
 
         // Choose a random size, respecting the original aspect ratio
         let width, height;
@@ -97,7 +97,7 @@ export const createNonOverlappingImages = (projectImageRefs, patternWidth, patte
             }
         }
 
-        console.log(`Project tile dimensions: ${width.toFixed(0)}x${height.toFixed(0)}`);
+
 
         // Calculate parallax factor based on the larger dimension
         const largerDimension = Math.max(width, height);
@@ -221,6 +221,6 @@ export const createNonOverlappingImages = (projectImageRefs, patternWidth, patte
         }
     }
 
-    console.log(`Created ${images.length} project tiles from ${imageCount} images`);
+
     return images;
 };

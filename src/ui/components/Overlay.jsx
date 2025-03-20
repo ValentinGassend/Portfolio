@@ -41,7 +41,7 @@ const Overlay = ({
                 let segments = evt.target.href.split("#");
                 let lastSegment = segments[segments.length - 1];
                 const targetElement = document.querySelector(`#${lastSegment}`);
-                console.log(targetElement);
+
                 scrollToTargetElement(targetElement);
             });
         });
@@ -81,7 +81,7 @@ const Overlay = ({
 
     const openMenu = (evt) => {
         if (menu && !menu.classList.contains("active")) {
-            console.log(window.scrollY);
+
             setScrollPosition(window.scrollY);
             menu.classList.add("active");
             document.getElementById("root").classList.add("no-scroll");

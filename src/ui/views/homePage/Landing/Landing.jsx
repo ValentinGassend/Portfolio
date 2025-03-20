@@ -49,7 +49,7 @@ const Landing = () => {
                         if (url.includes('full_logo') && svgContentRef.current) {
                             svgContentRef.current.innerHTML = svgContent;
                         }
-                        console.log(`SVG préchargé: ${url}`);
+
                     })
                     .catch(error => console.error(`Erreur préchargement SVG: ${url}`, error));
             });
@@ -63,7 +63,7 @@ const Landing = () => {
     useEffect(() => {
         const loadGsap = () => {
             gsapPromise.then(gsap => {
-                console.log('GSAP chargé de manière différée');
+
                 setGsapLoaded(true);
                 window._gsap = gsap; // Stocker pour une utilisation ultérieure
             });

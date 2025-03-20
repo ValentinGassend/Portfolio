@@ -53,7 +53,7 @@ export const useCanvasSetup = () => {
                 'why.webp'
             ];
 
-            console.log("Attempting to load known .webp files:", knownFiles);
+
 
             // Définir le nombre total d'images à charger
             setTotalImages(knownFiles.length);
@@ -69,14 +69,21 @@ export const useCanvasSetup = () => {
                         loadedSuccessfully++;
                         setImagesLoaded(loadedSuccessfully);
 
-                        // Stocker l'image chargée avec ses métadonnées
-                        projectImagesRef.current.push({
-                            img: img,
-                            filename: filename,
-                            index: index
-                        });
+                        // Vérifier si l'image n'existe pas déjà avant de l'ajouter
+                        const existingImage = projectImagesRef.current.find(
+                            existingImg => existingImg.filename === filename
+                        );
 
-                        console.log(`Successfully loaded: ${filename}`);
+                        if (!existingImage) {
+                            // Stocker l'image chargée avec ses métadonnées
+                            projectImagesRef.current.push({
+                                img: img,
+                                filename: filename,
+                                index: index
+                            });
+                        }
+
+
                         resolve();
                     };
 
@@ -102,7 +109,7 @@ export const useCanvasSetup = () => {
 
                 // Mettre à jour l'état
                 setProjectImageLoaded(true);
-                console.log(`Successfully loaded ${loadedSuccessfully} out of ${knownFiles.length} images`);
+
             } else {
                 // Si aucune image n'a été chargée, créer une image par défaut
                 createFallbackImage();
@@ -114,7 +121,7 @@ export const useCanvasSetup = () => {
 
         // Create a fallback image if needed
         const createFallbackImage = () => {
-            console.log("Creating fallback image");
+
 
             const fallback = document.createElement('canvas');
             fallback.width = 200;

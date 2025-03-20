@@ -74,7 +74,7 @@ const ContactMasking = () => {
             });
         }
 
-        console.log(IsMobile())
+
         if ((!cursorClicked && clickCount === 3) || IsMobile()) {
             gsap.to(cursor, {
                 delay: !IsMobile() ? 1.6 : 0,

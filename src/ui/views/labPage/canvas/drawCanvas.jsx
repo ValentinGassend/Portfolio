@@ -1,5 +1,5 @@
-import { COLOR_PALETTE } from '../constants.js';
-import { drawGrid, isInViewport } from './canvasUtils.js';
+import {COLOR_PALETTE} from '../constants.js';
+import {drawGrid, isInViewport} from './canvasUtils.js';
 import {drawImageWithColorTrail} from "../effects/drawImageWithColorTrail.jsx";
 import {applyGlobalColorTrail} from "../effects/applyGlobalColorTrail.jsx";
 import {applyFisheye} from "../effects/applyFisheye.jsx";
@@ -19,9 +19,10 @@ const drawCanvas = ({
                         fisheyeStrength,
                         patternWidth,
                         patternHeight,
-                        isGridMode
+                        isGridMode,
+                        calculateGridLayout // Ajouter ce paramètre
                     }) => {
-    if (!ctx || !offscreenCtx) return { visibleTiles: 0, visibleInstances: 0 };
+    if (!ctx || !offscreenCtx) return {visibleTiles: 0, visibleInstances: 0};
 
     // Clear the canvas
     offscreenCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -31,7 +32,7 @@ const drawCanvas = ({
     offscreenCtx.fillRect(0, 0, canvas.width, canvas.height);
 
     // 2. Draw the grid with the fixed parallax factor for the grid
-    const gridParallaxFactor = 0.7;
+    const gridParallaxFactor = isGridMode ? 1.0 : 0.7;
     drawGrid(offscreenCtx, offsetX * gridParallaxFactor, offsetY * gridParallaxFactor, canvas.width, canvas.height);
 
     // Calculate the magnitude of velocity
@@ -48,61 +49,111 @@ const drawCanvas = ({
         isGridMode: isGridMode
     };
 
-    // 3. Calculate visible tiles
-    const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
-    const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
-    const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
-    const endTileY = Math.ceil((-offsetY + canvas.width) / patternHeight);
-
     // 4. Collect all visible images with their calculated positions
     const visibleImagesData = [];
     const visibleIndices = new Set();
+    const drawnProjects = new Set();
+    const uniqueProjects = new Set();
 
-    for (let tileY = startTileY; tileY <= endTileY; tileY++) {
-        for (let tileX = startTileX; tileX <= endTileX; tileX++) {
-            debugInfo.visibleTiles++;
+    // Pour le mode grille, on veut juste montrer les projets une seule fois
+    if (isGridMode) {
+        // For infinite scroll, each item can be repeated multiple times
+        const drawnCombinations = new Set(); // To track combinations already drawn
 
-            // Si nous sommes en mode grille, ne considérer que la tuile centrale (0,0)
-            if (isGridMode && (tileX !== 0 || tileY !== 0)) {
-                continue;
-            }
+        // Get the grid layout positions from calculateGridLayout
+        const gridPositions = calculateGridLayout();
 
-            // Pour chaque tuile, collecter les images visibles
-            images.forEach((image, index) => {
-                // Appliquer le facteur de parallaxe spécifique à chaque image
-                // En mode grille, utiliser un facteur réduit pour moins d'effet
-                const parallaxFactor = isGridMode ? 0.95 : image.parallaxFactor;
-                const imgOffsetX = offsetX * parallaxFactor;
-                const imgOffsetY = offsetY * parallaxFactor;
+        // If grid positions are available, use them directly
+        if (gridPositions && gridPositions.length > 0) {
+            gridPositions.forEach((position, idx) => {
+                // Find the corresponding image
+                const image = images[position.originalIndex % images.length];
+                if (!image) return;
 
-                // Calculer la position avec ce décalage
-                const tilePixelX = tileX * patternWidth + imgOffsetX;
-                const tilePixelY = tileY * patternHeight + imgOffsetY;
+                // Create a unique key for this project+repeat combination
+                const projectKey = `${image.filename}-${position.repeatIndex}`;
 
-                const imgX = image.patternX + tilePixelX;
-                const imgY = image.patternY + tilePixelY;
+                // Skip if already drawn (avoid duplicates in same position)
+                if (drawnCombinations.has(projectKey)) return;
+                drawnCombinations.add(projectKey);
 
-                if (isInViewport(imgX, imgY, image.width, image.height, canvas.width, canvas.height)) {
+                // Apply the correct positioning from grid layout
+                const imgX = position.x;
+                const imgY = position.y + offsetY;
+
+                // Check if image is in viewport
+                if (isInViewport(imgX, imgY, position.width, position.height, canvas.width, canvas.height)) {
                     debugInfo.visibleInstances++;
-                    visibleIndices.add(index);
+                    visibleIndices.add(position.originalIndex);
 
-                    // Ajouter l'image à la liste des images visibles avec sa position
+                    // Add image to list of visible images
                     visibleImagesData.push({
                         image,
                         x: imgX,
                         y: imgY,
-                        width: image.width,
-                        height: image.height,
-                        size: image.size || image.width,
+                        width: position.width,
+                        height: position.height,
+                        size: image.size || position.width,
                         velocity: {
-                            x: dragVelocityX * parallaxFactor,
-                            y: dragVelocityY * parallaxFactor
+                            x: 0,
+                            y: dragVelocityY * 0.5 // Subtle effect
                         },
                         opacity: image.opacity,
-                        index
+                        index: position.originalIndex,
+                        repeatIndex: position.repeatIndex
                     });
                 }
             });
+        } else {
+            // Fallback to previous implementation if grid positions aren't available
+            // (existing code for the old implementation)
+        }
+    }  else {
+        // Mode libre - logique originale avec répétition des tuiles
+        const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
+        const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
+        const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
+        const endTileY = Math.ceil((-offsetY + canvas.width) / patternHeight);
+
+        for (let tileY = startTileY; tileY <= endTileY; tileY++) {
+            for (let tileX = startTileX; tileX <= endTileX; tileX++) {
+                debugInfo.visibleTiles++;
+
+                // Pour chaque tuile, collecter les images visibles
+                images.forEach((image, index) => {
+                    // Appliquer le facteur de parallaxe spécifique à chaque image
+                    const parallaxFactor = image.parallaxFactor;
+                    const imgOffsetX = offsetX * parallaxFactor;
+                    const imgOffsetY = offsetY * parallaxFactor;
+
+                    // Calculer la position avec ce décalage
+                    const tilePixelX = tileX * patternWidth + imgOffsetX;
+                    const tilePixelY = tileY * patternHeight + imgOffsetY;
+
+                    const imgX = image.patternX + tilePixelX;
+                    const imgY = image.patternY + tilePixelY;
+
+                    if (isInViewport(imgX, imgY, image.width, image.height, canvas.width, canvas.height)) {
+                        debugInfo.visibleInstances++;
+                        visibleIndices.add(index);
+
+                        // Ajouter l'image à la liste des images visibles
+                        visibleImagesData.push({
+                            image,
+                            x: imgX,
+                            y: imgY,
+                            width: image.width,
+                            height: image.height,
+                            size: image.size || image.width,
+                            velocity: {
+                                x: dragVelocityX * parallaxFactor, y: dragVelocityY * parallaxFactor
+                            },
+                            opacity: image.opacity,
+                            index
+                        });
+                    }
+                });
+            }
         }
     }
 
@@ -118,43 +169,28 @@ const drawCanvas = ({
     // 6. Draw images in the sorted order
     for (const imageData of visibleImagesData) {
         // Draw the image with trail if necessary
-        drawImageWithColorTrail(
-            offscreenCtx,
-            imageData.image,
-            imageData.x,
-            imageData.y,
-            imageData.width,
-            imageData.height,
-            imageData.velocity,
-            imageData.opacity
-        );
+        drawImageWithColorTrail(offscreenCtx, imageData.image, imageData.x, imageData.y, imageData.width, imageData.height, imageData.velocity, imageData.opacity);
     }
 
+    // Le reste du code reste inchangé...
     // 7. If the speed is sufficient or if the effect is still visible, apply the effect
     if (velocityMagnitude > 0.3 || effectStrength > 0.05) {
         // Pass effectStrength to the function to properly control the intensity
-        applyGlobalColorTrail(
-            offscreenCtx,
-            offscreenCanvas,
-            offsetX,
-            offsetY,
-            dragVelocityX,
-            dragVelocityY,
-            effectStrength
-        );
+        // In grid mode, reduce the effect strength significantly
+        const adjustedStrength = isGridMode ? effectStrength * 0.3 : effectStrength;
+
+        applyGlobalColorTrail(offscreenCtx, offscreenCanvas, offsetX, offsetY, isGridMode ? 0 : dragVelocityX, // No horizontal effect in grid mode
+            dragVelocityY, adjustedStrength);
     }
 
     // 8. Update the visibility of images
     const updatedImages = images.map((image, index) => {
         const isVisible = visibleIndices.has(index);
-        const opacity = isVisible
-            ? Math.min(image.opacity + 0.05, 1) // Fade in
+        const opacity = isVisible ? Math.min(image.opacity + 0.05, 1) // Fade in
             : Math.max(image.opacity - 0.05, 0); // Fade out
 
         return {
-            ...image,
-            visible: isVisible,
-            opacity
+            ...image, visible: isVisible, opacity
         };
     });
 
@@ -169,7 +205,7 @@ const drawCanvas = ({
         ctx.drawImage(offscreenCanvas, 0, 0);
     }
 
-    return { updatedImages, debugInfo };
+    return {updatedImages, debugInfo};
 };
 
 export default drawCanvas;

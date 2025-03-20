@@ -85,14 +85,14 @@ const Lab = () => {
 
         // Only consider this a click if the mouse hasn't moved significantly
         if (!hasDraggedRef.current) {
-            console.log("Detecting click at:", e.clientX, e.clientY);
+
             const project = findClickedProject(e.clientX, e.clientY);
             if (project) {
-                console.log("Project clicked:", project.name || `Project ${project.index + 1}`);
+
                 setSelectedProject(project);
             }
         } else {
-            console.log("Drag ended - not opening project");
+
         }
 
         // Reset cursor after drag
@@ -149,11 +149,11 @@ const Lab = () => {
             if (!hasDraggedRef.current) {
                 const project = findClickedProject(touch.clientX, touch.clientY);
                 if (project) {
-                    console.log("Project clicked from touch:", project.name || `Project ${project.index + 1}`);
+
                     setSelectedProject(project);
                 }
             } else {
-                console.log("Touch drag ended - not opening project");
+
             }
         }
     }, [setDragHandlers, findClickedProject]);
@@ -173,23 +173,34 @@ const Lab = () => {
                 document.body.classList.remove('cursor-pointer');
             }
 
-            console.log("Hover state changed:", isOverProject ? "Over project" : "Not over project");
+
         }
     }, [findClickedProject, isHoveringProject]);
 
     // Gestionnaire spécifique au canvas pour assurer une détection correcte des survols de projets
     const handleCanvasMouseMove = useCallback((e) => {
-        // Vérifier simplement si nous survolons un projet
+        // Check if we're hovering over a project
         checkCursorOverProject(e);
 
-        // Si nous sommes en train de faire glisser, appliquer une autre classe
-        if (isDragging) {
+        // Apply different cursor classes based on mode and drag state
+        if (isDragging && !gridLayoutActive) {
             document.body.classList.add('cursor-grabbing');
         } else {
             document.body.classList.remove('cursor-grabbing');
         }
-    }, [checkCursorOverProject, isDragging]);
+    }, [checkCursorOverProject, isDragging, gridLayoutActive]);
 
+    useEffect(() => {
+        if (gridLayoutActive) {
+            document.body.classList.add('grid-mode');
+        } else {
+            document.body.classList.remove('grid-mode');
+        }
+
+        return () => {
+            document.body.classList.remove('grid-mode');
+        };
+    }, [gridLayoutActive]);
     useEffect(() => {
         if (images.length > 0 && updateImagesLayout) {
             updateImagesLayout(gridLayoutActive);
@@ -233,18 +244,29 @@ const Lab = () => {
 
     return (<section className={"Lab"}>
         <style>{`
-            body.cursor-pointer * {
-                cursor: pointer !important;
-            }
+    body.cursor-pointer * {
+        cursor: pointer !important;
+    }
 
-            body.cursor-grabbing * {
-                cursor: grabbing !important;
-            }
+    body.cursor-grabbing * {
+        cursor: grabbing !important;
+    }
+    
+    /* Add this for grid mode */
+    body.grid-mode * {
+        cursor: default !important;
+    }
 
-            body:not(.cursor-pointer):not(.cursor-grabbing) .Lab canvas {
-                cursor: grab !important;
-            }
-        `}</style>
+    /* Update this to handle grid mode */
+    body:not(.cursor-pointer):not(.cursor-grabbing):not(.grid-mode) .Lab canvas {
+        cursor: grab !important;
+    }
+    
+    /* When in grid mode but hovering over a project, show pointer */
+    body.grid-mode.cursor-pointer * {
+        cursor: pointer !important;
+    }
+`}</style>
 
         <canvas
             ref={canvasRef}
@@ -286,13 +308,14 @@ const Lab = () => {
             }}
         >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" />
-                <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" />
-                <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" />
-                <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" />
+                <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
+                <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
+                <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
+                <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
             </svg>
-            {gridLayoutActive ? "Free Layout" : "Grid Layout"}
+            {gridLayoutActive ? "Free Layout" : "Grid Layout (Scroll)"}
         </div>
+
     </section>);
 };
 

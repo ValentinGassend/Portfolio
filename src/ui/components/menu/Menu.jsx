@@ -22,7 +22,7 @@ const Menu = ({scrollPosition}) => {
             menu.classList.remove("active");
             document.getElementById('root').classList.remove('no-scroll');
             window.scrollTo(0, scrollPosition);
-            console.log(scrollPosition);
+
         }
     };
     useEffect(() => {
