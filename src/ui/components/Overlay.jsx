@@ -213,6 +213,31 @@ const Overlay = ({
                     {lab ? (<div className={`Overlay`} role="banner">
                         <div className={`Overlay-upper`}>
                             <div className={`Overlay-upper--item`}>
+                                <h1 className={`Overlay-upper--item---text Uppercase`}>Lab</h1>
+                            </div>
+                            <div className={`Overlay-upper--item`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}></p>
+                            </div>
+                            <div className={`Overlay-upper--item __MenuOpener`}>
+                                <p className={`Overlay-upper--item---text Uppercase`}
+                                   aria-label="Ouvrir le menu">ME<br/>NU</p>
+                            </div>
+                        </div>
+                        <div className={`Overlay-lower`}>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>Disponible en
+                                    freelance</p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}></p>
+                            </div>
+                            <div className={`Overlay-lower--item`}>
+                                <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
+                            </div>
+                        </div>
+                    </div>) : (<div className={`Overlay`} role="banner">
+                        <div className={`Overlay-upper`}>
+                            <div className={`Overlay-upper--item`}>
                                 <h1 className={`Overlay-upper--item---text Uppercase`}>Développeur
                                     web créatif</h1>
                             </div>
@@ -232,31 +257,6 @@ const Overlay = ({
                             </div>
                             <div className={`Overlay-lower--item`}>
                                 <p className={`Overlay-lower--item---text Uppercase`}>Portfolio</p>
-                            </div>
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
-                            </div>
-                        </div>
-                    </div>) : (<div className={`Overlay`} role="banner">
-                        <div className={`Overlay-upper`}>
-                            <div className={`Overlay-upper--item`}>
-                                <h1 className={`Overlay-upper--item---text Uppercase`}>Lab</h1>
-                            </div>
-                            <div className={`Overlay-upper--item`}>
-                                <p className={`Overlay-upper--item---text Uppercase`}></p>
-                            </div>
-                            <div className={`Overlay-upper--item __MenuOpener`}>
-                                <p className={`Overlay-upper--item---text Uppercase`}
-                                   aria-label="Ouvrir le menu">ME<br/>NU</p>
-                            </div>
-                        </div>
-                        <div className={`Overlay-lower`}>
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}>Disponible en
-                                    freelance</p>
-                            </div>
-                            <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}></p>
                             </div>
                             <div className={`Overlay-lower--item`}>
                                 <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
