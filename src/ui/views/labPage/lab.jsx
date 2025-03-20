@@ -278,7 +278,10 @@ const Lab = () => {
                 }
             }
             return false;
-        };// Create images with non-overlapping layout
+        };
+
+        // Create images with non-overlapping layout
+        // Create images with non-overlapping layout
         const createNonOverlappingImages = () => {
             // Only proceed if all necessary resources are loaded
             if (!projectImageLoaded || images.length > 0) return;
@@ -303,6 +306,7 @@ const Lab = () => {
                 // Plus le projet est grand, plus il est proche de 1.0 (pas de parallaxe)
                 const sizeRatio = (width - minSize) / sizeRange;
                 const parallaxFactor = 0.7 + (sizeRatio * 0.3); // Entre 0.7 et 1.0
+
                 let found = false;
                 let newRect = null;
                 let attemptsForThisRect = 0;
@@ -352,10 +356,12 @@ const Lab = () => {
                     );
 
                     // Apply a slight overlay to make text more readable
-                    imageCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    // Les petits projets ont un overlay plus foncé pour renforcer l'effet de profondeur
+                    const overlayAlpha = 0.3 + (0.2 * (1 - sizeRatio)); // Smaller projects have darker overlay (0.5 for smallest, 0.3 for largest)
+                    imageCtx.fillStyle = `rgba(0, 0, 0, ${overlayAlpha})`;
                     imageCtx.fillRect(0, 0, newRect.width, newRect.height);
 
-                    // Add project label
+                    // Add project label with proportional font size
                     imageCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
                     imageCtx.font = `bold ${Math.round(newRect.width / 10)}px Arial`;
                     imageCtx.textAlign = 'center';
@@ -363,16 +369,37 @@ const Lab = () => {
                     imageCtx.fillText(`Project ${i + 1}`, newRect.width / 2, newRect.height / 2);
 
                     // Create color-shifted versions for 3D effect
-
                     const redCanvas = createColorShiftedCanvas(imageCanvas, 'r');
                     const blueCanvas = createColorShiftedCanvas(imageCanvas, 'b');
 
-// Create split channel versions for chromatic aberration effect
+                    // Create split channel versions for chromatic aberration effect
                     const { redCanvas: redSplitCanvas, greenCanvas: greenSplitCanvas, blueCanvas: blueSplitCanvas } =
                         createSplitChannelCanvas(imageCanvas);
+
+                    // Add shadow canvas for depth perception
+                    const shadowCanvas = document.createElement('canvas');
+                    shadowCanvas.width = newRect.width + 20; // Larger to contain shadow
+                    shadowCanvas.height = newRect.height + 20;
+                    const shadowCtx = shadowCanvas.getContext('2d');
+
+                    // Draw shadow with size-dependent intensity
+                    // Les grands projets ont des ombres plus prononcées (plus en premier plan)
+                    const shadowOpacity = 0.2 + (sizeRatio * 0.2); // 0.2 for small projects, 0.4 for large ones
+                    const shadowBlur = 5 + (sizeRatio * 10); // 5px for small, 15px for large
+                    const shadowOffsetX = 2 + (sizeRatio * 8); // 2px for small, 10px for large
+                    const shadowOffsetY = 2 + (sizeRatio * 8); // 2px for small, 10px for large
+
+                    shadowCtx.shadowColor = `rgba(0, 0, 0, ${shadowOpacity})`;
+                    shadowCtx.shadowBlur = shadowBlur;
+                    shadowCtx.shadowOffsetX = shadowOffsetX;
+                    shadowCtx.shadowOffsetY = shadowOffsetY;
+                    shadowCtx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    shadowCtx.fillRect(5, 5, newRect.width - 10, newRect.height - 10);
+
                     // Add to images array
                     images.push({
                         canvas: imageCanvas,
+                        shadowCanvas: shadowCanvas, // Store shadow canvas
                         redCanvas: redCanvas,
                         blueCanvas: blueCanvas,
                         redSplitCanvas,
@@ -385,7 +412,9 @@ const Lab = () => {
                         opacity: 0,
                         visible: false,
                         rotation: 0,
-                        parallaxFactor: parallaxFactor // Nouveau paramètre
+                        parallaxFactor: parallaxFactor, // Facteur de parallaxe basé sur la taille
+                        size: width, // Stocke la taille réelle pour le tri
+                        sizeRatio: sizeRatio // Ratio de taille normalisé entre 0 et 1
                     });
 
                     // Signal that this image is "loaded"
@@ -526,8 +555,6 @@ const Lab = () => {
             destCtx.putImageData(destImageData, 0, 0);
         };
 
-        // Function to draw just the grid
-        // Function to draw just the grid - CORRIGÉ POUR DÉPLACEMENT DANS LE MÊME SENS
         // Function to draw just the grid with parallax effect
         const drawGrid = (ctx, offsetX, offsetY) => {
             ctx.beginPath();
@@ -778,8 +805,7 @@ const Lab = () => {
             // Réinitialiser les paramètres du contexte
             ctx.globalAlpha = 1.0;
         };
-
-// Version améliorée de drawCanvas pour passer l'effectStrength
+// Modify the drawCanvas function to remove the shadow rendering
         const drawCanvas = () => {
             if (!ctx || !offscreenCanvasRef.current) return;
 
@@ -796,7 +822,6 @@ const Lab = () => {
             // 2. Dessiner la grille avec le facteur de parallaxe fixe pour la grille
             const gridParallaxFactor = 0.7;
             drawGrid(offscreenCtx, offsetX * gridParallaxFactor, offsetY * gridParallaxFactor);
-
 
             // Calculer la magnitude de la vitesse
             const velocityMagnitude = Math.sqrt(dragVelocityX * dragVelocityX + dragVelocityY * dragVelocityY);
@@ -815,12 +840,13 @@ const Lab = () => {
             const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
             const endTileY = Math.ceil((-offsetY + canvas.width) / patternHeight);
 
-            // 4. Dessiner toutes les images
-            const visibleImages = new Set();
+            // 4. Collecter toutes les images visibles avec leurs positions calculées
+            const visibleImagesData = [];
+            const visibleIndices = new Set();
 
             for (let tileY = startTileY; tileY <= endTileY; tileY++) {
                 for (let tileX = startTileX; tileX <= endTileX; tileX++) {
-                    // Au lieu d'utiliser offsetX et offsetY directement, les ajuster par image
+                    // Pour chaque tuile, collecter les images visibles
                     images.forEach((image, index) => {
                         // Appliquer le facteur de parallaxe propre à chaque image
                         const imgOffsetX = offsetX * image.parallaxFactor;
@@ -835,29 +861,49 @@ const Lab = () => {
 
                         if (isInViewport(imgX, imgY, image.width, image.height)) {
                             debugInfo.visibleInstances++;
-                            visibleImages.add(index);
+                            visibleIndices.add(index);
 
-                            // Dessiner l'image avec traînée si nécessaire
-                            drawImageWithColorTrail(
-                                offscreenCtx,
+                            // Ajouter l'image à la liste des images visibles avec sa position
+                            visibleImagesData.push({
                                 image,
-                                imgX,
-                                imgY,
-                                image.width,
-                                image.height,
-                                {
+                                x: imgX,
+                                y: imgY,
+                                width: image.width,
+                                height: image.height,
+                                size: image.size || image.width, // Utiliser la taille pour le tri
+                                velocity: {
                                     x: dragVelocityX * image.parallaxFactor,
                                     y: dragVelocityY * image.parallaxFactor
                                 },
-                                image.opacity
-                            );
+                                opacity: image.opacity,
+                                index // Garder l'index original pour la mise à jour des propriétés
+                            });
                         }
                     });
                 }
             }
 
-            // 5. Si la vitesse est suffisante ou si l'effet est encore visible, appliquer l'effet
-            // C'est ici que nous utilisons effectStrength pour une transition douce
+            // 5. Trier les images par taille (de petite à grande pour que les grandes soient au-dessus)
+            visibleImagesData.sort((a, b) => a.size - b.size);
+
+            // 6. Dessiner les images dans l'ordre trié (petites d'abord, grandes ensuite)
+            for (const imageData of visibleImagesData) {
+                // ** REMOVED SHADOW DRAWING CODE HERE **
+
+                // Dessiner l'image avec traînée si nécessaire
+                drawImageWithColorTrail(
+                    offscreenCtx,
+                    imageData.image,
+                    imageData.x,
+                    imageData.y,
+                    imageData.width,
+                    imageData.height,
+                    imageData.velocity,
+                    imageData.opacity
+                );
+            }
+
+            // 7. Si la vitesse est suffisante ou si l'effet est encore visible, appliquer l'effet
             if (velocityMagnitude > 0.3 || effectStrength > 0.05) {
                 // Passer effectStrength à la fonction pour bien contrôler l'intensité
                 applyGlobalColorTrail(
@@ -871,9 +917,9 @@ const Lab = () => {
                 );
             }
 
-            // 6. Mettre à jour la visibilité des images
+            // 8. Mettre à jour la visibilité des images
             images.forEach((image, index) => {
-                const isVisible = visibleImages.has(index);
+                const isVisible = visibleIndices.has(index);
                 image.visible = isVisible;
 
                 if (isVisible) {
@@ -883,7 +929,7 @@ const Lab = () => {
                 }
             });
 
-            // 7. Dessiner l'interface utilisateur
+            // 9. Dessiner l'interface utilisateur
             offscreenCtx.globalAlpha = 1.0;
             offscreenCtx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             offscreenCtx.font = '14px Arial';
@@ -900,7 +946,7 @@ const Lab = () => {
             offscreenCtx.font = '12px monospace';
             offscreenCtx.fillText(`Offset: (${debugInfo.offsetX}, ${debugInfo.offsetY}) | Velocity: ${debugInfo.velocityMagnitude} | Effect: ${debugInfo.effectStrength} | Tiles: ${debugInfo.visibleTiles} | Images: ${debugInfo.visibleInstances}`, 20, canvas.height - 20);
 
-            // 8. Appliquer l'effet fisheye si nécessaire
+            // 10. Appliquer l'effet fisheye si nécessaire
             if (fisheyeStrength > 0.01) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = COLOR_PALETTE.neutral1;
@@ -911,7 +957,6 @@ const Lab = () => {
                 ctx.drawImage(offscreenCanvasRef.current, 0, 0);
             }
         };
-
 
 
         let effectStrength = 0; // Controls the visual strength of the color shift effect
