@@ -11,7 +11,7 @@ import {Helmet} from "react-helmet";
 // import Lenis from "lenis";
 
 import {WebglCanvasRemover} from "./utils/utils.jsx";
-import Lab from "./ui/views/labPage/lab.jsx";
+import Lab from "./ui/views/labPage/Lab.jsx";
 
 // Utiliser React.lazy pour les composants à charger en différé
 const Home = lazy(() => import('./ui/views/homePage/Home.jsx'));
