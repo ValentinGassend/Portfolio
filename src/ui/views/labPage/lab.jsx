@@ -1138,7 +1138,7 @@ const Lab = () => {
     }, [backgroundLoaded, projectImageLoaded]);
 
     return (
-        <>
+        <section className={"Lab"}>
             <canvas
                 ref={canvasRef}
                 style={{
@@ -1152,9 +1152,9 @@ const Lab = () => {
                     background: COLOR_PALETTE.neutral1 // Couleur de fond
                 }}
             />
-            <Overlay/>
+            <Overlay lab={true}/>
 
-        </>
+        </section>
     );
 };
 

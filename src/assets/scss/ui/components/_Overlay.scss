@@ -1,312 +1,318 @@
 .Overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  width: 100vw;
-  height: 100vh;
-  padding: 32px 46px;
-  display: grid;
-  grid-auto-flow: row;
-  align-content: space-between;
-  pointer-events: none;
-  opacity: 0;
-  animation: opacity 600ms ease-out 1.1s forwards;
-  &-upper, &-lower {
-    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    padding: 32px 46px;
     display: grid;
-    grid-auto-flow: column;
-    justify-content: space-between;
-    align-items: center;
-    grid-template-columns:repeat(auto-fit, 33%);
-    justify-items: center;
-
-    &--item {
-      display: flex;
-      justify-content: flex-start;
-      width: 33%;
-      @include font($ff_1_C_10pt, 24px, 700, normal);
-      @include media("<=small") {
-        @include font($ff_1_C_10pt, 20px, 700, normal);
-
-      }
-
-      &:first-child {
-        width: 100%;
-
-      }
-
-      &:last-child {
-        width: 100%;
-
-        justify-content: flex-end;
-      }
-
-      &---text {
-        pointer-events: auto;
-
-        text-decoration: unset;
-        color: $color_black_20;
-
-      }
-    }
-  }
-
-  &-upper {
-
-    @include media("<=medium") {
-      justify-items: start;
-    }
-
-    &--item {
-
-      &:first-child {
-        @include media("<=medium") {
-          display: none;
-        }
-      }
-
-
-      &:last-child {
-        cursor: pointer;
-        @include font($ff_1, 26px, 800, 18px);
-        pointer-events: auto;
-        width: fit-content;
-        margin-left: auto;
-        & > * {
-          pointer-events: none;
-        }
-
-      }
-
-    }
-  }
-
-  &-lower {
-    @include media("<=medium") {
-      grid-template-columns:unset;
-    }
-
-    &--item {
-
-      @include media("<=medium") {
-        display: none;
-      }
-
-      &:first-child, &:last-child {
-
-        @include media("<=medium") {
-          display: flex;
-        }
-      }
-    }
-  }
-
-  // Overlay modifications for ProjectsPage
-  .Projects & {
-    &-upper {
-      @include media("<=medium") {
-        grid-template-columns:unset;
-
-        justify-content: end;
-      }
-
-    }
+    grid-auto-flow: row;
+    align-content: space-between;
+    pointer-events: none;
+    opacity: 0;
+    animation: opacity 600ms ease-out 1.1s forwards;
 
     &-upper, &-lower {
-      &--item, &--item---text {
-        color: $color_black;
-
-      }
-
-    }
-
-    &-center {
-
-      width: 100%;
-      display: grid;
-      grid-auto-flow: column;
-      justify-content: flex-end;
-      align-items: center;
-      grid-template-columns:repeat(auto-fit, 33%);
-      justify-items: end;
-      @include media("<=medium") {
-        grid-template-columns:unset;
-
-      }
-
-      &--item, &--item---text {
-        will-change: opacity;
-        transition: opacity 300ms ease-in-out;
-        color: $color_neutral1;
-        display: grid;
-        grid-auto-flow: row;
-        justify-items: end;
-        @include font($ff_1_C_10pt, 24px, 700, normal);
-        pointer-events: all;
-        text-decoration: unset;
-
-        &---text {
-          opacity: 0.1;
-          display: flex;
-
-          &:after {
-
-            content: "<";
-          }
-
-          &:hover {
-            opacity: 1 !important;
-          }
-        }
-
-      }
-
-    }
-
-    &-lower {
-      @include media("<=medium") {
-        display: none;
-      }
-
-      &--item {
-        justify-content: flex-start;
-
-      }
-    }
-  }
-
-  &.SingleProject {
-    display: grid;
-    grid-auto-flow: column;
-
-    @include media("<=small") {
-      display: none !important;
-    }
-    //z-index: 110;
-    grid-template-columns: 1fr 1fr;
-
-    padding: 24px 46px;
-
-    .Overlay {
-
-      &-right, &-left {
-        z-index: -1;
-        display: grid;
-        grid-auto-flow: row;
-        grid-row-gap: 4px;
         width: 100%;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: space-between;
+        align-items: center;
+        grid-template-columns:repeat(auto-fit, 33%);
+        justify-items: center;
 
+        &--item {
+            display: flex;
+            justify-content: flex-start;
+            //width: 50%;
+            @include font($ff_1_C_10pt, 24px, 700, normal);
+            @include media("<=small") {
+                @include font($ff_1_C_10pt, 20px, 700, normal);
 
-        &--upper, &--lower {
-          display: grid;
-          grid-auto-flow: column;
-          justify-content: space-between;
-          padding-left: 24px;
-
-
-          &---item {
-            display: grid;
-            grid-auto-flow: column;
-            grid-column-gap: 32px;
+            }
 
             &:first-child {
-              .Overlay-right--upper---item----text {
-                @include font($ff_1_C_10pt, 32px, 800, normal);
-                letter-spacing: -1.28px;
-              }
-
+                width: 100%;
 
             }
 
             &:last-child {
-              width: fit-content;
+                width: 100%;
 
+                justify-content: flex-end;
             }
 
-            &----text {
+            &---text {
+                pointer-events: auto;
 
-              width: fit-content;
+                text-decoration: unset;
+                color: $color_black_20;
+
             }
-
-
-            &----text {
-              color: $color_black_20;
-              display: grid;
-              grid-auto-flow: row;
-              justify-items: center;
-              @include font($ff_1_C_10pt, 24px, 700, normal);
-              pointer-events: all;
-              text-decoration: unset;
-            }
-          }
         }
-
-        &--lower {
-          display: grid;
-          grid-auto-flow: column;
-
-          width: fit-content;
-
-          &---item {
-            display: grid;
-            grid-auto-flow: column;
-
-            grid-column-gap: 16px;
-
-            &----text {
-              color: $color_black_20;
-              display: grid;
-              grid-auto-flow: row;
-              justify-items: center;
-              @include font($ff_1_C_10pt, 24px, 700, normal);
-              pointer-events: all;
-              text-decoration: unset;
-            }
-          }
-        }
-      }
-
-      &-left {
-        //width: fit-content;
-        position: relative;
-        z-index: 110;
-        height: fit-content;
-
-        &--upper {
-          width: fit-content;
-
-          &---item {
-            &----text {
-              color: $color_black;
-              @include font($ff_1_C_10pt, 32px, 800, normal);
-              letter-spacing: -1.28px;
-
-            }
-          }
-
-        }
-      }
     }
-  }
 
-  &.About {
-    background: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    &-upper {
 
-    .Overlay {
-      &-upper {
-        justify-content: end;
-        height: fit-content;
-        grid-template-columns: none;
+        @include media("<=medium") {
+            justify-items: start;
+        }
 
         &--item {
-          display: block;
-          width: fit-content;
+
+            &:first-child {
+                @include media("<=medium") {
+                    display: none;
+                }
+            }
+
+
+            &:last-child {
+                cursor: pointer;
+                @include font($ff_1, 26px, 800, 18px);
+                pointer-events: auto;
+                width: fit-content;
+                margin-left: auto;
+
+                & > * {
+                    pointer-events: none;
+                }
+
+            }
+
         }
-      }
     }
-  }
+
+    &-lower {
+        @include media("<=medium") {
+            grid-template-columns:unset;
+        }
+
+        &--item {
+
+            @include media("<=medium") {
+                display: none;
+            }
+
+            &:first-child, &:last-child {
+
+                @include media("<=medium") {
+                    display: flex;
+                }
+            }
+        }
+    }
+
+    // Overlay modifications for ProjectsPage
+    .Projects & {
+        &-upper {
+            @include media("<=medium") {
+                grid-template-columns:unset;
+
+                justify-content: end;
+            }
+
+        }
+
+        &-upper, &-lower {
+            &--item, &--item---text {
+                color: $color_black;
+
+            }
+
+        }
+
+        &-center {
+
+            width: 100%;
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: flex-end;
+            align-items: center;
+            grid-template-columns:repeat(auto-fit, 33%);
+            justify-items: end;
+            @include media("<=medium") {
+                grid-template-columns:unset;
+
+            }
+
+            &--item, &--item---text {
+                will-change: opacity;
+                transition: opacity 300ms ease-in-out;
+                color: $color_neutral1;
+                display: grid;
+                grid-auto-flow: row;
+                justify-items: end;
+                @include font($ff_1_C_10pt, 24px, 700, normal);
+                pointer-events: all;
+                text-decoration: unset;
+
+                &---text {
+                    opacity: 0.1;
+                    display: flex;
+
+                    &:after {
+
+                        content: "<";
+                    }
+
+                    &:hover {
+                        opacity: 1 !important;
+                    }
+                }
+
+            }
+
+        }
+
+        &-lower {
+            @include media("<=medium") {
+                display: none;
+            }
+
+            &--item {
+                justify-content: flex-start;
+
+            }
+        }
+    }
+
+    &.SingleProject {
+        display: grid;
+        grid-auto-flow: column;
+
+        @include media("<=small") {
+            display: none !important;
+        }
+        //z-index: 110;
+        grid-template-columns: 1fr 1fr;
+
+        padding: 24px 46px;
+
+        .Overlay {
+
+            &-right, &-left {
+                z-index: -1;
+                display: grid;
+                grid-auto-flow: row;
+                grid-row-gap: 4px;
+                width: 100%;
+
+
+                &--upper, &--lower {
+                    display: grid;
+                    grid-auto-flow: column;
+                    justify-content: space-between;
+                    padding-left: 24px;
+
+
+                    &---item {
+                        display: grid;
+                        grid-auto-flow: column;
+                        grid-column-gap: 32px;
+
+                        &:first-child {
+                            .Overlay-right--upper---item----text {
+                                @include font($ff_1_C_10pt, 32px, 800, normal);
+                                letter-spacing: -1.28px;
+                            }
+
+
+                        }
+
+                        &:last-child {
+                            width: fit-content;
+
+                        }
+
+                        &----text {
+
+                            width: fit-content;
+                        }
+
+
+                        &----text {
+                            color: $color_black_20;
+                            display: grid;
+                            grid-auto-flow: row;
+                            justify-items: center;
+                            @include font($ff_1_C_10pt, 24px, 700, normal);
+                            pointer-events: all;
+                            text-decoration: unset;
+                        }
+                    }
+                }
+
+                &--lower {
+                    display: grid;
+                    grid-auto-flow: column;
+
+                    width: fit-content;
+
+                    &---item {
+                        display: grid;
+                        grid-auto-flow: column;
+
+                        grid-column-gap: 16px;
+
+                        &----text {
+                            color: $color_black_20;
+                            display: grid;
+                            grid-auto-flow: row;
+                            justify-items: center;
+                            @include font($ff_1_C_10pt, 24px, 700, normal);
+                            pointer-events: all;
+                            text-decoration: unset;
+                        }
+                    }
+                }
+            }
+
+            &-left {
+                //width: fit-content;
+                position: relative;
+                z-index: 110;
+                height: fit-content;
+
+                &--upper {
+                    width: fit-content;
+
+                    &---item {
+                        &----text {
+                            color: $color_black;
+                            @include font($ff_1_C_10pt, 32px, 800, normal);
+                            letter-spacing: -1.28px;
+
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    &.About {
+        background: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+
+        .Overlay {
+            &-upper {
+                justify-content: end;
+                height: fit-content;
+                grid-template-columns: none;
+
+                &--item {
+                    display: block;
+                    width: fit-content;
+                }
+            }
+        }
+    }
+
+    .Lab & {
+        z-index: 10 !important;
+    }
 }
