@@ -2,6 +2,7 @@ import {useRef, useEffect, useState, useCallback} from 'react';
 import {createNonOverlappingImages} from './createNonOverlappingImages.jsx';
 import drawCanvas from './drawCanvas.jsx';
 import {MAX_HISTORY} from '../constants.js';
+import {isInViewport} from './canvasUtils.js';
 
 // Custom hook to handle the canvas animation and interaction
 export const useCanvasAnimation = ({
@@ -18,9 +19,12 @@ export const useCanvasAnimation = ({
                                    }) => {
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
+    // Nouvel état pour le projet survolé
+    const [hoveredProject, setHoveredProject] = useState(null);
 
     // Store current images in a ref to avoid dependency issues in the animation loop
     const imagesRef = useRef([]);
+
 
     // Interactive state refs
     const dragStartXRef = useRef(0);
@@ -43,12 +47,7 @@ export const useCanvasAnimation = ({
 
     // Debug info
     const debugInfoRef = useRef({
-        visibleTiles: 0,
-        visibleInstances: 0,
-        offsetX: 0,
-        offsetY: 0,
-        velocityMagnitude: 0,
-        effectStrength: 0
+        visibleTiles: 0, visibleInstances: 0, offsetX: 0, offsetY: 0, velocityMagnitude: 0, effectStrength: 0
     });
 
     // Update the imagesRef when images state changes
@@ -56,6 +55,112 @@ export const useCanvasAnimation = ({
         imagesRef.current = images;
     }, [images]);
 
+    // Helper function to detect if a point is inside an image
+    const isPointInImage = useCallback((x, y, imgX, imgY, imgWidth, imgHeight) => {
+        return x >= imgX && x <= imgX + imgWidth && y >= imgY && y <= imgY + imgHeight;
+    }, []);
+
+    // Find which image (if any) is under the clicked point
+    const findClickedProject = useCallback((x, y) => {
+        if (!canvasRef.current) return null;
+
+        const canvas = canvasRef.current;
+
+        // Convertir les coordonnées de la fenêtre en coordonnées du canvas
+        const canvasRect = canvas.getBoundingClientRect();
+        const canvasX = x - canvasRect.left;
+        const canvasY = y - canvasRect.top;
+
+        console.log("Canvas coordinates:", canvasX, canvasY);
+
+        const patternWidth = window.innerWidth;
+        const patternHeight = window.innerHeight;
+
+        // Calcul des tuiles visibles
+        const offsetX = offsetXRef.current;
+        const offsetY = offsetYRef.current;
+        const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
+        const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
+        const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
+        const endTileY = Math.ceil((-offsetY + canvas.width) / patternHeight);
+
+        // Collecter toutes les images visibles, les plus grandes d'abord
+        const visibleImagesData = [];
+
+        for (let tileY = startTileY; tileY <= endTileY; tileY++) {
+            for (let tileX = startTileX; tileX <= endTileX; tileX++) {
+                // Pour chaque tuile, collecter les images visibles
+                imagesRef.current.forEach((image, index) => {
+                    // Appliquer le facteur de parallaxe spécifique à chaque image
+                    const imgOffsetX = offsetX * image.parallaxFactor;
+                    const imgOffsetY = offsetY * image.parallaxFactor;
+
+                    // Calculer la position avec ce décalage
+                    const tilePixelX = tileX * patternWidth + imgOffsetX;
+                    const tilePixelY = tileY * patternHeight + imgOffsetY;
+
+                    const imgX = image.patternX + tilePixelX;
+                    const imgY = image.patternY + tilePixelY;
+
+                    if (isInViewport(imgX, imgY, image.width, image.height, canvas.width, canvas.height)) {
+                        visibleImagesData.push({
+                            image,
+                            x: imgX,
+                            y: imgY,
+                            width: image.width,
+                            height: image.height,
+                            size: image.size || image.width,
+                            index
+                        });
+                    }
+                });
+            }
+        }
+
+        // Trier les images par taille dans l'ordre décroissant
+        visibleImagesData.sort((a, b) => b.size - a.size);
+
+        console.log("Visible images:", visibleImagesData.length);
+
+        // Vérifier les projets sous le pointeur
+        for (const imgData of visibleImagesData) {
+            if (isPointInImage(canvasX, canvasY, imgData.x, imgData.y, imgData.width, imgData.height)) {
+                console.log("Found clicked image:", imgData.index);
+
+                // Une fois qu'un projet est trouvé, appliquer directement le style du curseur
+                if (canvasRef.current) {
+                    canvasRef.current.style.cursor = 'pointer';
+                }
+
+                const projectInfo = {
+                    ...imgData.image, index: imgData.index, name: `Project ${imgData.index + 1}` // Générer un nom pour le popup
+                };
+
+                // Mettre à jour l'état du projet survolé
+                setHoveredProject(projectInfo);
+
+                return projectInfo;
+            }
+        }
+        // Si aucun projet n'est trouvé, réinitialiser le style du curseur
+        if (canvasRef.current) {
+            canvasRef.current.style.cursor = isDragging ? 'grabbing' : 'grab';
+        }
+
+        // Réinitialiser l'état du projet survolé
+        setHoveredProject(null);
+
+        return null;
+    }, [canvasRef, isPointInImage, isDragging]);
+    useEffect(() => {
+        if (!canvasRef.current) return;
+
+        if (hoveredProject) {
+            canvasRef.current.style.cursor = 'pointer';
+        } else {
+            canvasRef.current.style.cursor = isDragging ? 'grabbing' : 'grab';
+        }
+    }, [hoveredProject, isDragging, canvasRef]);
     // Initialize images when project image is loaded
     useEffect(() => {
         if (projectImageLoaded && backgroundLoaded && images.length === 0) {
@@ -63,11 +168,7 @@ export const useCanvasAnimation = ({
             const patternWidth = window.innerWidth;
             const patternHeight = window.innerHeight;
 
-            const newImages = createNonOverlappingImages(
-                projectImageRef,
-                patternWidth,
-                patternHeight,
-                40 // imageCount
+            const newImages = createNonOverlappingImages(projectImageRef, patternWidth, patternHeight, 40 // imageCount
             );
 
             setTotalImages(newImages.length);
@@ -127,10 +228,7 @@ export const useCanvasAnimation = ({
         }
 
         // Calculate velocity magnitude for debug and effects
-        const velocityMagnitude = Math.sqrt(
-            dragVelocityXRef.current * dragVelocityXRef.current +
-            dragVelocityYRef.current * dragVelocityYRef.current
-        );
+        const velocityMagnitude = Math.sqrt(dragVelocityXRef.current * dragVelocityXRef.current + dragVelocityYRef.current * dragVelocityYRef.current);
 
         // Update position history for trail effect
         if (positionHistoryRef.current.length >= MAX_HISTORY) {
@@ -187,6 +285,48 @@ export const useCanvasAnimation = ({
         animationFrameRef.current = requestAnimationFrame(animate);
     }, [isDragging, canvasRef, offscreenCanvasRef, animationFrameRef, prevOffsetXRef, prevOffsetYRef]);
 
+    // Event handlers for mouse/touch interaction
+    const handleMouseDown = useCallback((e) => {
+        setIsDragging(true);
+        dragStartXRef.current = e.clientX - targetOffsetXRef.current;
+        dragStartYRef.current = e.clientY - targetOffsetYRef.current;
+
+        if (canvasRef.current) {
+            canvasRef.current.style.cursor = 'grabbing';
+        }
+
+        // Add a small initial velocity if starting from rest
+        if (Math.abs(dragVelocityXRef.current) < 0.1 && Math.abs(dragVelocityYRef.current) < 0.1) {
+            dragVelocityXRef.current = 0.1;
+            dragVelocityYRef.current = 0.1;
+        }
+
+        // Reset position history
+        positionHistoryRef.current = [];
+    }, [canvasRef]);
+
+    const handleMouseMove = useCallback((e) => {
+        if (!isDragging) return;
+
+        const newTargetX = e.clientX - dragStartXRef.current;
+        const newTargetY = e.clientY - dragStartYRef.current;
+
+        // Calculate new target offset
+        targetOffsetXRef.current = newTargetX;
+        targetOffsetYRef.current = newTargetY;
+    }, [isDragging]);
+
+    const handleMouseUp = useCallback(() => {
+        setIsDragging(false);
+        if (canvasRef.current) {
+            canvasRef.current.style.cursor = 'grab';
+        }
+
+        // Moderately reduce speed for inertia effect
+        dragVelocityXRef.current *= 0.5;
+        dragVelocityYRef.current *= 0.5;
+    }, [canvasRef]);
+
     // Setup animation loop
     useEffect(() => {
         if (!canvasRef.current || !offscreenCanvasRef.current || images.length === 0) return;
@@ -203,106 +343,17 @@ export const useCanvasAnimation = ({
         };
     }, [canvasRef, offscreenCanvasRef, animationFrameRef, animate, images.length]);
 
-    // Event handlers for mouse/touch interaction
-    const handleMouseDown = useCallback((e) => {
-        setIsDragging(true);
-        dragStartXRef.current = e.clientX - targetOffsetXRef.current;
-        dragStartYRef.current = e.clientY - targetOffsetYRef.current;
-
-        if (canvasRef.current) {
-            canvasRef.current.style.cursor = 'grabbing';
-        }
-
-        // Add a small initial velocity if starting from rest
-        // This ensures the effect begins to show immediately
-        if (Math.abs(dragVelocityXRef.current) < 0.1 && Math.abs(dragVelocityYRef.current) < 0.1) {
-            dragVelocityXRef.current = 0.1;
-            dragVelocityYRef.current = 0.1;
-        }
-
-        // Reset position history
-        positionHistoryRef.current = [];
-    }, [canvasRef]);
-
-    const handleMouseMove = useCallback((e) => {
-        if (!isDragging) return;
-
-        // Calculate new target offset
-        targetOffsetXRef.current = e.clientX - dragStartXRef.current;
-        targetOffsetYRef.current = e.clientY - dragStartYRef.current;
-    }, [isDragging]);
-
-    const handleMouseUp = useCallback(() => {
-        setIsDragging(false);
-        if (canvasRef.current) {
-            canvasRef.current.style.cursor = 'grab';
-        }
-
-        // Moderately reduce speed for inertia effect
-        dragVelocityXRef.current *= 0.5;
-        dragVelocityYRef.current *= 0.5;
-    }, [canvasRef]);
-
-    // Touch event handlers (for mobile devices)
-    const handleTouchStart = useCallback((e) => {
-        if (e.touches.length === 1) {
-            const touch = e.touches[0];
-            handleMouseDown({clientX: touch.clientX, clientY: touch.clientY});
-        }
-    }, [handleMouseDown]);
-
-    const handleTouchMove = useCallback((e) => {
-        if (e.touches.length === 1) {
-            const touch = e.touches[0];
-            handleMouseMove({clientX: touch.clientX, clientY: touch.clientY});
-
-            // Prevent scroll/zoom on touch devices
-            e.preventDefault();
-        }
-    }, [handleMouseMove]);
-
-    const handleTouchEnd = useCallback(() => {
-        handleMouseUp();
-    }, [handleMouseUp]);
-
-    // Setup event listeners
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        // Set initial cursor style
-        canvas.style.cursor = 'grab';
-
-        // Add event listeners
-        canvas.addEventListener('mousedown', handleMouseDown);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-        canvas.addEventListener('touchstart', handleTouchStart);
-        window.addEventListener('touchmove', handleTouchMove, {passive: false});
-        window.addEventListener('touchend', handleTouchEnd);
-
-        // Cleanup event listeners
-        return () => {
-            canvas.removeEventListener('mousedown', handleMouseDown);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-            canvas.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
-        };
-    }, [
-        canvasRef,
-        handleMouseDown,
-        handleMouseMove,
-        handleMouseUp,
-        handleTouchStart,
-        handleTouchMove,
-        handleTouchEnd
-    ]);
+    // Export the event handlers to be used by the parent component
+    const setDragHandlers = {
+        mouseDown: handleMouseDown, mouseMove: handleMouseMove, mouseUp: handleMouseUp
+    };
 
     return {
         images,
         isDragging,
-        debugInfo: debugInfoRef.current
+        hoveredProject, // Exposer l'état du projet survolé
+        debugInfo: debugInfoRef.current,
+        findClickedProject,
+        setDragHandlers
     };
 };
