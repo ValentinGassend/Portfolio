@@ -1094,7 +1094,6 @@ const Lab = () => {
 
     return (
         <>
-            <Overlay/>
             <canvas
                 ref={canvasRef}
                 style={{
@@ -1104,11 +1103,12 @@ const Lab = () => {
                     display: 'block',
                     width: '100vw',
                     height: '100vh',
-                    zIndex: 1,
                     touchAction: 'none',
                     background: COLOR_PALETTE.neutral1 // Couleur de fond
                 }}
             />
+            <Overlay/>
+
         </>
     );
 };

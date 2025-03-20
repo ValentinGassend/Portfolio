@@ -35,7 +35,7 @@ const MenuSection = () => {
 
         </a>
         <a href={'/lab'} className={"MenuSection-item"}>
-            <div className={"MenuSection-item--title Disable Uppercase"}>
+            <div className={"MenuSection-item--title Uppercase"}>
                 <DynamicHover text={"Lab"} parentClass={"MenuSection-item--title"}
                               hoverTriggerClass={"MenuSection-item"}/>
 
