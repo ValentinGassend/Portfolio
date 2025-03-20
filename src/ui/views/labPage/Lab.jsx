@@ -29,6 +29,7 @@ const Lab = () => {
         backgroundLoaded,
         projectImageLoaded,
         projectImageRef,
+        projectImagesRef, // Add this to the destructuring
         prevOffsetXRef,
         prevOffsetYRef
     } = useCanvasSetup();
@@ -37,16 +38,8 @@ const Lab = () => {
     const {
         images, isDragging, debugInfo, findClickedProject, setDragHandlers
     } = useCanvasAnimation({
-        canvasRef,
-        offscreenCanvasRef,
-        animationFrameRef,
-        projectImageRef,
-        projectImageLoaded,
-        backgroundLoaded,
-        setImagesLoaded,
-        setTotalImages,
-        prevOffsetXRef,
-        prevOffsetYRef
+        canvasRef, offscreenCanvasRef, animationFrameRef, projectImageRef, projectImagesRef, // Pass the projectImagesRef to the animation hook
+        projectImageLoaded, backgroundLoaded, setImagesLoaded, setTotalImages, prevOffsetXRef, prevOffsetYRef
     });
 
     // Handle closing the popup

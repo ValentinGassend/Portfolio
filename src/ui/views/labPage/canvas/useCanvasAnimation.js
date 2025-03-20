@@ -10,6 +10,7 @@ export const useCanvasAnimation = ({
                                        offscreenCanvasRef,
                                        animationFrameRef,
                                        projectImageRef,
+                                       projectImagesRef, // Add projectImagesRef to the parameters
                                        projectImageLoaded,
                                        backgroundLoaded,
                                        setImagesLoaded,
@@ -133,7 +134,9 @@ export const useCanvasAnimation = ({
                 }
 
                 const projectInfo = {
-                    ...imgData.image, index: imgData.index, name: `Project ${imgData.index + 1}` // Générer un nom pour le popup
+                    ...imgData.image,
+                    index: imgData.index,
+                    name: imgData.image.name || `Project ${imgData.index + 1}` // Use name from the image object if available
                 };
 
                 // Mettre à jour l'état du projet survolé
@@ -152,6 +155,7 @@ export const useCanvasAnimation = ({
 
         return null;
     }, [canvasRef, isPointInImage, isDragging]);
+
     useEffect(() => {
         if (!canvasRef.current) return;
 
@@ -161,6 +165,7 @@ export const useCanvasAnimation = ({
             canvasRef.current.style.cursor = isDragging ? 'grabbing' : 'grab';
         }
     }, [hoveredProject, isDragging, canvasRef]);
+
     // Initialize images when project image is loaded
     useEffect(() => {
         if (projectImageLoaded && backgroundLoaded && images.length === 0) {
@@ -168,14 +173,22 @@ export const useCanvasAnimation = ({
             const patternWidth = window.innerWidth;
             const patternHeight = window.innerHeight;
 
-            const newImages = createNonOverlappingImages(projectImageRef, patternWidth, patternHeight, 40 // imageCount
+            // Instead of passing a fixed count (40), let the function use the actual number of images
+            const newImages = createNonOverlappingImages(
+                projectImagesRef || projectImageRef, // Use image array if available, fallback to single image
+                patternWidth,
+                patternHeight
+                // No more imageCount parameter - we'll use exactly as many images as were loaded
             );
 
+            // Set the total and loaded count to match the actual created images
             setTotalImages(newImages.length);
             setImagesLoaded(newImages.length);
             setImages(newImages);
+
+            console.log(`Created ${newImages.length} projects from ${projectImagesRef.current?.length || 1} images`);
         }
-    }, [projectImageLoaded, backgroundLoaded, images.length, projectImageRef, setImagesLoaded, setTotalImages]);
+    }, [projectImageLoaded, backgroundLoaded, images.length, projectImageRef, projectImagesRef, setImagesLoaded, setTotalImages]);
 
     // The animation function that uses refs instead of state to avoid re-renders
     const animate = useCallback(() => {
