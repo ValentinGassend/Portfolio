@@ -1,4 +1,11 @@
-export const drawImageWithColorTrail = (ctx, image, x, y, width, height, velocity, opacity) => {
+export const drawImageWithColorTrail = (ctx, image, x, y, width, height, velocity, opacity, isGridMode = false) => {
+    // Disable trail effect completely in grid mode
+    if (isGridMode) {
+        ctx.globalAlpha = opacity;
+        ctx.drawImage(image.canvas, x, y, width, height);
+        return;
+    }
+
     const velocityMagnitude = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 
     // If speed is too low, just draw the image without effect

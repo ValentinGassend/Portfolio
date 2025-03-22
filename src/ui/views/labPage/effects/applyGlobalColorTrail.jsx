@@ -1,6 +1,9 @@
 import {COLOR_PALETTE} from '../constants';
 
-export const applyGlobalColorTrail = (ctx, canvas, offsetX, offsetY, dragVelocityX, dragVelocityY, effectStrength) => {
+export const applyGlobalColorTrail = (ctx, canvas, offsetX, offsetY, dragVelocityX, dragVelocityY, effectStrength, isGridMode = false) => {
+    // Completely disable global color trail in grid mode
+    if (isGridMode) return;
+
     const velocityMagnitude = Math.sqrt(dragVelocityX * dragVelocityX + dragVelocityY * dragVelocityY);
 
     // Don't apply the effect if the speed is too low

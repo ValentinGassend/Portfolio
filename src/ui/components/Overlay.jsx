@@ -4,17 +4,35 @@ import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import ColorManager from "../../managers/ColorManager.jsx";
 import Menu from "./menu/Menu.jsx";
+import {COLOR_PALETTE} from "../views/labPage/constants.js";
 
 const Overlay = ({
-                     projectsPage = false, projectsList, singleProjectPage = false, project, about = false, lab = false
+                     projectsPage = false,
+                     projectsList,
+                     singleProjectPage = false,
+                     project,
+                     about = false,
+                     lab = false,
+                     onGridLayoutToggle = null
                  }) => {
 
     const [menu, setMenu] = useState(null);
     const [scrollPosition, setScrollPosition] = useState(0);
     const mousePosition = useRef({x: 0, y: 0});
+    const [gridLayoutActive, setGridLayoutActive] = useState(false);
+    const layoutButtonRef = useRef(null);
 
     gsap.registerPlugin(ScrollToPlugin);
 
+    const handleGridLayoutToggle = () => {
+        const newGridLayoutState = !gridLayoutActive;
+        setGridLayoutActive(newGridLayoutState);
+
+        // Call the prop function to notify parent component
+        if (onGridLayoutToggle) {
+            onGridLayoutToggle(newGridLayoutState);
+        }
+    };
     useEffect(() => {
         const menuElement = document.querySelector(".Menu");
         setMenu(menuElement);
@@ -228,8 +246,33 @@ const Overlay = ({
                                 <p className={`Overlay-lower--item---text Uppercase`}>Disponible en
                                     freelance</p>
                             </div>
+
                             <div className={`Overlay-lower--item`}>
-                                <p className={`Overlay-lower--item---text Uppercase`}></p>
+                                <div
+                                    ref={layoutButtonRef}
+                                    className="Overlay-lower--item---text Uppercase grid-layout-button"
+                                    onClick={handleGridLayoutToggle}
+                                >
+                                    <div className="layout-text-container">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <rect x="3" y="3" width="7" height="7" stroke="currentColor"
+                                                  strokeWidth="2"/>
+                                            <rect x="14" y="3" width="7" height="7" stroke="currentColor"
+                                                  strokeWidth="2"/>
+                                            <rect x="3" y="14" width="7" height="7" stroke="currentColor"
+                                                  strokeWidth="2"/>
+                                            <rect x="14" y="14" width="7" height="7" stroke="currentColor"
+                                                  strokeWidth="2"/>
+                                        </svg>
+                                        <p className="layout-text">
+                                            <span className="before">Free</span>
+                                            <span className={"content"}>layout</span>
+                                            <span className="after">Grid</span>
+
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <div className={`Overlay-lower--item`}>
                                 <p className={`Overlay-lower--item---text Uppercase`}>2025</p>
@@ -265,6 +308,52 @@ const Overlay = ({
                     </div>)}
                 </>)} </>)}
         </>)}
+        <style>{`
+            .grid-layout-button {
+                position: relative;
+                cursor: pointer;
+                user-select: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .layout-text-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .layout-text {
+                position: relative;
+                display: inline-block;
+                height: 1.2em;
+                line-height: 1.2;
+            }
+
+            .layout-text .before,
+            .layout-text .after {
+                position: relative;
+                left: 0;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                padding-right: 0.25rem;
+            }
+            
+            .layout-text .after {
+                position: absolute;
+            }
+
+            .layout-text .before {
+                transform: ${gridLayoutActive ? 'translateY(100%)' : 'translateY(0)'} !important;
+                opacity: ${gridLayoutActive ? 1 : 0};
+            }
+
+            .layout-text .after {
+                transform: ${gridLayoutActive ? 'translateY(100%)' : 'translateY(0)'} !important;
+            }
+        `}</style>
     </>);
 };
 

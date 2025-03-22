@@ -44,7 +44,7 @@ export const useCanvasAnimation = ({
     const infiniteScrollRef = useRef({
         totalRows: 1000,       // Nombre initial de répétitions de la grille
         itemsPerRow: 2,     // Correspond à columnCount dans calculateGridLayout
-        rowHeight: 300,     // Hauteur approximative d'une rangée (sera calculée plus précisément)
+        rowHeight: 500,     // Hauteur approximative d'une rangée (sera calculée plus précisément)
         virtualOffset: 0,   // Décalage virtuel pour le scroll infini
         lastScrollPos: 0    // Pour détecter la direction du défilement
     });
@@ -78,16 +78,19 @@ export const useCanvasAnimation = ({
 
     // Add this new function to store initial positions before any transformations
     const storeInitialPositions = useCallback((imgs) => {
+        console.log('Stockage des positions initiales', imgs);
         if (!originalPositionsRef.current || originalPositionsRef.current.length === 0) {
             originalPositionsRef.current = imgs.map(img => ({
                 x: img.patternX, y: img.patternY, width: img.width, height: img.height
             }));
 
-            // Store a deep copy of the initial positions to ensure they're preserved
             initialPositionsRef.current = JSON.parse(JSON.stringify(originalPositionsRef.current));
+
+            console.log('Positions initiales stockées:', initialPositionsRef.current);
         }
     }, []);
 
+    // Modification pour centrer verticalement les premiers projets
     const calculateGridLayout = useCallback(() => {
         if (images.length === 0) return [];
 
@@ -106,10 +109,11 @@ export const useCanvasAnimation = ({
         const canvasHeight = canvas.height;
 
         // Grid parameters
-        const margin = 20;              // Margin between projects
-        const pairSpacing = 20;         // Space between rows
-        const targetHeight = 250;       // Target height for projects
-        const columnCount = 2;          // Columns per row
+        const horizontalSpacing = 100;     // Espacement horizontal entre projets
+        const verticalSpacing = horizontalSpacing;       // Espacement vertical entre lignes de projets
+        const groupSpacing = verticalSpacing;         // Espacement entre les groupes répétés
+        const targetHeight = 250;         // Target height for projects
+        const columnCount = 2;            // Columns per row
         const baseImagesCount = images.length;
 
         // Store these values for infinite scroll
@@ -117,7 +121,18 @@ export const useCanvasAnimation = ({
 
         // Calculate positions for base images (single repetition)
         const baseGridPositions = [];
-        let currentY = 50; // Start at top with padding
+
+        // Calculer d'abord la hauteur totale pour pouvoir centrer verticalement
+        let totalHeight = 0;
+        const rows = Math.ceil(baseImagesCount / columnCount);
+
+        // Estimation de la hauteur basée sur targetHeight et espacements
+        const estimatedRowHeight = targetHeight + verticalSpacing;
+        totalHeight = rows * estimatedRowHeight - verticalSpacing; // Soustraire le dernier espacement
+
+        // Calculer le décalage Y pour centrer verticalement
+        const initialY = Math.max(0, (canvasHeight - totalHeight) / 2) - estimatedRowHeight / 2;
+        let currentY = initialY; // Commencer avec un décalage qui centre verticalement
 
         // Go through images in pairs to create rows
         for (let i = 0; i < baseImagesCount; i += columnCount) {
@@ -137,8 +152,8 @@ export const useCanvasAnimation = ({
                 sizes.push(calculateSize(images[i + j]));
             }
 
-            // Total width of the row
-            const totalWidth = sizes.reduce((sum, size) => sum + size.width, 0) + (sizes.length - 1) * margin;
+            // Total width of the row with UNIFORM horizontal spacing
+            const totalWidth = sizes.reduce((sum, size) => sum + size.width, 0) + ((sizes.length - 1) * horizontalSpacing);
             const startX = (canvasWidth - totalWidth) / 2;
 
             // Position of each image in the row
@@ -146,22 +161,21 @@ export const useCanvasAnimation = ({
             availableImages.forEach((img, index) => {
                 const size = sizes[index];
                 baseGridPositions.push({
-                    x: currentX, y: currentY, width: size.width, height: size.height, originalIndex: i + index // Keep original index
+                    x: currentX, y: currentY, width: size.width, height: size.height, originalIndex: i + index
                 });
 
-                // Prepare position for next image
-                currentX += size.width + margin;
+                // Utiliser horizontalSpacing constant entre les éléments
+                currentX += size.width + horizontalSpacing;
             });
 
-            // Move to next row
+            // Move to next row with UNIFORM vertical spacing
             const rowHeight = Math.max(...sizes.map(s => s.height));
-            currentY += rowHeight + pairSpacing;
+            currentY += rowHeight + verticalSpacing;
         }
 
-        // Store approximate row height for infinite scroll
-        const totalRows = Math.ceil(baseImagesCount / columnCount);
-        const patternHeight = currentY;
-        infiniteScrollRef.current.rowHeight = patternHeight / totalRows;
+        // Recalculer la hauteur réelle du pattern
+        const patternHeight = currentY - initialY + (groupSpacing - verticalSpacing);
+        infiniteScrollRef.current.rowHeight = patternHeight / Math.ceil(baseImagesCount / columnCount);
         infiniteScrollRef.current.patternHeight = patternHeight;
 
         // Now, create the complete layout with duplication for infinite scroll
@@ -169,54 +183,81 @@ export const useCanvasAnimation = ({
 
         // Calculate virtual offset (allows infinite scroll)
         const scrollOffset = offsetYRef.current;
-        const virtualOffset = infiniteScrollRef.current.virtualOffset;
+        const virtualOffset = infiniteScrollRef.current.virtualOffset || 0;
         const adjustedScrollOffset = scrollOffset + virtualOffset;
 
-        // Number of repetitions needed to fill the view
-        const visibleRows = Math.ceil(canvasHeight / infiniteScrollRef.current.rowHeight) + 2;
-        // At least double the visible screen, or use existing totalRows if larger
-        const requiredRepeats = Math.max(infiniteScrollRef.current.totalRows, Math.ceil(visibleRows * 2));
-
-        // Determine if we need to add repetitions
-        if (scrollOffset !== infiniteScrollRef.current.lastScrollPos) {
-            const isScrollingDown = scrollOffset < infiniteScrollRef.current.lastScrollPos;
-            const threshold = canvasHeight;
-
-            // When scrolling down enough, add repetitions
-            if (isScrollingDown && Math.abs(adjustedScrollOffset) > threshold * (infiniteScrollRef.current.totalRows - visibleRows)) {
-                infiniteScrollRef.current.totalRows += 5; // Add 5 repetitions
-
-            }
-
-            // Handle scroll reset when going too far
-            if (Math.abs(adjustedScrollOffset) > threshold * infiniteScrollRef.current.totalRows * 0.75) {
-                // Virtual reset - user won't see a jump
-                infiniteScrollRef.current.virtualOffset = virtualOffset - adjustedScrollOffset;
-
-            }
-
-            infiniteScrollRef.current.lastScrollPos = scrollOffset;
+        // Initialiser topRepeats et totalRows s'ils n'existent pas encore
+        if (infiniteScrollRef.current.topRepeats === undefined) {
+            infiniteScrollRef.current.topRepeats = 0;
+        }
+        if (infiniteScrollRef.current.totalRows === undefined) {
+            infiniteScrollRef.current.totalRows = 5;
         }
 
-        // Create complete layout with repetitions
-        for (let repeat = 0; repeat < requiredRepeats; repeat++) {
+        // Number of repetitions needed to fill the view
+        const visibleRows = Math.ceil(canvasHeight / infiniteScrollRef.current.rowHeight) + 5; // +5 pour éviter les sauts visuels
+
+        // Nombre de répétitions nécessaires dans chaque direction
+        const requiredRepeatsDown = Math.max(infiniteScrollRef.current.totalRows, Math.ceil(visibleRows * 2));
+        const requiredRepeatsUp = Math.max(infiniteScrollRef.current.topRepeats, Math.ceil(visibleRows * 2));
+
+        // Calculer les répétitions visibles en fonction de l'offset actuel
+        const currentViewport = {
+            top: -offsetYRef.current - canvasHeight,
+            bottom: -offsetYRef.current + canvasHeight * 2
+        };
+
+        // Créer des répétitions au-dessus (répétitions négatives)
+        for (let repeat = -requiredRepeatsUp; repeat < 0; repeat++) {
             baseGridPositions.forEach((basePos, idx) => {
-                // Calculate the repeat-adjusted y position
+                // Position Y avec un espacement UNIFORME entre les répétitions
                 const repeatY = basePos.y + (repeat * patternHeight);
 
                 // Only include positions that are within the visible area plus some padding
-                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight &&
-                    repeatY + offsetYRef.current < canvasHeight * 2) {
+                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 2 &&
+                    repeatY + offsetYRef.current < canvasHeight * 3) {
+
                     gridPositions.push({
                         ...basePos,
                         y: repeatY,
                         originalIndex: basePos.originalIndex,
                         repeatIndex: repeat,
-                        isVisible: true // Mark as visible for rendering
+                        isVisible: true
                     });
                 }
             });
         }
+
+        // Créer des répétitions au-dessous (répétitions positives)
+        for (let repeat = 0; repeat < requiredRepeatsDown; repeat++) {
+            baseGridPositions.forEach((basePos, idx) => {
+                // Position Y avec un espacement UNIFORME entre les répétitions
+                const repeatY = basePos.y + (repeat * patternHeight);
+
+                // Only include positions that are within the visible area plus some padding
+                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 2 &&
+                    repeatY + offsetYRef.current < canvasHeight * 3) {
+
+                    gridPositions.push({
+                        ...basePos,
+                        y: repeatY,
+                        originalIndex: basePos.originalIndex,
+                        repeatIndex: repeat,
+                        isVisible: true
+                    });
+                }
+            });
+        }
+
+        // Ajouter l'information de débogage pour faciliter le suivi
+        debugInfoRef.current = {
+            ...debugInfoRef.current,
+            scrollOffset,
+            virtualOffset,
+            topRepeats: infiniteScrollRef.current.topRepeats,
+            totalRows: infiniteScrollRef.current.totalRows,
+            visibleProjects: gridPositions.length
+        };
 
         return gridPositions;
     }, [images, canvasRef, offsetYRef]);
@@ -244,54 +285,108 @@ export const useCanvasAnimation = ({
         // Calculate pattern height to determine scroll limits
         if (typeof calculateGridLayout === 'function') {
             const patternHeight = infiniteScrollRef.current.patternHeight || 0;
-            const totalRepeats = infiniteScrollRef.current.totalRows || 5;
 
-            // Only apply light resistance when scrolling too far up
-            if (gridScrollOffsetRef.current > 0) {
-                // Apply resistance when trying to scroll above the top
-                gridScrollOffsetRef.current = Math.max(0, gridScrollOffsetRef.current * 0.9);
+            // Initialiser les compteurs de répétitions s'ils n'existent pas encore
+            if (infiniteScrollRef.current.topRepeats === undefined) {
+                infiniteScrollRef.current.topRepeats = 0;
             }
-            // For downward scrolling, dynamically add more repeats instead of limiting
-            else if (gridScrollOffsetRef.current < -(patternHeight * totalRepeats * 0.7)) {
-                // Add more rows when we're getting close to the bottom
-                infiniteScrollRef.current.totalRows += 2;
-
+            if (infiniteScrollRef.current.totalRows === undefined) {
+                infiniteScrollRef.current.totalRows = 5;
             }
 
-            targetOffsetYRef.current = gridScrollOffsetRef.current;
+            // Détection de la direction du défilement
+            const isScrollingUp = delta < 0;
+            const isScrollingDown = delta > 0;
+
+            // Si on défile vers le haut et qu'on approche de la limite supérieure
+            if (isScrollingUp && gridScrollOffsetRef.current > patternHeight * 0.5) {
+                console.log("Ajout de répétitions vers le haut");
+                // Ajouter des répétitions au-dessus et décaler l'offset
+                infiniteScrollRef.current.topRepeats += 5;
+                infiniteScrollRef.current.virtualOffset -= patternHeight * 5;
+                gridScrollOffsetRef.current -= patternHeight * 5;
+                targetOffsetYRef.current = gridScrollOffsetRef.current;
+            }
+
+            // Si on défile vers le bas et qu'on approche de la limite inférieure
+            const totalRepeats = infiniteScrollRef.current.totalRows;
+            if (isScrollingDown && gridScrollOffsetRef.current < -(patternHeight * totalRepeats * 0.7)) {
+                console.log("Ajout de répétitions vers le bas");
+                // Ajouter plus de lignes quand on s'approche du bas
+                infiniteScrollRef.current.totalRows += 5;
+            }
         }
     }, [isGridModeRef, calculateGridLayout]);
 
 
     // Modified version of updateImagesLayout
     const updateImagesLayout = useCallback((useGridLayout) => {
-        // If we're already in the requested mode, do nothing
+        console.log('Transition entre layouts:', useGridLayout ? 'Grid' : 'Libre');
+        console.log('Positions initiales:', initialPositionsRef.current);
+
+        if (isGridModeRef.current === useGridLayout) {
+            console.log('Déjà dans ce mode, pas de transition');
+            return;
+        }
         if (isGridModeRef.current === useGridLayout) {
             return;
         }
 
-        // Make sure we have stored the initial positions
+        // S'assurer que les positions initiales sont stockées
         storeInitialPositions(imagesRef.current);
 
-        // Update the mode reference
+        // Mettre à jour la référence du mode
         isGridModeRef.current = useGridLayout;
 
-        // Reset animation progress
+        // Réinitialiser la progression de l'animation
         animationProgressRef.current = 0;
 
-        // Store current positions as starting point for animation
+        // Stocker les positions actuelles comme point de départ de l'animation
         originalPositionsRef.current = imagesRef.current.map(img => ({
             x: img.patternX, y: img.patternY, width: img.width, height: img.height
         }));
 
         if (useGridLayout) {
-            // Calculate grid layout
-            targetPositionsRef.current = calculateGridLayout();
-            // Reset the scroll position when entering grid mode
-            gridScrollOffsetRef.current = 0;
+            // Forcer le calcul du layout de grille
+            const gridPositions = calculateGridLayout();
+
+            // Vérifier que les positions de grille sont valides
+            if (gridPositions && gridPositions.length > 0) {
+                targetPositionsRef.current = gridPositions.map((pos, index) => ({
+                    x: pos.x, y: pos.y, width: pos.width, height: pos.height, originalIndex: pos.originalIndex, // Ajouter l'image originale correspondante
+                    image: imagesRef.current[pos.originalIndex % imagesRef.current.length]
+                }));
+            } else {
+                // Fallback: créer manuellement un layout de grille simple
+                targetPositionsRef.current = imagesRef.current.map((img, index) => {
+                    const cols = 2; // Nombre de colonnes
+                    const margin = 20; // Marge entre les éléments
+                    const targetHeight = 250; // Hauteur cible
+
+                    // Calculer l'aspect ratio
+                    const aspectRatio = img.width / img.height;
+                    let height = targetHeight;
+                    let width = height * aspectRatio;
+
+                    // Calculer la position
+                    const col = index % cols;
+                    const row = Math.floor(index / cols);
+
+                    return {
+                        x: col * (width + margin) + (window.innerWidth - (width * cols + margin * (cols - 1))) / 2,
+                        y: row * (height + margin) + 50, // 50px from top
+                        width: width,
+                        height: height,
+                        originalIndex: index,
+                        image: img
+                    };
+                });
+            }
         } else {
-            // Going back to free layout - use the initial positions we saved
-            targetPositionsRef.current = initialPositionsRef.current.map(pos => ({...pos}));
+            // Retour au layout libre - utiliser les positions initiales sauvegardées
+            targetPositionsRef.current = initialPositionsRef.current.map((pos, index) => ({
+                ...pos, image: imagesRef.current[index]
+            }));
         }
 
         // Start transition animation
@@ -317,10 +412,13 @@ export const useCanvasAnimation = ({
             const elapsedTime = timestamp - startTime;
             const progress = Math.min(elapsedTime / TRANSITION_DURATION, 1);
 
+            console.log('Animation de transition:', progress);
+
             animationProgressRef.current = progress;
 
             // Si la transition est terminée
             if (progress >= 1) {
+                console.log('Transition terminée');
                 setIsTransitioning(false);
                 return;
             }
@@ -357,6 +455,58 @@ export const useCanvasAnimation = ({
         const canvasX = x - canvasRect.left;
         const canvasY = y - canvasRect.top;
 
+        // Cas spécial pour le mode grille
+        if (isGridModeRef.current) {
+            // Cette partie utilise isGridModeRef qui est disponible dans le hook
+            // Obtenir les positions de grid actuelles
+            const gridPositions = calculateGridLayout();
+            if (!gridPositions || gridPositions.length === 0) return null;
+
+            // Trier les positions par taille (grandes d'abord)
+            const sortedPositions = [...gridPositions].sort((a, b) => {
+                const imgA = imagesRef.current[a.originalIndex % imagesRef.current.length];
+                const imgB = imagesRef.current[b.originalIndex % imagesRef.current.length];
+                return imgB.size - imgA.size;
+            });
+
+            // Parcourir chaque position de la grille
+            for (const pos of sortedPositions) {
+                const image = imagesRef.current[pos.originalIndex % imagesRef.current.length];
+                if (!image) continue;
+
+                // Ajuster la position Y avec l'offset de défilement actuel
+                const imgY = pos.y + offsetYRef.current;
+
+                // Vérifier si le point est dans l'image
+                if (canvasX >= pos.x && canvasX <= pos.x + pos.width &&
+                    canvasY >= imgY && canvasY <= imgY + pos.height) {
+
+                    // Projet trouvé
+                    if (canvasRef.current) {
+                        canvasRef.current.style.cursor = 'pointer';
+                    }
+
+                    const projectInfo = {
+                        ...image,
+                        index: pos.originalIndex,
+                        name: image.name || `Project ${pos.originalIndex + 1}`
+                    };
+
+                    setHoveredProject(projectInfo);
+                    return projectInfo;
+                }
+            }
+
+            // Aucun projet trouvé en mode grille
+            if (canvasRef.current) {
+                canvasRef.current.style.cursor = 'default';
+            }
+
+            setHoveredProject(null);
+            return null;
+        }
+
+        // Mode libre - logique existante
         const patternWidth = window.innerWidth;
         const patternHeight = window.innerHeight;
 
@@ -373,15 +523,10 @@ export const useCanvasAnimation = ({
 
         for (let tileY = startTileY; tileY <= endTileY; tileY++) {
             for (let tileX = startTileX; tileX <= endTileX; tileX++) {
-                // En mode grille, ne considérer que la tuile centrale
-                if (isGridModeRef.current && (tileX !== 0 || tileY !== 0)) {
-                    continue;
-                }
-
                 // Pour chaque tuile, collecter les images visibles
                 imagesRef.current.forEach((image, index) => {
                     // Appliquer le facteur de parallaxe spécifique à chaque image
-                    const parallaxFactor = isGridModeRef.current ? 0.95 : image.parallaxFactor;
+                    const parallaxFactor = image.parallaxFactor;
                     const imgOffsetX = offsetX * parallaxFactor;
                     const imgOffsetY = offsetY * parallaxFactor;
 
@@ -419,7 +564,9 @@ export const useCanvasAnimation = ({
                 }
 
                 const projectInfo = {
-                    ...imgData.image, index: imgData.index, name: imgData.image.name || `Project ${imgData.index + 1}` // Use name from the image object if available
+                    ...imgData.image,
+                    index: imgData.index,
+                    name: imgData.image.name || `Project ${imgData.index + 1}`
                 };
 
                 // Mettre à jour l'état du projet survolé
@@ -428,6 +575,7 @@ export const useCanvasAnimation = ({
                 return projectInfo;
             }
         }
+
         // Si aucun projet n'est trouvé, réinitialiser le style du curseur
         if (canvasRef.current) {
             canvasRef.current.style.cursor = isDragging ? 'grabbing' : 'grab';
@@ -437,7 +585,8 @@ export const useCanvasAnimation = ({
         setHoveredProject(null);
 
         return null;
-    }, [canvasRef, isPointInImage, isDragging]);
+    }, [canvasRef, isPointInImage, isDragging, offsetYRef, isGridModeRef, calculateGridLayout, imagesRef]);
+
 
     useEffect(() => {
         if (!canvasRef.current) return;
@@ -577,43 +726,36 @@ export const useCanvasAnimation = ({
 
         // If a transition is in progress, update image positions
         let imagesToDraw = [...imagesRef.current];
-
         if (isTransitioning && targetPositionsRef.current.length > 0) {
             const progress = animationProgressRef.current;
-            // Use a smoother easing function - cubic easing
+            // Utiliser une fonction d'interpolation de type "ease-in-out"
             const easedProgress = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-            // Create a modified copy of images with transition positions
+            // Créer une copie modifiée des images avec des positions de transition
             imagesToDraw = imagesRef.current.map((img, index) => {
-                const origPos = originalPositionsRef.current[index] || {
+                const origPos = {
                     x: img.patternX, y: img.patternY, width: img.width, height: img.height
                 };
                 const targetPos = targetPositionsRef.current[index];
 
                 if (!targetPos) return img;
 
-                // Interpolate between current position and target position
+                // Interpoler entre la position actuelle et la position cible
                 const newX = origPos.x + (targetPos.x - origPos.x) * easedProgress;
                 const newY = origPos.y + (targetPos.y - origPos.y) * easedProgress;
-
-                // Also interpolate dimensions if they've changed
                 const newWidth = origPos.width + (targetPos.width - origPos.width) * easedProgress;
                 const newHeight = origPos.height + (targetPos.height - origPos.height) * easedProgress;
 
-                // Mark that this is an image in grid layout mode
-                const inGridLayout = isGridModeRef.current;
-
-                // Return image with new coordinates and dimensions
                 return {
-                    ...img, patternX: newX, patternY: newY, width: newWidth, height: newHeight, inGridLayout
+                    ...img, patternX: newX, patternY: newY, width: newWidth, height: newHeight
                 };
             });
 
-            // If transition is complete, permanently update image state
+            // Si la transition est complète, mettre à jour l'état des images
             if (progress >= 1) {
                 setTimeout(() => {
                     setImages(imagesToDraw);
-                    setIsTransitioning(false); // Explicitly mark transition as complete
+                    setIsTransitioning(false);
                 }, 0);
             }
         }
@@ -729,12 +871,11 @@ export const useCanvasAnimation = ({
         // Only run this once when the canvas is available
         if (wheelSetupCompleteRef.current || !canvasRef.current) return;
 
-
-
         // Mark as completed immediately to avoid multiple executions
         wheelSetupCompleteRef.current = true;
 
-        // Wheel event handler function
+        // Wheel event handler function with debounce for performance
+        let wheelTimeout = null;
         const wheelHandler = (e) => {
             // Only process the event if we're in grid mode
             if (!isGridModeRef.current) return;
@@ -742,7 +883,7 @@ export const useCanvasAnimation = ({
             // Prevent default browser behavior
             e.preventDefault();
 
-            // Apply speed factor
+            // Apply factor to adjust scroll speed
             const scrollFactor = 2.5;
             const delta = e.deltaY / scrollFactor;
 
@@ -753,11 +894,8 @@ export const useCanvasAnimation = ({
             // Set a flag to indicate we should update in the animation loop
             wheelEventOccurredRef.current = true;
 
-            // Apply smooth scroll resistance at the top
-            if (gridScrollOffsetRef.current > 0) {
-                gridScrollOffsetRef.current = Math.max(0, gridScrollOffsetRef.current * 0.9);
-                targetOffsetYRef.current = gridScrollOffsetRef.current;
-            }
+            // Appeler handleWheel pour la logique avancée de scroll infini
+            handleWheel(e);
         };
 
         // Add event listeners - important to set passive: false to prevent default scrolling
@@ -768,7 +906,6 @@ export const useCanvasAnimation = ({
         return () => {
             if (!wheelSetupCompleteRef.current) return;
 
-
             window.removeEventListener('wheel', wheelHandler);
 
             if (canvasRef.current) {
@@ -778,7 +915,7 @@ export const useCanvasAnimation = ({
             // Reset to allow reconfiguration if needed
             wheelSetupCompleteRef.current = false;
         };
-    }, []);
+    }, [handleWheel]);
 
 
     // Export the event handlers to be used by the parent component
@@ -793,6 +930,7 @@ export const useCanvasAnimation = ({
         debugInfo: debugInfoRef.current,
         findClickedProject,
         setDragHandlers,
-        updateImagesLayout
+        updateImagesLayout,
+        isTransitioning
     };
 };

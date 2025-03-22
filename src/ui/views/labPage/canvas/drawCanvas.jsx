@@ -169,7 +169,7 @@ const drawCanvas = ({
     // 6. Draw images in the sorted order
     for (const imageData of visibleImagesData) {
         // Draw the image with trail if necessary
-        drawImageWithColorTrail(offscreenCtx, imageData.image, imageData.x, imageData.y, imageData.width, imageData.height, imageData.velocity, imageData.opacity);
+        drawImageWithColorTrail(offscreenCtx, imageData.image, imageData.x, imageData.y, imageData.width, imageData.height, imageData.velocity, imageData.opacity, isGridMode);
     }
 
     // Le reste du code reste inchangé...

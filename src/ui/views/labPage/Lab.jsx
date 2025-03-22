@@ -35,9 +35,12 @@ const Lab = () => {
         prevOffsetYRef
     } = useCanvasSetup();
 
+    const handleGridLayoutToggle = useCallback((isGridActive) => {
+        setGridLayoutActive(isGridActive);
+    }, []);
     // Use animation hook to handle the interactive canvas
     const {
-        images, isDragging, debugInfo, findClickedProject, setDragHandlers, updateImagesLayout
+        images, isDragging, debugInfo, findClickedProject, setDragHandlers, updateImagesLayout, isTransitioning
     } = useCanvasAnimation({
         canvasRef, offscreenCanvasRef, animationFrameRef, projectImageRef, projectImagesRef,
         projectImageLoaded, backgroundLoaded, setImagesLoaded, setTotalImages, prevOffsetXRef, prevOffsetYRef,
@@ -79,32 +82,6 @@ const Lab = () => {
         }
     }, [isDragging, setDragHandlers]);
 
-    const handleMouseUp = useCallback((e) => {
-        // First, call the drag end handler
-        setDragHandlers.mouseUp(e);
-
-        // Only consider this a click if the mouse hasn't moved significantly
-        if (!hasDraggedRef.current) {
-
-            const project = findClickedProject(e.clientX, e.clientY);
-            if (project) {
-
-                setSelectedProject(project);
-            }
-        } else {
-
-        }
-
-        // Reset cursor after drag
-        if (canvasRef.current) {
-            const project = findClickedProject(e.clientX, e.clientY);
-            if (project) {
-                canvasRef.current.style.cursor = 'pointer';
-            } else {
-                canvasRef.current.style.cursor = 'grab';
-            }
-        }
-    }, [setDragHandlers, findClickedProject, canvasRef]);
 
     // Set up touch handlers the same way
     const handleTouchStart = useCallback((e) => {
@@ -145,18 +122,46 @@ const Lab = () => {
             // Call the original handler
             setDragHandlers.mouseUp({clientX: touch.clientX, clientY: touch.clientY});
 
-            // If it wasn't a drag, treat as click
-            if (!hasDraggedRef.current) {
+            // If it wasn't a drag, treat as click OR if we're in grid mode
+            if (!hasDraggedRef.current || gridLayoutActive) {
                 const project = findClickedProject(touch.clientX, touch.clientY);
                 if (project) {
-
                     setSelectedProject(project);
                 }
-            } else {
+            }
 
+            // Reset drag state
+            hasDraggedRef.current = false;
+        }
+    }, [setDragHandlers, findClickedProject, gridLayoutActive]);
+
+    const handleMouseUp = useCallback((e) => {
+        // First, call the drag end handler
+        setDragHandlers.mouseUp(e);
+
+        // Only consider this a click if the mouse hasn't moved significantly OR if we're in grid mode
+        if (!hasDraggedRef.current || gridLayoutActive) {
+            const project = findClickedProject(e.clientX, e.clientY);
+            if (project) {
+                setSelectedProject(project);
             }
         }
-    }, [setDragHandlers, findClickedProject]);
+
+        // Reset drag state
+        hasDraggedRef.current = false;
+
+        // Reset cursor after drag
+        if (canvasRef.current) {
+            const project = findClickedProject(e.clientX, e.clientY);
+            if (project) {
+                canvasRef.current.style.cursor = 'pointer';
+            } else {
+                canvasRef.current.style.cursor = gridLayoutActive ? 'default' : 'grab';
+            }
+        }
+    }, [setDragHandlers, findClickedProject, canvasRef, gridLayoutActive]);
+
+
 
     const checkCursorOverProject = useCallback((e) => {
         const project = findClickedProject(e.clientX, e.clientY);
@@ -202,10 +207,10 @@ const Lab = () => {
         };
     }, [gridLayoutActive]);
     useEffect(() => {
-        if (images.length > 0 && updateImagesLayout) {
+        if (images.length > 0 && updateImagesLayout && !isTransitioning) {
             updateImagesLayout(gridLayoutActive);
         }
-    }, [gridLayoutActive, images.length, updateImagesLayout]);
+    }, [gridLayoutActive, images.length, updateImagesLayout, isTransitioning]);
     // Attach all event listeners to the canvas
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -253,7 +258,7 @@ const Lab = () => {
     }
     
     /* Add this for grid mode */
-    body.grid-mode * {
+    body.grid-mode canvas {
         cursor: default !important;
     }
 
@@ -281,40 +286,15 @@ const Lab = () => {
                 background: COLOR_PALETTE.neutral1
             }}
         />
-        <Overlay lab={true}/>
-
+        <Overlay
+            lab={true}
+            onGridLayoutToggle={handleGridLayoutToggle}
+        />
         {/* Project Popup */}
         {selectedProject && (<LabPopup
             project={selectedProject}
             onClose={handleClosePopup}
         />)}
-        <div
-            className="grid-layout-button"
-            onClick={() => setGridLayoutActive(!gridLayoutActive)}
-            style={{
-                position: 'fixed',
-                bottom: '20px',
-                right: '20px',
-                backgroundColor: COLOR_PALETTE.neutral6,
-                color: COLOR_PALETTE.neutral1,
-                padding: '10px 15px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                zIndex: 100,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
-            }}
-        >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
-                <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
-                <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
-                <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-            {gridLayoutActive ? "Free Layout" : "Grid Layout (Scroll)"}
-        </div>
 
     </section>);
 };
