@@ -20,7 +20,8 @@ const drawCanvas = ({
                         patternWidth,
                         patternHeight,
                         isGridMode,
-                        calculateGridLayout // Ajouter ce paramètre
+                        calculateGridLayout,
+                        isTransitioning
                     }) => {
     if (!ctx || !offscreenCtx) return {visibleTiles: 0, visibleInstances: 0};
 
@@ -46,47 +47,41 @@ const drawCanvas = ({
         offsetY: Math.round(offsetY),
         velocityMagnitude: Math.round(velocityMagnitude * 100) / 100,
         effectStrength: Math.round(effectStrength * 100) / 100,
-        isGridMode: isGridMode
+        isGridMode: isGridMode,
+        isTransitioning: isTransitioning
     };
 
     // 4. Collect all visible images with their calculated positions
     const visibleImagesData = [];
     const visibleIndices = new Set();
-    const drawnProjects = new Set();
-    const uniqueProjects = new Set();
 
-    // Pour le mode grille, on veut juste montrer les projets une seule fois
-    if (isGridMode) {
-        // For infinite scroll, each item can be repeated multiple times
-        const drawnCombinations = new Set(); // To track combinations already drawn
-
-        // Get the grid layout positions from calculateGridLayout
+    // ⚠️ Important: En mode transition, toujours utiliser l'approche libre pour le rendu
+    // afin d'éviter toute téléportation liée au changement de mode
+    if (isGridMode && !isTransitioning) {
+        // Mode grille - mais uniquement si pas en transition
+        const drawnCombinations = new Set();
         const gridPositions = calculateGridLayout();
 
-        // If grid positions are available, use them directly
         if (gridPositions && gridPositions.length > 0) {
-            gridPositions.forEach((position, idx) => {
-                // Find the corresponding image
+            // Séparer les positions originales et les duplications
+            const originalPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
+            const duplicatePositions = gridPositions.filter(pos => pos.repeatIndex !== 0);
+
+            // D'abord afficher les positions originales
+            originalPositions.forEach((position) => {
                 const image = images[position.originalIndex % images.length];
                 if (!image) return;
 
-                // Create a unique key for this project+repeat combination
-                const projectKey = `${image.filename}-${position.repeatIndex}`;
-
-                // Skip if already drawn (avoid duplicates in same position)
-                if (drawnCombinations.has(projectKey)) return;
-                drawnCombinations.add(projectKey);
-
-                // Apply the correct positioning from grid layout
+                // Position de l'image
                 const imgX = position.x;
                 const imgY = position.y + offsetY;
 
-                // Check if image is in viewport
+                // Vérifier si l'image est visible
                 if (isInViewport(imgX, imgY, position.width, position.height, canvas.width, canvas.height)) {
                     debugInfo.visibleInstances++;
                     visibleIndices.add(position.originalIndex);
 
-                    // Add image to list of visible images
+                    // Ajouter l'image au rendu
                     visibleImagesData.push({
                         image,
                         x: imgX,
@@ -96,20 +91,79 @@ const drawCanvas = ({
                         size: image.size || position.width,
                         velocity: {
                             x: 0,
-                            y: dragVelocityY * 0.5 // Subtle effect
+                            y: dragVelocityY * 0.5
                         },
                         opacity: image.opacity,
                         index: position.originalIndex,
-                        repeatIndex: position.repeatIndex
+                        repeatIndex: 0,
+                        isOriginal: true
                     });
                 }
             });
-        } else {
-            // Fallback to previous implementation if grid positions aren't available
-            // (existing code for the old implementation)
+
+            // Puis afficher les duplications
+            duplicatePositions.forEach((position) => {
+                const originalIndex = position.originalIndex;
+                const repeatIndex = position.repeatIndex;
+                const originalImage = images[originalIndex % images.length];
+                if (!originalImage) return;
+
+                // Clé unique pour cette duplication
+                const projectKey = `${originalImage.filename || 'img'}-${repeatIndex}`;
+                if (drawnCombinations.has(projectKey)) return;
+                drawnCombinations.add(projectKey);
+
+                // Position de la duplication
+                const imgX = position.x;
+                const imgY = position.y + offsetY;
+
+                // Vérifier si la duplication est visible
+                if (isInViewport(imgX, imgY, position.width, position.height, canvas.width, canvas.height)) {
+                    debugInfo.visibleInstances++;
+
+                    // Calculer l'opacité basée sur l'image originale
+                    const originalOpacity = originalImage.opacity || 0;
+
+                    // Opacité basée sur la distance et l'opacité de l'original
+                    let displayOpacity = 0;
+
+                    if (originalOpacity > 0.8) {
+                        // Fadeout progressif en fonction de la distance
+                        const distanceFactor = Math.max(0, 1 - (Math.abs(repeatIndex) * 0.15));
+                        // Fade in progressif
+                        const fadeInFactor = Math.min(1, (originalOpacity - 0.8) * 5);
+                        displayOpacity = originalOpacity * distanceFactor * fadeInFactor;
+                    }
+
+                    // Créer une version modifiée de l'image avec l'opacité ajustée
+                    const adjustedImage = {
+                        ...originalImage,
+                        opacity: displayOpacity
+                    };
+
+                    // Ajouter la duplication
+                    visibleImagesData.push({
+                        image: adjustedImage,
+                        x: imgX,
+                        y: imgY,
+                        width: position.width,
+                        height: position.height,
+                        size: adjustedImage.size || position.width,
+                        velocity: {
+                            x: 0,
+                            y: dragVelocityY * 0.5 * Math.max(0.5, 1 - Math.abs(repeatIndex) * 0.1)
+                        },
+                        opacity: displayOpacity,
+                        index: originalIndex,
+                        repeatIndex: repeatIndex,
+                        isOriginal: false
+                    });
+                }
+            });
         }
-    }  else {
-        // Mode libre - logique originale avec répétition des tuiles
+    } else {
+        // Mode libre OU mode en transition
+        // Dans les deux cas, utiliser l'approche standard de répétition des tuiles
         const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
         const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
         const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
@@ -146,10 +200,12 @@ const drawCanvas = ({
                             height: image.height,
                             size: image.size || image.width,
                             velocity: {
-                                x: dragVelocityX * parallaxFactor, y: dragVelocityY * parallaxFactor
+                                x: dragVelocityX * parallaxFactor,
+                                y: dragVelocityY * parallaxFactor
                             },
                             opacity: image.opacity,
-                            index
+                            index,
+                            isOriginal: true
                         });
                     }
                 });
@@ -157,44 +213,89 @@ const drawCanvas = ({
         }
     }
 
-    // 5. Sort images by size (small to large in free mode, large to small in grid mode)
-    if (isGridMode) {
-        // En mode grille, dessiner les grandes images d'abord pour éviter les superpositions
-        visibleImagesData.sort((a, b) => b.size - a.size);
+    // 5. Sort images by size and type
+    if (isGridMode && !isTransitioning) {
+        // En mode grille (hors transition):
+        // 1. D'abord les originaux (grandes d'abord)
+        // 2. Ensuite les duplications (par distance de répétition, puis par taille)
+        visibleImagesData.sort((a, b) => {
+            // Priorité aux images originales
+            if (a.isOriginal !== b.isOriginal) {
+                return a.isOriginal ? -1 : 1;
+            }
+
+            // Si ce sont des duplications, trier par index de répétition
+            if (!a.isOriginal && 'repeatIndex' in a && 'repeatIndex' in b) {
+                const absA = Math.abs(a.repeatIndex);
+                const absB = Math.abs(b.repeatIndex);
+                if (absA !== absB) {
+                    return absA - absB;
+                }
+            }
+
+            // Finalement par taille
+            return b.size - a.size;
+        });
     } else {
-        // En mode libre, dessiner les petites images d'abord (grandes par-dessus)
+        // En mode libre ou transition:
+        // Dessiner les petites images d'abord (grandes par-dessus)
         visibleImagesData.sort((a, b) => a.size - b.size);
     }
 
     // 6. Draw images in the sorted order
     for (const imageData of visibleImagesData) {
         // Draw the image with trail if necessary
-        drawImageWithColorTrail(offscreenCtx, imageData.image, imageData.x, imageData.y, imageData.width, imageData.height, imageData.velocity, imageData.opacity, isGridMode);
+        drawImageWithColorTrail(
+            offscreenCtx,
+            imageData.image,
+            imageData.x,
+            imageData.y,
+            imageData.width,
+            imageData.height,
+            imageData.velocity,
+            imageData.opacity,
+            isGridMode && !isTransitioning // N'utiliser le rendu "grille" que si on n'est pas en transition
+        );
     }
 
-    // Le reste du code reste inchangé...
-    // 7. If the speed is sufficient or if the effect is still visible, apply the effect
+    // 7. Apply color trail effect if needed
     if (velocityMagnitude > 0.3 || effectStrength > 0.05) {
-        // Pass effectStrength to the function to properly control the intensity
-        // In grid mode, reduce the effect strength significantly
+        // Adjust effect strength based on mode
         const adjustedStrength = isGridMode ? effectStrength * 0.3 : effectStrength;
 
-        applyGlobalColorTrail(offscreenCtx, offscreenCanvas, offsetX, offsetY, isGridMode ? 0 : dragVelocityX, // No horizontal effect in grid mode
-            dragVelocityY, adjustedStrength);
+        applyGlobalColorTrail(
+            offscreenCtx,
+            offscreenCanvas,
+            offsetX,
+            offsetY,
+            isGridMode ? 0 : dragVelocityX, // No horizontal effect in grid mode
+            dragVelocityY,
+            adjustedStrength
+        );
     }
 
-    // 8. Update the visibility of images
-    const updatedImages = images.map((image, index) => {
+    // 8. Update image visibility - skip during transition
+    const updatedImages = !isTransitioning ? images.map((image, index) => {
         const isVisible = visibleIndices.has(index);
-        const opacity = isVisible ? Math.min(image.opacity + 0.05, 1) // Fade in
-            : Math.max(image.opacity - 0.05, 0); // Fade out
+
+        // Gradually adjust opacity
+        let newOpacity = image.opacity;
+        if (isVisible) {
+            // Fade in
+            newOpacity = Math.min(image.opacity + 0.05, 1);
+        } else {
+            // Fade out
+            newOpacity = Math.max(image.opacity - 0.05, 0);
+        }
 
         return {
-            ...image, visible: isVisible, opacity
+            ...image,
+            visible: isVisible,
+            opacity: newOpacity
         };
-    });
+    }) : images; // During transition, don't modify opacity automatically
 
-    // 10. Apply the fisheye effect if necessary
+    // 9. Apply fisheye effect if needed
     if (fisheyeStrength > 0.01) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = COLOR_PALETTE.neutral1;
