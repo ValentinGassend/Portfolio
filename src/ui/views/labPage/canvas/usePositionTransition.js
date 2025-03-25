@@ -238,7 +238,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
         // Nouveau: Calculer position intermédiaire empilée au centre de l'écran
         const intermediatePositions = {};
-        const stackSpacing = 15; // Espace vertical entre les éléments empilés
+        const stackSpacing = 0; // Espace vertical entre les éléments empilés
 
         // Obtenir la position centrale de l'écran
         const screenCenterX = screenWidth / 2;
@@ -253,7 +253,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
         // Coefficient de réduction pour l'empilage
         const stackScale = 0.85; // Réduction à 85% de la taille d'origine
-        const stackOverlap = 0.8; // 80% de chevauchement vertical
+        const stackOverlap = 1.0; // 80% de chevauchement vertical
 
         // Calculer la hauteur totale de la pile après réduction et chevauchement
         let totalStackHeight = sortedIndices.reduce((height, idx, i) => {
