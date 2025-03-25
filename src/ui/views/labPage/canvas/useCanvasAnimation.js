@@ -83,6 +83,61 @@ export const useCanvasAnimation = ({
         lastScrollPos: 0
     });
 
+    // Exposer les références globalement pour l'animation de transition
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Exposer les références pour les animations de transition
+            window.offsetXRef = offsetXRef;
+            window.offsetYRef = offsetYRef;
+            window.targetOffsetXRef = targetOffsetXRef;
+            window.targetOffsetYRef = targetOffsetYRef;
+        }
+
+        return () => {
+            // Nettoyage
+            if (typeof window !== 'undefined') {
+                window.offsetXRef = null;
+                window.offsetYRef = null;
+                window.targetOffsetXRef = null;
+                window.targetOffsetYRef = null;
+            }
+        };
+    }, [offsetXRef, offsetYRef, targetOffsetXRef, targetOffsetYRef]);
+
+    // Gestionnaire d'événement pour réinitialiser la position du grid
+    useEffect(() => {
+        const handleResetGridPosition = (event) => {
+            const immediate = event.detail?.immediate === true;
+
+            console.log("⚙️ Réinitialisation de la position du grid", immediate ? "(immédiat)" : "");
+
+            // Stocker temporairement la position actuelle
+            window._tempOffsetY = offsetYRef.current;
+            window._gridScrollOffset = gridScrollOffsetRef.current;
+
+            // Réinitialiser les positions
+            if (immediate) {
+                // Réinitialisation immédiate (pour les transitions)
+                offsetYRef.current = 0;
+                targetOffsetYRef.current = 0;
+                gridScrollOffsetRef.current = 0;
+            } else {
+                // Réinitialisation progressive (pour une utilisation manuelle)
+                // On garde le offset actuel mais on réinitialise la cible
+                targetOffsetYRef.current = 0;
+                gridScrollOffsetRef.current = 0;
+            }
+        };
+
+        // Ajouter l'écouteur d'événement
+        window.addEventListener('resetGridPosition', handleResetGridPosition);
+
+        // Nettoyage
+        return () => {
+            window.removeEventListener('resetGridPosition', handleResetGridPosition);
+        };
+    }, [offsetYRef, targetOffsetYRef, gridScrollOffsetRef]);
+
     // Import and use sub-hooks
     const {calculateGridLayout} = useGridLayout(
         canvasRef,
