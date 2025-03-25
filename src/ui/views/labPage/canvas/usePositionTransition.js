@@ -363,7 +363,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     const floatOffset = Math.sin(phaseProgress * Math.PI * 2) * floatAmplitude;
 
                     // Léger effet de pulsation (zoom)
-                    const pulseScale = 1 + Math.sin(phaseProgress * Math.PI * 2) * 0.015; // ±1.5% de pulsation
+                    const pulseScale = 0; // ±1.5% de pulsation
 
                     currentPos = {
                         x: middle.x - (middle.width * pulseScale - middle.width) / 2, // Garder centré pendant la pulsation
