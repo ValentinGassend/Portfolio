@@ -58,17 +58,15 @@ const drawCanvas = ({
     // ⚠️ Important: En mode transition, toujours utiliser l'approche libre pour le rendu
     // afin d'éviter toute téléportation liée au changement de mode
     if (isGridMode && !isTransitioning) {
-        // Mode grille - mais uniquement si pas en transition
         const drawnCombinations = new Set();
         const gridPositions = calculateGridLayout();
 
         if (gridPositions && gridPositions.length > 0) {
-            // Séparer les positions originales et les duplications
-            const originalPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
-            const duplicatePositions = gridPositions.filter(pos => pos.repeatIndex !== 0);
+            // MODIFICATION: Ne plus séparer les originaux des duplications
+            // et ne plus traiter les duplications du tout
 
-            // D'abord afficher les positions originales
-            originalPositions.forEach((position) => {
+            // Traiter toutes les positions comme des originaux
+            gridPositions.forEach((position) => {
                 const image = images[position.originalIndex % images.length];
                 if (!image) return;
 
@@ -101,65 +99,7 @@ const drawCanvas = ({
                 }
             });
 
-            // Puis afficher les duplications
-            duplicatePositions.forEach((position) => {
-                const originalIndex = position.originalIndex;
-                const repeatIndex = position.repeatIndex;
-                const originalImage = images[originalIndex % images.length];
-                if (!originalImage) return;
-
-                // Clé unique pour cette duplication
-                const projectKey = `${originalImage.filename || 'img'}-${repeatIndex}`;
-                if (drawnCombinations.has(projectKey)) return;
-                drawnCombinations.add(projectKey);
-
-                // Position de la duplication
-                const imgX = position.x;
-                const imgY = position.y + offsetY;
-
-                // Vérifier si la duplication est visible
-                if (isInViewport(imgX, imgY, position.width, position.height, canvas.width, canvas.height)) {
-                    debugInfo.visibleInstances++;
-
-                    // Calculer l'opacité basée sur l'image originale
-                    const originalOpacity = originalImage.opacity || 0;
-
-                    // Opacité basée sur la distance et l'opacité de l'original
-                    let displayOpacity = 0;
-
-                    if (originalOpacity > 0.8) {
-                        // Fadeout progressif en fonction de la distance
-                        const distanceFactor = Math.max(0, 1 - (Math.abs(repeatIndex) * 0.15));
-                        // Fade in progressif
-                        const fadeInFactor = Math.min(1, (originalOpacity - 0.8) * 5);
-                        displayOpacity = originalOpacity * distanceFactor * fadeInFactor;
-                    }
-
-                    // Créer une version modifiée de l'image avec l'opacité ajustée
-                    const adjustedImage = {
-                        ...originalImage,
-                        opacity: displayOpacity
-                    };
-
-                    // Ajouter la duplication
-                    visibleImagesData.push({
-                        image: adjustedImage,
-                        x: imgX,
-                        y: imgY,
-                        width: position.width,
-                        height: position.height,
-                        size: adjustedImage.size || position.width,
-                        velocity: {
-                            x: 0,
-                            y: dragVelocityY * 0.5 * Math.max(0.5, 1 - Math.abs(repeatIndex) * 0.1)
-                        },
-                        opacity: displayOpacity,
-                        index: originalIndex,
-                        repeatIndex: repeatIndex,
-                        isOriginal: false
-                    });
-                }
-            });
+            // SUPPRESSION: La partie qui traitait les duplications a été supprimée
         }
     } else {
         // Mode libre OU mode en transition

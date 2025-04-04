@@ -13,7 +13,6 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
     }, [originalPositionsRef, initialPositionsRef]);
 
 
-
     // Fonction de transition sans téléportation
     // Fonction de transition améliorée pour empiler les éléments au centre de l'écran
     const performNoTeleportTransition = useCallback((useGridLayout, resetPosition = false) => {
@@ -60,35 +59,103 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             // Calculer les positions de grille avec position réinitialisée
             const gridPositions = calculateGridLayout();
 
+            // Récupérer la référence infiniteScrollRef depuis le contexte window
+            // puisqu'elle n'est pas directement accessible dans cette fonction
+            const infiniteScrollRef = window.infiniteScrollRef;
+
             // Immédiatement revenir au mode d'origine
             isGridModeRef.current = tempGridMode;
 
             if (gridPositions && gridPositions.length > 0) {
-                // Filtrer uniquement les positions non dupliquées
-                const originalPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
+                // Obtenir la hauteur du motif de répétition
+                // Soit depuis infiniteScrollRef (s'il est disponible)
+                // Soit calculé à partir des positions de grille
+                let patternHeight;
 
-                // Calculer le centre de la grille
-                const gridItemsX = originalPositions.map(pos => pos.x);
-                const gridItemsY = originalPositions.map(pos => pos.y);
+                if (infiniteScrollRef && infiniteScrollRef.current && infiniteScrollRef.current.patternHeight) {
+                    patternHeight = infiniteScrollRef.current.patternHeight;
+                    console.log("📏 Hauteur du motif récupérée:", patternHeight);
+                } else {
+                    // Extraire les positions originales (repeatIndex === 0)
+                    const originalPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
+
+                    // Calculer la hauteur du motif manuellement
+                    if (originalPositions.length > 0) {
+                        // Trouver la position Y maximale (y + height) parmi les positions originales
+                        const maxY = Math.max(...originalPositions.map(pos => pos.y + pos.height));
+                        // Trouver la position Y minimale parmi les positions originales
+                        const minY = Math.min(...originalPositions.map(pos => pos.y));
+                        // La hauteur du motif est la différence + un espacement
+                        patternHeight = maxY - minY; // Ajouter 100px d'espacement
+                        console.log("📏 Hauteur du motif calculée:", patternHeight);
+                    } else {
+                        // Valeur par défaut si aucun calcul n'est possible
+                        patternHeight = 500;
+                        console.log("📏 Utilisation de la hauteur par défaut:", patternHeight);
+                    }
+                }
+
+                // Créer un mapping pour les positions originales et les duplicatas
+                const positionsByOriginalIndex = {};
+                const duplicatesByOriginalIndex = {};
+
+                // Classer les positions entre originales et duplicatas
+                gridPositions.forEach(pos => {
+                    const isOriginal = pos.repeatIndex === 0;
+
+                    if (isOriginal) {
+                        // Stocker la position originale
+                        if (!positionsByOriginalIndex[pos.originalIndex]) {
+                            positionsByOriginalIndex[pos.originalIndex] = pos;
+                        }
+                    } else {
+                        // Stocker le duplicata
+                        if (!duplicatesByOriginalIndex[pos.originalIndex]) {
+                            duplicatesByOriginalIndex[pos.originalIndex] = [];
+                        }
+                        duplicatesByOriginalIndex[pos.originalIndex].push(pos);
+                    }
+                });
+
+                // Calculer le centre de la grille pour les positions originales
+                const originalPositionsArray = Object.values(positionsByOriginalIndex);
+                const gridItemsX = originalPositionsArray.map(pos => pos.x);
+                const gridMaxX = Math.max(...gridItemsX.map((x, i) => x + originalPositionsArray[i].width));
                 const gridMinX = Math.min(...gridItemsX);
-                const gridMaxX = Math.max(...gridItemsX.map((x, i) => x + originalPositions[i].width));
                 const gridWidth = gridMaxX - gridMinX;
 
                 // Centrer la grille horizontalement par rapport à l'écran
                 const gridCenterOffset = (screenWidth - gridWidth) / 2 - gridMinX;
 
+                // Positionner les éléments visibles
                 visibleIndices.forEach(idx => {
                     const img = images[idx];
-                    const gridPos = originalPositions.find(pos => pos.originalIndex === idx);
+                    const originalGridPos = positionsByOriginalIndex[idx];
 
-                    if (gridPos) {
+                    if (originalGridPos) {
+                        // Position originale trouvée
                         finalPositions[idx] = {
-                            // Positionner au centre de l'écran, pas du canvas
-                            x: gridPos.x + gridCenterOffset, // Conserver la position Y de la grille mais centrer verticalement
-                            y: gridPos.y, width: gridPos.width, height: gridPos.height, opacity: 1
+                            x: originalGridPos.x + gridCenterOffset,
+                            y: originalGridPos.y,
+                            width: originalGridPos.width,
+                            height: originalGridPos.height,
+                            opacity: 1
                         };
+
+                        // Stocker les positions des duplicatas pour cette image
+                        if (duplicatesByOriginalIndex[idx] && duplicatesByOriginalIndex[idx].length > 0) {
+                            finalPositions.duplicates = finalPositions.duplicates || {};
+                            finalPositions.duplicates[idx] = duplicatesByOriginalIndex[idx].map(dupPos => ({
+                                x: dupPos.x + gridCenterOffset,
+                                y: dupPos.y,
+                                width: dupPos.width,
+                                height: dupPos.height,
+                                repeatIndex: dupPos.repeatIndex, // Utiliser la hauteur du motif pour calculer le bon espacement vertical
+                                offsetY: dupPos.repeatIndex * patternHeight
+                            }));
+                        }
                     } else {
-                        // Position par défaut toujours au centre de l'écran
+                        // Position par défaut au centre si aucune position de grille n'est trouvée
                         finalPositions[idx] = {
                             x: screenWidth / 2 - img.width / 2,
                             y: screenHeight / 2 - img.height / 2,
@@ -98,71 +165,8 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         };
                     }
                 });
-            } else {
-                // Fallback - layout grille basique, centré sur l'écran
-                const cols = 2;
-                const spacing = 30;
-                const baseHeight = 200;
-
-                // Calculer la largeur totale de la grille
-                let maxWidth = 0;
-                let totalRows = Math.ceil(visibleIndices.length / cols);
-
-                // Calculer la largeur et hauteur maximales pour centrage
-                let itemsByRow = [];
-                for (let row = 0; row < totalRows; row++) {
-                    let rowWidth = 0;
-                    let rowItems = [];
-
-                    for (let col = 0; col < cols; col++) {
-                        const idx = row * cols + col;
-                        if (idx < visibleIndices.length) {
-                            const imgIdx = visibleIndices[idx];
-                            const img = images[imgIdx];
-                            const aspectRatio = img.width / img.height;
-                            const targetHeight = baseHeight;
-                            const targetWidth = targetHeight * aspectRatio;
-
-                            rowWidth += targetWidth + (col > 0 ? spacing : 0);
-                            rowItems.push({
-                                index: imgIdx, width: targetWidth, height: targetHeight
-                            });
-                        }
-                    }
-
-                    maxWidth = Math.max(maxWidth, rowWidth);
-                    itemsByRow.push(rowItems);
-                }
-
-                // Calculer la hauteur totale de la grille
-                const totalHeight = totalRows * baseHeight + (totalRows - 1) * spacing;
-
-                // Position de départ pour centrer la grille
-                const startX = (screenWidth - maxWidth) / 2;
-                const startY = (screenHeight - totalHeight) / 2;
-
-                // Positionner chaque élément
-                itemsByRow.forEach((rowItems, rowIndex) => {
-                    // Calculer la largeur de cette rangée
-                    const rowWidth = rowItems.reduce((sum, item, idx) => sum + item.width + (idx > 0 ? spacing : 0), 0);
-
-                    // Centrer cette rangée
-                    const rowStartX = (screenWidth - rowWidth) / 2;
-
-                    let currentX = rowStartX;
-                    rowItems.forEach((item) => {
-                        finalPositions[item.index] = {
-                            x: currentX,
-                            y: startY + rowIndex * (baseHeight + spacing),
-                            width: item.width,
-                            height: item.height,
-                            opacity: 1
-                        };
-                        currentX += item.width + spacing;
-                    });
-                });
             }
-        } else { // Si on revient au mode libre
+        } else {
             visibleIndices.forEach(idx => {
                 const initialPos = initialPositionsRef.current[idx];
 
@@ -252,7 +256,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         });
 
         // Coefficient de réduction pour l'empilage
-        const stackScale = 0.85; // Réduction à 85% de la taille d'origine
+        const stackScale = 0.75; // Réduction à 85% de la taille d'origine
         const stackOverlap = 1.0; // 80% de chevauchement vertical
 
         // Calculer la hauteur totale de la pile après réduction et chevauchement
@@ -273,10 +277,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
             intermediatePositions[idx] = {
                 // Toujours centré horizontalement sur l'écran
-                x: screenCenterX - stackedWidth / 2,
-                y: stackY,
-                width: stackedWidth,
-                height: stackedHeight, // Ajuster l'opacité en fonction de la position dans la pile
+                x: screenCenterX - stackedWidth / 2, y: stackY, width: stackedWidth, height: stackedHeight, // Ajuster l'opacité en fonction de la position dans la pile
                 // Les éléments plus bas sont légèrement plus transparents
                 opacity: Math.max(0.7, 0.95 - (i * 0.03))
             };
@@ -288,7 +289,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         // Étape 3: Animer en trois phases: départ → centre empilé → destination
         let startTime = null;
         const PHASE_1_DURATION = 500; // ms - Vers le centre (légèrement plus rapide)
-        const PHASE_2_DURATION = 350; // ms - Pause au centre (légèrement plus courte)
+        const PHASE_2_DURATION = 0; // ms - Pause au centre (légèrement plus courte)
         const PHASE_3_DURATION = 550; // ms - Vers destination
         const TOTAL_DURATION = PHASE_1_DURATION + PHASE_2_DURATION + PHASE_3_DURATION;
 
@@ -401,7 +402,8 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             if (elapsed < TOTAL_DURATION) {
                 requestAnimationFrame(animate);
             } else {
-                // Animation terminée - appliquer les positions exactes finales
+
+// Animation terminée - appliquer les positions exactes finales
                 const finalUpdatedImages = [...images];
 
                 visibleIndices.forEach(idx => {
@@ -411,29 +413,35 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         patternY: finalPositions[idx].y,
                         width: finalPositions[idx].width,
                         height: finalPositions[idx].height,
-                        opacity: targetMode ? 0.9 : 1 // Légèrement transparent pour le fade in des duplications
+                        opacity: targetMode ? 0.9 : 1,
                     };
                 });
 
                 setImages(finalUpdatedImages);
                 imagesRef.current = finalUpdatedImages;
 
-                // ⚠️ IMPORTANT: Indiquer que l'animation est terminée
+// ⚠️ IMPORTANT: Indiquer que l'animation est terminée
                 animationInProgress = false;
 
-                // Étape 4: SEULEMENT MAINTENANT changer le mode
+// Étape 4: SEULEMENT MAINTENANT changer le mode
                 console.log(`✅ Animation terminée, changement de mode vers ${targetMode ? "grille" : "libre"}`);
                 isGridModeRef.current = targetMode;
 
-                // Pour le mode grille, afficher les duplications après un petit délai
+// Pour le mode grille, forcer le recalcul du layout complet incluant les duplicatas
                 if (targetMode) {
                     setTimeout(() => {
                         console.log("🔄 Calcul final et affichage des duplications");
 
-                        // Forcer un recalcul pour les duplications
-                        calculateGridLayout();
+                        // Au lieu de simplement appeler calculateGridLayout,
+                        // nous devons nous assurer que le layout est entièrement recalculé
+                        // et que les duplicatas sont correctement positionnés
+                        const gridPositions = calculateGridLayout();
 
-                        // Terminer la transition après un petit délai
+                        // Assurons-nous que les duplicatas sont visibles en appliquant
+                        // progressivement leur opacité
+                        const updatedWithDuplicates = [...imagesRef.current];
+
+                        // Pour chaque duplicata, mettre à jour son opacité progressivement
                         setTimeout(() => {
                             setIsTransitioning(false);
                             console.log("✅ Transition terminée, mode grille actif");

@@ -1,6 +1,4 @@
 import { useCallback } from 'react';
-import { isInViewport } from './canvasUtils.js';
-
 export const useGridLayout = (
     canvasRef,
     imagesRef,
@@ -12,7 +10,6 @@ export const useGridLayout = (
     // Function to calculate grid layout positions
     const calculateGridLayout = useCallback(() => {
         if (images.length === 0) return [];
-
         const canvas = canvasRef.current;
         if (!canvas) return [];
 
@@ -96,7 +93,6 @@ export const useGridLayout = (
         // Calculate virtual offset (allows infinite scroll)
         const scrollOffset = offsetYRef.current;
         const virtualOffset = infiniteScrollRef.current.virtualOffset || 0;
-        const adjustedScrollOffset = scrollOffset + virtualOffset;
 
         // Initialize topRepeats and totalRows if they don't exist yet
         if (infiniteScrollRef.current.topRepeats === undefined) {
@@ -113,11 +109,6 @@ export const useGridLayout = (
         const requiredRepeatsDown = Math.max(infiniteScrollRef.current.totalRows, Math.ceil(visibleRows * 2));
         const requiredRepeatsUp = Math.max(infiniteScrollRef.current.topRepeats, Math.ceil(visibleRows * 2));
 
-        // Calculate visible repetitions based on current offset
-        const currentViewport = {
-            top: -offsetYRef.current - canvasHeight,
-            bottom: -offsetYRef.current + canvasHeight * 2
-        };
 
         // Create repetitions above (negative repetitions)
         for (let repeat = -requiredRepeatsUp; repeat < 0; repeat++) {
@@ -125,9 +116,10 @@ export const useGridLayout = (
                 // Y position with UNIFORM spacing between repetitions
                 const repeatY = basePos.y + (repeat * patternHeight);
 
-                // Only include positions that are within the visible area plus some padding
-                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 2 &&
-                    repeatY + offsetYRef.current < canvasHeight * 3) {
+                // MODIFICATION: Utiliser une marge plus large pour assurer que les duplicatas
+                // restent chargés pendant le défilement
+                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 4 &&
+                    repeatY + offsetYRef.current < canvasHeight * 5) {
 
                     gridPositions.push({
                         ...basePos,
@@ -146,9 +138,10 @@ export const useGridLayout = (
                 // Y position with UNIFORM spacing between repetitions
                 const repeatY = basePos.y + (repeat * patternHeight);
 
-                // Only include positions that are within the visible area plus some padding
-                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 2 &&
-                    repeatY + offsetYRef.current < canvasHeight * 3) {
+                // MODIFICATION: Utiliser une marge plus large pour assurer que les duplicatas
+                // restent chargés pendant le défilement
+                if (repeatY + basePos.height + offsetYRef.current > -canvasHeight * 4 &&
+                    repeatY + offsetYRef.current < canvasHeight * 5) {
 
                     gridPositions.push({
                         ...basePos,

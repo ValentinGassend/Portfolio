@@ -76,11 +76,7 @@ export const useCanvasAnimation = ({
 
     // Infinite scroll ref
     const infiniteScrollRef = useRef({
-        totalRows: 1000,
-        itemsPerRow: 2,
-        rowHeight: 500,
-        virtualOffset: 0,
-        lastScrollPos: 0
+        totalRows: 1000, itemsPerRow: 2, rowHeight: 500, virtualOffset: 0, lastScrollPos: 0
     });
 
     // Exposer les références globalement pour l'animation de transition
@@ -139,26 +135,11 @@ export const useCanvasAnimation = ({
     }, [offsetYRef, targetOffsetYRef, gridScrollOffsetRef]);
 
     // Import and use sub-hooks
-    const {calculateGridLayout} = useGridLayout(
-        canvasRef,
-        imagesRef,
-        infiniteScrollRef,
-        offsetYRef,
-        debugInfoRef,
-        images
-    );
+    const {calculateGridLayout} = useGridLayout(canvasRef, imagesRef, infiniteScrollRef, offsetYRef, debugInfoRef, images);
 
-    const {storeInitialPositions, updateImagesLayout} = usePositionTransition(
-        imagesRef,
-        originalPositionsRef,
-        initialPositionsRef,
-        targetPositionsRef,
-        isGridModeRef,
-        calculateGridLayout,
-        animationProgressRef,
-        setIsTransitioning,
-        setImages
-    );
+    const {
+        storeInitialPositions, updateImagesLayout
+    } = usePositionTransition(imagesRef, originalPositionsRef, initialPositionsRef, targetPositionsRef, isGridModeRef, calculateGridLayout, animationProgressRef, setIsTransitioning, setImages);
 
     // Ajout de la fonction d'aide pour forcer une mise à jour cohérente des images
     const forceUpdateImages = useCallback((updatedImages) => {
@@ -168,6 +149,8 @@ export const useCanvasAnimation = ({
     }, [setImages]);
 
     // Modification du comportement de la roue pour améliorer l'expérience en mode grille
+    // Dans useCanvasAnimation.js, modifions la fonction handleWheel
+
     const handleWheel = useCallback((e) => {
         // Plus sensible en mode grille
         if (isGridModeRef.current) {
@@ -177,38 +160,35 @@ export const useCanvasAnimation = ({
             // Facteur pour ajuster la vitesse de défilement (plus rapide en mode grille)
             const scrollFactor = 1.5;
 
-            // Mettre à jour la position cible directement
+            // Calculer le delta
             const delta = e.deltaY / scrollFactor;
-            gridScrollOffsetRef.current -= delta;
-            targetOffsetYRef.current = gridScrollOffsetRef.current;
 
-            // Ajouter un léger effet visuel pour le défilement
-            effectStrengthRef.current = Math.min(0.2, effectStrengthRef.current + Math.abs(delta) * 0.001);
+            // MODIFICATION: Obtenir les limites de défilement
+            const minOffset = infiniteScrollRef.current.minOffset || -Infinity;
+            const maxOffset = infiniteScrollRef.current.maxOffset || 0;
+
+            // Calculer la nouvelle valeur potentielle
+            const newOffset = gridScrollOffsetRef.current - delta;
+
+            // MODIFICATION: Vérifier si le défilement est possible dans cette direction
+            if ((delta > 0 && gridScrollOffsetRef.current > minOffset) || (delta < 0 && gridScrollOffsetRef.current < maxOffset)) {
+                // Le défilement est possible, mettre à jour la position
+                gridScrollOffsetRef.current = Math.max(minOffset, Math.min(maxOffset, newOffset));
+                targetOffsetYRef.current = gridScrollOffsetRef.current;
+
+                // Ajouter un léger effet visuel pour le défilement
+                // effectStrengthRef.current = Math.min(0.2, effectStrengthRef.current + Math.abs(delta) * 0.001);
+            }
         }
-    }, [isGridModeRef, gridScrollOffsetRef, targetOffsetYRef, wheelEventOccurredRef, effectStrengthRef]);
+    }, [isGridModeRef, gridScrollOffsetRef, targetOffsetYRef, wheelEventOccurredRef, effectStrengthRef, infiniteScrollRef]);
 
-    const {findClickedProject, isPointInImage} = useHoverDetection(
-        canvasRef,
-        imagesRef,
-        offsetYRef,
-        isGridModeRef,
-        calculateGridLayout,
-        isDragging,
-        setHoveredProject
-    );
+    const {
+        findClickedProject, isPointInImage
+    } = useHoverDetection(canvasRef, imagesRef, offsetYRef, isGridModeRef, calculateGridLayout, isDragging, setHoveredProject);
 
-    const {handleMouseDown, handleMouseMove, handleMouseUp} = useDragInteraction(
-        isGridModeRef,
-        dragStartXRef,
-        dragStartYRef,
-        targetOffsetXRef,
-        targetOffsetYRef,
-        dragVelocityXRef,
-        dragVelocityYRef,
-        positionHistoryRef,
-        canvasRef,
-        setIsDragging
-    );
+    const {
+        handleMouseDown, handleMouseMove, handleMouseUp
+    } = useDragInteraction(isGridModeRef, dragStartXRef, dragStartYRef, targetOffsetXRef, targetOffsetYRef, dragVelocityXRef, dragVelocityYRef, positionHistoryRef, canvasRef, setIsDragging);
 
     // Optimisation du rendu pendant les transitions
     const optimizeRenderDuringTransition = useCallback(() => {
@@ -262,11 +242,7 @@ export const useCanvasAnimation = ({
             const patternHeight = window.innerHeight;
 
             // Create images based on loaded resources
-            const newImages = createNonOverlappingImages(
-                projectImagesRef || projectImageRef,
-                patternWidth,
-                patternHeight
-            );
+            const newImages = createNonOverlappingImages(projectImagesRef || projectImageRef, patternWidth, patternHeight);
 
             // Set the total and loaded count to match the actual created images
             setTotalImages(newImages.length);
@@ -281,6 +257,10 @@ export const useCanvasAnimation = ({
 
         // Appliquer l'optimisation de rendu pendant les transitions
         optimizeRenderDuringTransition();
+
+        // Détection de défilement actif en mode grille
+        const isActiveGridScroll = isGridModeRef.current &&
+            Math.abs(gridScrollOffsetRef.current - offsetYRef.current) > 0.5;
 
         if (wheelEventOccurredRef.current && isGridModeRef.current) {
             // Reset the flag
@@ -315,14 +295,21 @@ export const useCanvasAnimation = ({
 
             // Generate artificial velocity for visual effects
             const deltaY = offsetYRef.current - prevOffsetYRef.current;
-            dragVelocityYRef.current = deltaY * 2;
 
-            // Subtle visual effect based on movement
-            effectStrengthRef.current = Math.abs(deltaY) > 0.5 ?
-                Math.min(Math.abs(deltaY) * 0.05, 0.1) :
-                Math.max(effectStrengthRef.current - 0.01, 0);
+            // MODIFICATION: Seulement générer une vélocité si ce n'est pas un défilement actif
+            dragVelocityYRef.current = isActiveGridScroll ? 0 : deltaY * 2;
 
-            // Disable fisheye effect
+            // MODIFICATION: Désactiver tout effet visuel pendant le défilement en mode grille
+            if (isActiveGridScroll) {
+                effectStrengthRef.current = 0;
+            } else {
+                // Subtle visual effect based on movement (seulement quand on ne défile pas)
+                effectStrengthRef.current = Math.abs(deltaY) > 0.5 ?
+                    Math.min(Math.abs(deltaY) * 0.05, 0.1) :
+                    Math.max(effectStrengthRef.current - 0.01, 0);
+            }
+
+            // Disable fisheye effect in grid mode
             fisheyeStrengthRef.current = 0;
         } else {
             // Free mode - original behavior
@@ -362,12 +349,8 @@ export const useCanvasAnimation = ({
                 effectStrengthRef.current = Math.max(effectStrengthRef.current - 0.008, 0);
             }
         }
-
         // Calculate velocity magnitude for debug and effects
-        const velocityMagnitude = Math.sqrt(
-            dragVelocityXRef.current * dragVelocityXRef.current +
-            dragVelocityYRef.current * dragVelocityYRef.current
-        );
+        const velocityMagnitude = Math.sqrt(dragVelocityXRef.current * dragVelocityXRef.current + dragVelocityYRef.current * dragVelocityYRef.current);
 
         // Update position history for trail effect
         if (positionHistoryRef.current.length >= MAX_HISTORY) {
@@ -428,17 +411,7 @@ export const useCanvasAnimation = ({
 
         // Continue animation
         animationFrameRef.current = requestAnimationFrame(animate);
-    }, [
-        isDragging,
-        canvasRef,
-        offscreenCanvasRef,
-        animationFrameRef,
-        prevOffsetXRef,
-        prevOffsetYRef,
-        isTransitioning,
-        calculateGridLayout,
-        optimizeRenderDuringTransition
-    ]);
+    }, [isDragging, canvasRef, offscreenCanvasRef, animationFrameRef, prevOffsetXRef, prevOffsetYRef, isTransitioning, calculateGridLayout, optimizeRenderDuringTransition]);
 
     // Setup animation loop
     useEffect(() => {
@@ -485,9 +458,7 @@ export const useCanvasAnimation = ({
 
     // Export the event handlers to be used by the parent component
     const setDragHandlers = {
-        mouseDown: handleMouseDown,
-        mouseMove: handleMouseMove,
-        mouseUp: handleMouseUp
+        mouseDown: handleMouseDown, mouseMove: handleMouseMove, mouseUp: handleMouseUp
     };
 
     return {
