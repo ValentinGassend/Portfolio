@@ -12,134 +12,218 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         }
     }, [originalPositionsRef, initialPositionsRef]);
 
+    // Improved function to get unique image indices by filtering duplicates
+    const getUniqueVisibleIndices = useCallback((images) => {
+        // Créer une map pour suivre les indices sources
+        const sourceImageToIndexMap = new Map();
+        const uniqueIndices = [];
+        const projectGroups = new Map(); // Pour regrouper les éléments par projet
 
-    // Fonction de transition sans téléportation
-    // Fonction de transition améliorée pour empiler les éléments au centre de l'écran
-    const performNoTeleportTransition = useCallback((useGridLayout, resetPosition = false) => {
-        console.log(`🔄 Démarrage de la transition fluide: ${useGridLayout ? "libre → grille" : "grille → libre"}`);
-
-        // ⚠️ CRITIQUE: Utiliser des flags pour ne pas changer le mode pendant l'animation
-        let animationInProgress = true;
-        const originalMode = isGridModeRef.current;
-        const targetMode = useGridLayout;
-
-        // Bloquer la transition si aucune image n'est visible
-        const images = imagesRef.current;
+        // Première passe : identifier toutes les images visibles
         const visibleIndices = images
             .map((img, idx) => img.visible ? idx : -1)
             .filter(idx => idx !== -1);
 
+        if (visibleIndices.length === 0) return { uniqueIndices: [], projectGroups: new Map() };
+
+        // Deuxième passe : construire la correspondance des indices source
+        // et identifier les groupes de projets
+        for (let i = 0; i < images.length; i++) {
+            const img = images[i];
+
+            // Extraire le nom du projet à partir du nom de l'image
+            const projectName = img.name ? img.name.split(' ')[0] : null;
+
+            // Si nous avons un nom de projet valide, le regrouper
+            if (projectName) {
+                if (!projectGroups.has(projectName)) {
+                    projectGroups.set(projectName, []);
+                }
+                projectGroups.get(projectName).push(i);
+            }
+
+            // Suivre la première occurrence de chaque image source
+            if (img.sourceImageIndex !== undefined) {
+                if (!sourceImageToIndexMap.has(img.sourceImageIndex)) {
+                    sourceImageToIndexMap.set(img.sourceImageIndex, i);
+                }
+            }
+        }
+
+        // Pour chaque groupe de projet, sélectionner uniquement l'image principale
+        projectGroups.forEach((indices, projectName) => {
+            // Trier les indices par taille d'image (la plus grande d'abord)
+            indices.sort((a, b) => {
+                const imgA = images[a];
+                const imgB = images[b];
+                // Calculer la surface pour déterminer la taille
+                const sizeA = imgA.width * imgA.height;
+                const sizeB = imgB.width * imgB.height;
+                return sizeB - sizeA; // Du plus grand au plus petit
+            });
+
+            // Ne garder que le premier élément (le plus grand) de chaque groupe
+            if (indices.length > 0 && visibleIndices.includes(indices[0])) {
+                uniqueIndices.push(indices[0]);
+
+                // Marquer cet indice comme l'indice principal pour tous les éléments du groupe
+                indices.forEach(idx => {
+                    if (idx !== indices[0] && images[idx].sourceImageIndex !== undefined) {
+                        sourceImageToIndexMap.set(images[idx].sourceImageIndex, indices[0]);
+                    }
+                });
+            }
+        });
+
+        // Troisième passe : ajouter les images visibles qui n'appartiennent à aucun groupe
+        for (const idx of visibleIndices) {
+            const img = images[idx];
+            const projectName = img.name ? img.name.split(' ')[0] : null;
+
+            // Si cette image n'appartient à aucun groupe ou si le groupe n'a pas été traité
+            if (!projectName || !projectGroups.has(projectName)) {
+                // Si pas d'index source ou premier élément avec cet index source
+                if (img.sourceImageIndex === undefined ||
+                    sourceImageToIndexMap.get(img.sourceImageIndex) === idx) {
+                    // Éviter les doublons
+                    if (!uniqueIndices.includes(idx)) {
+                        uniqueIndices.push(idx);
+                    }
+                }
+            }
+        }
+
+        console.log(`Filtré ${visibleIndices.length} images visibles en ${uniqueIndices.length} éléments uniques`);
+
+        return {
+            uniqueIndices,
+            projectGroups
+        };
+    }, []);
+    // Improved transition function that eliminates duplicates
+    const performNoTeleportTransition = useCallback((useGridLayout, resetPosition = false) => {
+        console.log(`🔄 Starting smooth transition: ${useGridLayout ? "free → grid" : "grid → free"}`);
+
+        // Use flags to prevent mode changes during animation
+        let animationInProgress = true;
+        const originalMode = isGridModeRef.current;
+        const targetMode = useGridLayout;
+
+        // Get current images and filter out duplicates
+        const images = imagesRef.current;
+        const { uniqueIndices, projectGroups } = getUniqueVisibleIndices(images);
+
+        let visibleIndices = uniqueIndices;
+
         if (visibleIndices.length === 0) {
-            console.log("❌ Aucune image visible, annulation");
+            console.log("❌ No visible images, canceling transition");
             return;
         }
 
-        // IMPORTANT: Réinitialiser les flags globaux qui contrôlent le comportement du grid layout
+        console.log(`🔄 Transition: ${visibleIndices.length} unique projects retained out of ${images.length} total elements`);
+
+        // Reset global flags that control grid layout behavior
         if (typeof window !== 'undefined') {
             window.useFinalGridPositions = false;
             window.isGridTransitioning = true;
         }
 
-        // Activer l'état de transition
+        // Activate transition state
         setIsTransitioning(true);
 
-        // Obtenir les dimensions de l'écran
+        // Get screen dimensions
         const screenWidth = window.innerWidth;
         const screenHeight = window.innerHeight;
 
-        // Étape 1: Calculer les positions finales SANS changer le mode
+        // Step 1: Calculate final positions WITHOUT changing the mode
         let finalPositions = {};
 
-        if (targetMode) { // Si on va vers la grille
-            // Sauvegarder l'état d'origine
+        if (targetMode) {
+            // If transitioning to grid mode
+            // Save original state
             const tempGridMode = isGridModeRef.current;
 
-            // Temporairement passer en mode grille pour le calcul seulement
+            // Temporarily switch to grid mode for calculation only
             isGridModeRef.current = true;
 
-            // Forcer une réinitialisation de la position du grid pour le calcul
-            // Cela va faire en sorte que la grille soit bien centrée dans la vue dès le départ
+            // Force grid position reset for calculation
             const originalOffsetY = window._tempOffsetY = window._gridScrollOffset || 0;
             window._gridScrollOffset = 0;
 
-            // Calculer les positions de grille avec position réinitialisée
+            // Calculate grid positions with reset position
             const gridPositions = calculateGridLayout();
 
-            // Récupérer la référence infiniteScrollRef depuis le contexte window
-            // puisqu'elle n'est pas directement accessible dans cette fonction
+            // Get infiniteScrollRef from window context
             const infiniteScrollRef = window.infiniteScrollRef;
 
-            // Immédiatement revenir au mode d'origine
+            // Immediately revert to original mode
             isGridModeRef.current = tempGridMode;
 
             if (gridPositions && gridPositions.length > 0) {
-                // Obtenir la hauteur du motif de répétition
-                // Soit depuis infiniteScrollRef (s'il est disponible)
-                // Soit calculé à partir des positions de grille
+                // Get pattern height
                 let patternHeight;
 
                 if (infiniteScrollRef && infiniteScrollRef.current && infiniteScrollRef.current.patternHeight) {
                     patternHeight = infiniteScrollRef.current.patternHeight;
-                    console.log("📏 Hauteur du motif récupérée:", patternHeight);
+                    console.log("📏 Retrieved pattern height:", patternHeight);
                 } else {
-                    // Extraire les positions originales (repeatIndex === 0)
+                    // Extract original positions (repeatIndex === 0)
                     const originalPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
 
-                    // Calculer la hauteur du motif manuellement
+                    // Calculate pattern height manually
                     if (originalPositions.length > 0) {
-                        // Trouver la position Y maximale (y + height) parmi les positions originales
+                        // Find max Y position (y + height) among original positions
                         const maxY = Math.max(...originalPositions.map(pos => pos.y + pos.height));
-                        // Trouver la position Y minimale parmi les positions originales
+                        // Find min Y position among original positions
                         const minY = Math.min(...originalPositions.map(pos => pos.y));
-                        // La hauteur du motif est la différence + un espacement
-                        patternHeight = maxY - minY; // Ajouter 100px d'espacement
-                        console.log("📏 Hauteur du motif calculée:", patternHeight);
+                        // Pattern height is the difference + spacing
+                        patternHeight = maxY - minY;
+                        console.log("📏 Calculated pattern height:", patternHeight);
                     } else {
-                        // Valeur par défaut si aucun calcul n'est possible
+                        // Default value if no calculation is possible
                         patternHeight = 500;
-                        console.log("📏 Utilisation de la hauteur par défaut:", patternHeight);
+                        console.log("📏 Using default height:", patternHeight);
                     }
                 }
 
-                // Créer un mapping pour les positions originales et les duplicatas
+                // Keep only positions with repeatIndex === 0 (eliminate all duplicates)
+                const originalGridPositions = gridPositions.filter(pos => pos.repeatIndex === 0);
+
+                // Create mapping for original positions
                 const positionsByOriginalIndex = {};
-                const duplicatesByOriginalIndex = {};
 
-                // Classer les positions entre originales et duplicatas
-                gridPositions.forEach(pos => {
-                    const isOriginal = pos.repeatIndex === 0;
-
-                    if (isOriginal) {
-                        // Stocker la position originale
-                        if (!positionsByOriginalIndex[pos.originalIndex]) {
-                            positionsByOriginalIndex[pos.originalIndex] = pos;
-                        }
-                    } else {
-                        // Stocker le duplicata
-                        if (!duplicatesByOriginalIndex[pos.originalIndex]) {
-                            duplicatesByOriginalIndex[pos.originalIndex] = [];
-                        }
-                        duplicatesByOriginalIndex[pos.originalIndex].push(pos);
+                // Store only original positions
+                originalGridPositions.forEach(pos => {
+                    if (!positionsByOriginalIndex[pos.originalIndex]) {
+                        positionsByOriginalIndex[pos.originalIndex] = pos;
                     }
                 });
 
-                // Calculer le centre de la grille pour les positions originales
+                // Calculate center of grid for original positions
                 const originalPositionsArray = Object.values(positionsByOriginalIndex);
+
+                // If no original positions found, cancel transition
+                if (originalPositionsArray.length === 0) {
+                    console.log("❌ No original positions found, canceling");
+                    setIsTransitioning(false);
+                    return;
+                }
+
                 const gridItemsX = originalPositionsArray.map(pos => pos.x);
                 const gridMaxX = Math.max(...gridItemsX.map((x, i) => x + originalPositionsArray[i].width));
                 const gridMinX = Math.min(...gridItemsX);
                 const gridWidth = gridMaxX - gridMinX;
 
-                // Centrer la grille horizontalement par rapport à l'écran
+                // Center grid horizontally relative to screen
                 const gridCenterOffset = (screenWidth - gridWidth) / 2 - gridMinX;
 
-                // Positionner les éléments visibles
+                // Position visible elements
                 visibleIndices.forEach(idx => {
                     const img = images[idx];
                     const originalGridPos = positionsByOriginalIndex[idx];
 
                     if (originalGridPos) {
-                        // Position originale trouvée
+                        // Original position found
                         finalPositions[idx] = {
                             x: originalGridPos.x + gridCenterOffset,
                             y: originalGridPos.y,
@@ -147,30 +231,55 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                             height: originalGridPos.height,
                             opacity: 1
                         };
+                    }
+                    const allIndices = Object.keys(images).map(Number);
+                    const indicesToHide = allIndices.filter(idx => !visibleIndices.includes(idx));
 
-                        // Stocker les positions des duplicatas pour cette image
-                        if (duplicatesByOriginalIndex[idx] && duplicatesByOriginalIndex[idx].length > 0) {
-                            finalPositions.duplicates = finalPositions.duplicates || {};
-                            finalPositions.duplicates[idx] = duplicatesByOriginalIndex[idx].map(dupPos => ({
-                                x: dupPos.x + gridCenterOffset,
-                                y: dupPos.y,
-                                width: dupPos.width,
-                                height: dupPos.height,
-                                repeatIndex: dupPos.repeatIndex, // Utiliser la hauteur du motif pour calculer le bon espacement vertical
-                                offsetY: dupPos.repeatIndex * patternHeight
-                            }));
+                    // Pour chaque groupe de projet, ne conserver que l'élément principal
+                    projectGroups.forEach((indices, projectName) => {
+                        if (indices.length > 1) {
+                            // Le premier élément (le plus grand) est conservé, les autres masqués
+                            for (let i = 1; i < indices.length; i++) {
+                                indicesToHide.push(indices[i]);
+                            }
                         }
-                    } else {
-                        // Position par défaut au centre si aucune position de grille n'est trouvée
-                        finalPositions[idx] = {
-                            x: screenWidth / 2 - img.width / 2,
-                            y: screenHeight / 2 - img.height / 2,
-                            width: img.width,
-                            height: img.height,
-                            opacity: 1
-                        };
+                    });
+
+                    // Définir l'opacité à 0 pour tous les éléments à masquer
+                    for (const idx of indicesToHide) {
+                        if (images[idx]) {
+                            images[idx] = {
+                                ...images[idx],
+                                opacity: 0,
+                                visible: false
+                            };
+                        }
                     }
                 });
+
+                if (targetMode) {
+                    // For grid mode, check for odd elements and give them special stable treatment
+                    const impairElements = originalPositionsArray.filter(pos => pos.isImpairElement);
+
+                    if (impairElements.length > 0) {
+                        // There's an odd element, apply special treatment
+                        impairElements.forEach(impairPos => {
+                            // If this odd element is visible, stabilize its position
+                            const idx = impairPos.originalIndex;
+
+                            if (finalPositions[idx]) {
+                                console.log("💫 Stabilizing odd element:", idx);
+
+                                // Ensure stable central position
+                                finalPositions[idx] = {
+                                    ...finalPositions[idx],
+                                    x: screenWidth / 2 - finalPositions[idx].width / 2,
+                                    isStabilized: true // Mark as stabilized
+                                };
+                            }
+                        });
+                    }
+                }
             }
         } else {
             visibleIndices.forEach(idx => {
@@ -181,7 +290,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         ...initialPos, opacity: 1
                     };
                 } else {
-                    // Fallback - position actuelle
+                    // Fallback - current position
                     finalPositions[idx] = {
                         x: images[idx].patternX,
                         y: images[idx].patternY,
@@ -193,11 +302,10 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             });
         }
 
-        // Étape 2: Mémoriser les positions de départ, mais assurons-nous qu'elles sont toujours
-        // relatives à l'écran, pas au canvas
+        // Step 2: Remember starting positions
         const startPositions = {};
 
-        // Déterminer si un élément est visible à l'écran
+        // Determine if an element is visible on screen
         const isVisibleOnScreen = (img) => {
             const adjustedX = img.patternX;
             const adjustedY = img.patternY;
@@ -208,27 +316,26 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         visibleIndices.forEach(idx => {
             const img = images[idx];
 
-            // Si l'image n'est pas visible à l'écran, lui donner une position de départ
-            // juste en dehors de l'écran dans une direction aléatoire
+            // If image not visible on screen, give it a starting position just outside the screen in a random direction
             if (!isVisibleOnScreen(img)) {
-                // Direction aléatoire (haut, bas, gauche, droite)
+                // Random direction (top, right, bottom, left)
                 const direction = Math.floor(Math.random() * 4);
                 let offScreenX, offScreenY;
 
                 switch (direction) {
-                    case 0: // haut
+                    case 0: // top
                         offScreenX = Math.random() * screenWidth;
                         offScreenY = -img.height - 50;
                         break;
-                    case 1: // droite
+                    case 1: // right
                         offScreenX = screenWidth + 50;
                         offScreenY = Math.random() * screenHeight;
                         break;
-                    case 2: // bas
+                    case 2: // bottom
                         offScreenX = Math.random() * screenWidth;
                         offScreenY = screenHeight + 50;
                         break;
-                    case 3: // gauche
+                    case 3: // left
                     default:
                         offScreenX = -img.width - 50;
                         offScreenY = Math.random() * screenHeight;
@@ -236,117 +343,157 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 }
 
                 startPositions[idx] = {
-                    x: offScreenX, y: offScreenY, width: img.width, height: img.height, opacity: 0  // Démarrer invisible pour les éléments hors écran
+                    x: offScreenX, y: offScreenY, width: img.width, height: img.height, opacity: 0  // Start invisible for off-screen elements
                 };
             } else {
-                // Pour les éléments visibles, utiliser leur position actuelle
+                // For visible elements, use their current position
                 startPositions[idx] = {
                     x: img.patternX, y: img.patternY, width: img.width, height: img.height, opacity: img.opacity || 1
                 };
             }
         });
 
-        // Nouveau: Calculer position intermédiaire empilée au centre de l'écran
+        // New: Calculate intermediate stacked position at screen center
         const intermediatePositions = {};
-        const stackSpacing = 0; // Espace vertical entre les éléments empilés
+        const stackSpacing = 0; // Vertical spacing between stacked elements
 
-        // Obtenir la position centrale de l'écran
+        // Get screen center position
         const screenCenterX = screenWidth / 2;
         const screenCenterY = screenHeight / 2;
 
-        // Trier les éléments par taille (les plus grands d'abord)
+        // Sort elements by size (largest first)
         const sortedIndices = [...visibleIndices].sort((a, b) => {
             const sizeA = images[a].width * images[a].height;
             const sizeB = images[b].width * images[b].height;
             return sizeB - sizeA;
         });
 
-        // Coefficient de réduction pour l'empilage
-        const stackScale = 0.75; // Réduction à 85% de la taille d'origine
-        const stackOverlap = 1.0; // 80% de chevauchement vertical
+        // Scale coefficient for stacking
+        const stackScale = 0.75; // Reduce to 75% of original size
+        const stackOverlap = 1.0; // 100% vertical overlap
 
-        // Calculer la hauteur totale de la pile après réduction et chevauchement
+        // Calculate total height of stack after reduction and overlap
         let totalStackHeight = sortedIndices.reduce((height, idx, i) => {
             const stackedHeight = images[idx].height * stackScale;
-            // Premier élément complet, les autres avec chevauchement
+            // First element complete, others with overlap
             return height + (i > 0 ? stackedHeight * (1 - stackOverlap) + stackSpacing : stackedHeight);
         }, 0);
 
-        // Position Y de départ, centrée par rapport à l'écran
+        // Starting Y position, centered relative to screen
         let stackY = screenCenterY - totalStackHeight / 2;
 
-        // Attribuer positions empilées (toujours centrées sur l'écran)
+        // Assign stacked positions (always centered on screen)
         sortedIndices.forEach((idx, i) => {
             const img = images[idx];
             const stackedWidth = img.width * stackScale;
             const stackedHeight = img.height * stackScale;
 
             intermediatePositions[idx] = {
-                // Toujours centré horizontalement sur l'écran
-                x: screenCenterX - stackedWidth / 2, y: stackY, width: stackedWidth, height: stackedHeight, // Ajuster l'opacité en fonction de la position dans la pile
-                // Les éléments plus bas sont légèrement plus transparents
+                // Always horizontally centered on screen
+                x: screenCenterX - stackedWidth / 2,
+                y: stackY,
+                width: stackedWidth,
+                height: stackedHeight,
+                // Adjust opacity based on position in stack
+                // Elements lower in stack are slightly more transparent
                 opacity: Math.max(0.7, 0.95 - (i * 0.03))
             };
 
-            // Avancer position Y pour l'élément suivant avec chevauchement
+            // Advance Y position for next element with overlap
             stackY += stackedHeight * (1 - stackOverlap) + stackSpacing;
         });
 
-        // Étape 3: Animer en trois phases: départ → centre empilé → destination
+        // Step 3: Animate in three phases: start → stacked center → destination
         let startTime = null;
-        const PHASE_1_DURATION = 500; // ms - Vers le centre (légèrement plus rapide)
-        const PHASE_2_DURATION = 0; // ms - Pause au centre (légèrement plus courte)
-        const PHASE_3_DURATION = 550; // ms - Vers destination
+        const PHASE_1_DURATION = 500; // ms - To center (slightly faster)
+        const PHASE_2_DURATION = 0; // ms - Pause at center (slightly shorter)
+        const PHASE_3_DURATION = 550; // ms - To destination
         const TOTAL_DURATION = PHASE_1_DURATION + PHASE_2_DURATION + PHASE_3_DURATION;
 
-        // Sauvegarder les décalages de canvas originaux pour la réinitialisation
-        // Ces variables seront utilisées si nous passons du mode libre au mode grille
+        // Save original canvas offsets for reset
+        // These variables will be used if we transition from free to grid mode
         const originalOffsetX = window._canvasOffsetX || 0;
         const originalOffsetY = window._canvasOffsetY || 0;
-        const needsCanvasRecentering = targetMode && !originalMode; // Passage de libre à grille
+        const needsCanvasRecentering = targetMode && !originalMode; // Transitioning from free to grid
 
-        console.log("🔄 Début de l'animation en trois phases", needsCanvasRecentering ? "avec recentrage du canvas" : "");
+        console.log("🔄 Starting three-phase animation", needsCanvasRecentering ? "with canvas recentering" : "");
 
         const animate = (timestamp) => {
             if (!startTime) startTime = timestamp;
             const elapsed = timestamp - startTime;
 
-            // Déterminer la phase actuelle
+            // Determine current phase
             let phase = 1;
             let phaseProgress = 0;
 
             if (elapsed < PHASE_1_DURATION) {
-                // Phase 1: départ → centre
+                // Phase 1: start → center
                 phase = 1;
                 phaseProgress = elapsed / PHASE_1_DURATION;
             } else if (elapsed < PHASE_1_DURATION + PHASE_2_DURATION) {
-                // Phase 2: pause au centre
+                // Phase 2: pause at center
                 phase = 2;
                 phaseProgress = (elapsed - PHASE_1_DURATION) / PHASE_2_DURATION;
             } else {
-                // Phase 3: centre → destination
+                // Phase 3: center → destination
                 phase = 3;
                 phaseProgress = (elapsed - PHASE_1_DURATION - PHASE_2_DURATION) / PHASE_3_DURATION;
-                phaseProgress = Math.min(phaseProgress, 1); // Limiter à 1
+                phaseProgress = Math.min(phaseProgress, 1); // Limit to 1
             }
 
-            // Fonction d'easing
+            // Easing function
             const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
             const easedProgress = easeInOutCubic(phaseProgress);
 
-            // Recentrer progressivement le canvas si on passe de libre à grille (phase 1)
+            // Progressively recenter canvas if transitioning from free to grid (phase 1)
             if (phase === 1 && needsCanvasRecentering && window._updateCanvasOffset) {
-                // Calculer le décalage progressif vers le centre (0, 0)
+                // Calculate progressive offset toward center (0, 0)
                 const newOffsetX = originalOffsetX * (1 - easedProgress);
                 const newOffsetY = originalOffsetY * (1 - easedProgress);
 
-                // Mettre à jour les positions du canvas via la fonction globale
+                // Update canvas positions via global function
                 window._updateCanvasOffset(newOffsetX, newOffsetY);
             }
 
-            // Appliquer les positions intermédiaires selon la phase
+            // Prepare new array for updated images
+            // IMPORTANT: Create a complete copy to avoid modifying the original
             const updatedImages = [...images];
 
+            // Reduce opacity of all duplicate elements
+            // This step is critical to ensure duplicates disappear during transition
+            if (typeof window !== 'undefined' && window.isGridTransitioning) {
+                // Use our source tracking to identify and hide duplicates
+                const processedSourceIndices = new Set();
+
+                for (let i = 0; i < updatedImages.length; i++) {
+                    const img = updatedImages[i];
+
+                    // If not a visible index, low opacity
+                    if (!visibleIndices.includes(i)) {
+                        updatedImages[i] = {
+                            ...img,
+                            opacity: Math.max(0, img.opacity - 0.1) // Gradually reduce
+                        };
+                        continue;
+                    }
+
+                    // For visible indices, check if it's a duplicate
+                    if (img.sourceImageIndex !== undefined) {
+                        if (processedSourceIndices.has(img.sourceImageIndex)) {
+                            // It's a duplicate, reduce opacity
+                            updatedImages[i] = {
+                                ...img,
+                                opacity: 0
+                            };
+                        } else {
+                            // It's the original, mark as processed
+                            processedSourceIndices.add(img.sourceImageIndex);
+                        }
+                    }
+                }
+            }
+
+            // Apply intermediate positions based on phase
             visibleIndices.forEach(idx => {
                 const start = startPositions[idx];
                 const middle = intermediatePositions[idx];
@@ -355,7 +502,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 let currentPos;
 
                 if (phase === 1) {
-                    // Phase 1: départ → centre
+                    // Phase 1: start → center
                     currentPos = {
                         x: start.x + (middle.x - start.x) * easedProgress,
                         y: start.y + (middle.y - start.y) * easedProgress,
@@ -364,23 +511,23 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         opacity: start.opacity + (middle.opacity - start.opacity) * easedProgress
                     };
                 } else if (phase === 2) {
-                    // Phase 2: léger flottement au centre
-                    // L'amplitude du flottement dépend de la taille de l'élément
-                    const floatAmplitude = Math.min(5, middle.height * 0.02); // Max 5px ou 2% de la hauteur
+                    // Phase 2: slight float at center
+                    // Float amplitude depends on element size
+                    const floatAmplitude = Math.min(5, middle.height * 0.02); // Max 5px or 2% of height
                     const floatOffset = Math.sin(phaseProgress * Math.PI * 2) * floatAmplitude;
 
-                    // Léger effet de pulsation (zoom)
-                    const pulseScale = 0; // ±1.5% de pulsation
+                    // Slight pulse effect (zoom)
+                    const pulseScale = 0; // ±1.5% pulse
 
                     currentPos = {
-                        x: middle.x - (middle.width * pulseScale - middle.width) / 2, // Garder centré pendant la pulsation
+                        x: middle.x - (middle.width * pulseScale - middle.width) / 2, // Keep centered during pulse
                         y: middle.y + floatOffset,
                         width: middle.width * pulseScale,
                         height: middle.height * pulseScale,
                         opacity: middle.opacity
                     };
                 } else {
-                    // Phase 3: centre → destination
+                    // Phase 3: center → destination
                     currentPos = {
                         x: middle.x + (end.x - middle.x) * easedProgress,
                         y: middle.y + (end.y - middle.y) * easedProgress,
@@ -388,6 +535,10 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         height: middle.height + (end.height - middle.height) * easedProgress,
                         opacity: middle.opacity + (end.opacity - middle.opacity) * easedProgress
                     };
+                    if (currentPos && end.isStabilized) {
+                        // Keep odd element horizontally centered throughout the transition
+                        currentPos.x = screenCenterX - currentPos.width / 2;
+                    }
                 }
 
                 updatedImages[idx] = {
@@ -400,18 +551,18 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 };
             });
 
-            // Mettre à jour l'affichage avec les nouvelles positions
+            // Update display with new positions
             setImages(updatedImages);
             imagesRef.current = updatedImages;
 
-            // Continuer l'animation jusqu'à la fin
+            // Continue animation until the end
             if (elapsed < TOTAL_DURATION) {
                 requestAnimationFrame(animate);
             } else {
-                // Animation terminée - appliquer les positions exactes finales
+                // Animation complete - apply exact final positions
                 const finalUpdatedImages = [...images];
 
-                // Mettre à jour les images avec les positions finales exactes
+                // Update images with exact final positions
                 visibleIndices.forEach(idx => {
                     finalUpdatedImages[idx] = {
                         ...finalUpdatedImages[idx],
@@ -423,41 +574,87 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     };
                 });
 
+                // Keep opacity at 0 for all duplicates
+                if (targetMode) {
+                    const sourceIndicesInTransition = new Set(
+                        visibleIndices
+                            .map(idx => finalUpdatedImages[idx].sourceImageIndex)
+                            .filter(idx => idx !== undefined)
+                    );
+
+                    // Process all images
+                    for (let i = 0; i < finalUpdatedImages.length; i++) {
+                        // Skip visible indices (already updated)
+                        if (visibleIndices.includes(i)) continue;
+
+                        const img = finalUpdatedImages[i];
+
+                        // If it's a duplicate of a processed image, make it invisible
+                        if (img.sourceImageIndex !== undefined &&
+                            sourceIndicesInTransition.has(img.sourceImageIndex)) {
+                            finalUpdatedImages[i] = {
+                                ...img,
+                                opacity: 0
+                            };
+                        }
+                    }
+                }
+
                 setImages(finalUpdatedImages);
                 imagesRef.current = finalUpdatedImages;
 
-                // Indiquer que l'animation est terminée
+                // Indicate animation is complete
                 animationInProgress = false;
 
-                // SEULEMENT MAINTENANT changer le mode
-                console.log(`✅ Animation terminée, changement de mode vers ${targetMode ? "grille" : "libre"}`);
+                // Clean up global transition flags
+                if (typeof window !== 'undefined') {
+                    // Explicitly reset transition control flags
+                    window.isGridTransitioning = false;
+
+                    // Also clean up temporary variables that are no longer needed
+                    window._tempOffsetY = undefined;
+                    window._gridScrollOffset = undefined;
+                    window._canvasOffsetX = undefined;
+                    window._canvasOffsetY = undefined;
+                    window._updateCanvasOffset = undefined;
+                }
+
+                // ONLY NOW change the mode
+                console.log(`✅ Animation complete, changing mode to ${targetMode ? "grid" : "free"}`);
                 isGridModeRef.current = targetMode;
 
-                // Pour le mode grille, solution définitive pour éviter tout décalage visuel:
-                // Forcer le grid layout à utiliser EXACTEMENT les positions finales de la transition
+                // For grid mode, definitive solution to avoid any visual offset:
+                // Force grid layout to use EXACTLY the final positions from the transition
                 if (targetMode) {
                     if (typeof window !== 'undefined') {
                         window.useFinalGridPositions = true;
                     }
 
                     setTimeout(() => {
-                        console.log("🔒 Verrouillage des positions finales pour assurer une transition parfaite");
+                        console.log("🔒 Locking final positions for perfect transition");
 
-                        // Désactiver le flag de transition
+                        // Disable transition flag
                         if (typeof window !== 'undefined') {
                             window.isGridTransitioning = false;
                         }
 
-                        // Recalculer le layout avec les positions verrouillées
+                        // Recalculate layout with locked positions
                         const gridPositions = calculateGridLayout();
 
-                        // Terminer la transition
+                        // Force complete layout recalculation once transition is complete
+                        if (typeof calculateGridLayout === 'function') {
+                            // Calculate new layout to ensure everything is correctly positioned
+                            const newGridPositions = calculateGridLayout();
+                            console.log("🔄 Final layout recalculation after transition");
+                        }
+
+                        // End transition
                         setTimeout(() => {
                             setIsTransitioning(false);
-                            console.log("✅ Transition terminée, mode grille actif avec positions préservées");
+                            console.log("✅ Transition complete, grid mode active with preserved positions");
 
-                            // Désactiver le verrouillage après un court délai pour permettre
-                            // le défilement normal par la suite
+                            // Disable position locking after a short delay to allow
+                            // normal scrolling afterward
                             setTimeout(() => {
                                 if (typeof window !== 'undefined') {
                                     window.useFinalGridPositions = false;
@@ -466,24 +663,24 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         }, 100);
                     }, 50);
                 } else {
-                    // Mode libre, terminer immédiatement
+                    // Free mode, end immediately
                     setIsTransitioning(false);
 
-                    // Désactiver les flags
+                    // Disable flags
                     if (typeof window !== 'undefined') {
                         window.isGridTransitioning = false;
                         window.useFinalGridPositions = false;
                     }
 
-                    console.log("✅ Transition terminée, mode libre actif");
+                    console.log("✅ Transition complete, free mode active");
                 }
             }
         };
 
-        // Démarrer l'animation
+        // Start animation
         requestAnimationFrame(animate);
 
-    }, [imagesRef, calculateGridLayout, initialPositionsRef, setImages, setIsTransitioning, isGridModeRef]);
+    }, [imagesRef, calculateGridLayout, initialPositionsRef, setImages, setIsTransitioning, isGridModeRef, getUniqueVisibleIndices]);
 
     // Update images layout based on mode (grid or free)
     const updateImagesLayout = useCallback((useGridLayout) => {
@@ -492,17 +689,17 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             return;
         }
 
-        console.log(`🔄 Transition: ${useGridLayout ? "vers grille" : "vers libre"}`);
+        console.log(`🔄 Transition: ${useGridLayout ? "to grid" : "to free"}`);
 
-        // Passage du mode libre au mode grille
+        // Transition from free mode to grid mode
         if (useGridLayout) {
-            // Stocker les positions actuelles du canvas pour l'animation
+            // Store current canvas positions for animation
             if (typeof window !== 'undefined') {
-                // Sauvegarder l'état actuel du canvas pour l'animation
+                // Save current canvas state for animation
                 window._canvasOffsetX = window.offsetXRef?.current || 0;
                 window._canvasOffsetY = window.offsetYRef?.current || 0;
 
-                // Définir la fonction pour mettre à jour les offsets durant l'animation
+                // Define function to update offsets during animation
                 window._updateCanvasOffset = (x, y) => {
                     if (window.offsetXRef && window.offsetYRef) {
                         window.offsetXRef.current = x;
@@ -512,29 +709,29 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     }
                 };
 
-                // Émettre un événement pour réinitialiser le scrolling du grid avant la transition
+                // Emit event to reset grid scrolling before transition
                 const resetEvent = new CustomEvent('resetGridPosition', {detail: {immediate: true}});
                 window.dispatchEvent(resetEvent);
             }
 
-            // Court délai pour laisser le temps à la position de se réinitialiser
+            // Short delay to allow position to reset
             setTimeout(() => {
                 // Ensure initial positions are stored
                 if (imagesRef.current.length > 0) {
                     storeInitialPositions(imagesRef.current);
                 }
 
-                // Utiliser la transition sans téléportation
+                // Use no-teleport transition
                 performNoTeleportTransition(useGridLayout, true);
             }, 50);
         } else {
-            // En mode libre, pas besoin de réinitialiser
+            // In free mode, no need to reset
             // Ensure initial positions are stored
             if (imagesRef.current.length > 0) {
                 storeInitialPositions(imagesRef.current);
             }
 
-            // Utiliser la transition sans téléportation
+            // Use no-teleport transition
             performNoTeleportTransition(useGridLayout, false);
         }
     }, [storeInitialPositions, performNoTeleportTransition, isGridModeRef, imagesRef]);

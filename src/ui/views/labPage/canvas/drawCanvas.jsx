@@ -21,7 +21,8 @@ const drawCanvas = ({
                         patternHeight,
                         isGridMode,
                         calculateGridLayout,
-                        isTransitioning
+                        isTransitioning,
+                        transitionProgress = 0 // Ajout d'un paramètre de progression de la transition
                     }) => {
     if (!ctx || !offscreenCtx) return {visibleTiles: 0, visibleInstances: 0};
 
@@ -55,17 +56,137 @@ const drawCanvas = ({
     const visibleImagesData = [];
     const visibleIndices = new Set();
 
-    // ⚠️ Important: En mode transition, toujours utiliser l'approche libre pour le rendu
-    // afin d'éviter toute téléportation liée au changement de mode
-    if (isGridMode && !isTransitioning) {
-        const drawnCombinations = new Set();
-        const gridPositions = calculateGridLayout();
+    // Créer un ensemble pour suivre les sourceImageIndex déjà traités
+    const processedSourceIndices = new Set();
 
+    // Si nous sommes en mode grille ou en transition vers le mode grille,
+    // calculer les positions de la grille pour les utiliser
+    const gridPositions = (isGridMode || isTransitioning) ? calculateGridLayout() : null;
+
+    // Pendant la transition, on va afficher à la fois le mode libre et le mode grille
+    // avec une opacité variable selon la progression de la transition
+    if (isTransitioning) {
+        // Afficher d'abord la version "mode libre" (avec filtrage des duplications)
+        // mais seulement si nous ne sommes pas trop avancés dans la transition
+        if (transitionProgress < 0.9) { // Afficher le mode libre jusqu'à 90% de la transition
+            const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
+            const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
+            const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
+            const endTileY = Math.ceil((-offsetY + canvas.width) / patternHeight);
+
+            // On ne veut qu'une seule tuile pendant la transition pour éviter les duplications
+            const centerTileX = Math.round((-offsetX) / patternWidth);
+            const centerTileY = Math.round((-offsetY) / patternHeight);
+
+            // Réinitialiser l'ensemble pour la partie mode libre
+            processedSourceIndices.clear();
+
+            for (let tileY = centerTileY; tileY <= centerTileY; tileY++) {
+                for (let tileX = centerTileX; tileX <= centerTileX; tileX++) {
+                    debugInfo.visibleTiles++;
+
+                    // Pour chaque tuile, collecter les images visibles
+                    images.forEach((image, index) => {
+                        // Filtrer les duplications pendant la transition
+                        if (image.sourceImageIndex !== undefined) {
+                            if (processedSourceIndices.has(image.sourceImageIndex)) {
+                                return;
+                            }
+                            processedSourceIndices.add(image.sourceImageIndex);
+                        }
+
+                        // Appliquer le facteur de parallaxe spécifique à chaque image
+                        const parallaxFactor = image.parallaxFactor;
+                        const imgOffsetX = offsetX * parallaxFactor;
+                        const imgOffsetY = offsetY * parallaxFactor;
+
+                        // Calculer la position avec ce décalage
+                        const tilePixelX = tileX * patternWidth + imgOffsetX;
+                        const tilePixelY = tileY * patternHeight + imgOffsetY;
+
+                        const imgX = image.patternX + tilePixelX;
+                        const imgY = image.patternY + tilePixelY;
+
+                        if (isInViewport(imgX, imgY, image.width, image.height, canvas.width, canvas.height)) {
+                            debugInfo.visibleInstances++;
+                            visibleIndices.add(index);
+
+                            // Ajouter l'image à la liste des images visibles avec une opacité qui diminue
+                            // pendant la transition
+                            visibleImagesData.push({
+                                image,
+                                x: imgX,
+                                y: imgY,
+                                width: image.width,
+                                height: image.height,
+                                size: image.size || image.width,
+                                velocity: {
+                                    x: dragVelocityX * parallaxFactor,
+                                    y: dragVelocityY * parallaxFactor
+                                },
+                                opacity: image.opacity * (1 - transitionProgress), // Diminue avec la progression
+                                index,
+                                isOriginal: true,
+                                mode: 'free' // Marquer comme mode libre pour le tri
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
+        // Ensuite, afficher la version "mode grille" (si disponible)
+        // avec une opacité qui augmente avec la progression de la transition
+        if (gridPositions && gridPositions.length > 0 && transitionProgress > 0.1) { // Apparaît à partir de 10%
+            // Réinitialiser l'ensemble pour la partie mode grille
+            processedSourceIndices.clear();
+
+            gridPositions.forEach((position) => {
+                const image = images[position.originalIndex % images.length];
+                if (!image) return;
+
+                // Filtrer les duplications pour le mode grille aussi
+                if (image.sourceImageIndex !== undefined) {
+                    if (processedSourceIndices.has(image.sourceImageIndex)) {
+                        return;
+                    }
+                    processedSourceIndices.add(image.sourceImageIndex);
+                }
+
+                // Position de l'image
+                const imgX = position.x;
+                const imgY = position.y + offsetY;
+
+                // Vérifier si l'image est visible
+                if (isInViewport(imgX, imgY, position.width, position.height, canvas.width, canvas.height)) {
+                    debugInfo.visibleInstances++;
+                    visibleIndices.add(position.originalIndex);
+
+                    // Ajouter l'image au rendu avec une opacité qui augmente avec la progression
+                    visibleImagesData.push({
+                        image,
+                        x: imgX,
+                        y: imgY,
+                        width: position.width,
+                        height: position.height,
+                        size: image.size || position.width,
+                        velocity: {
+                            x: 0,
+                            y: dragVelocityY * 0.5
+                        },
+                        opacity: image.opacity * transitionProgress, // Augmente avec la progression
+                        index: position.originalIndex,
+                        repeatIndex: 0,
+                        isOriginal: true,
+                        mode: 'grid' // Marquer comme mode grille pour le tri
+                    });
+                }
+            });
+        }
+    }
+    // Mode grille standard (pas de transition)
+    else if (isGridMode) {
         if (gridPositions && gridPositions.length > 0) {
-            // MODIFICATION: Ne plus séparer les originaux des duplications
-            // et ne plus traiter les duplications du tout
-
-            // Traiter toutes les positions comme des originaux
             gridPositions.forEach((position) => {
                 const image = images[position.originalIndex % images.length];
                 if (!image) return;
@@ -98,12 +219,10 @@ const drawCanvas = ({
                     });
                 }
             });
-
-            // SUPPRESSION: La partie qui traitait les duplications a été supprimée
         }
-    } else {
-        // Mode libre OU mode en transition
-        // Dans les deux cas, utiliser l'approche standard de répétition des tuiles
+    }
+    // Mode libre standard (pas de transition)
+    else {
         const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
         const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
         const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
@@ -153,11 +272,19 @@ const drawCanvas = ({
         }
     }
 
-    // 5. Sort images by size and type
-    if (isGridMode && !isTransitioning) {
-        // En mode grille (hors transition):
-        // 1. D'abord les originaux (grandes d'abord)
-        // 2. Ensuite les duplications (par distance de répétition, puis par taille)
+    // 5. Sort images by size, type and mode (pour la transition)
+    if (isTransitioning) {
+        // En transition: afficher d'abord le mode libre, puis le mode grille par-dessus
+        visibleImagesData.sort((a, b) => {
+            // D'abord par mode (libre puis grille)
+            if (a.mode !== b.mode) {
+                return a.mode === 'free' ? -1 : 1;
+            }
+            // Ensuite par taille
+            return a.size - b.size;
+        });
+    } else if (isGridMode) {
+        // En mode grille (hors transition)
         visibleImagesData.sort((a, b) => {
             // Priorité aux images originales
             if (a.isOriginal !== b.isOriginal) {
@@ -177,8 +304,7 @@ const drawCanvas = ({
             return b.size - a.size;
         });
     } else {
-        // En mode libre ou transition:
-        // Dessiner les petites images d'abord (grandes par-dessus)
+        // En mode libre (hors transition)
         visibleImagesData.sort((a, b) => a.size - b.size);
     }
 

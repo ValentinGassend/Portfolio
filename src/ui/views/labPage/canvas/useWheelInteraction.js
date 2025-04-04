@@ -22,42 +22,37 @@ export const useWheelInteraction = (
         // Apply factor to adjust scroll speed
         const scrollFactor = 2.5;
 
-        // Update target position directly
-        const delta = e.deltaY / scrollFactor;
-        gridScrollOffsetRef.current -= delta;
-        targetOffsetYRef.current = gridScrollOffsetRef.current;
-
-        // Calculate pattern height to determine scroll limits
+        // Calculate the current grid positions to determine layout dimensions
         if (typeof calculateGridLayout === 'function') {
+            const gridPositions = calculateGridLayout();
+
+            // Get pattern height and calculate content boundaries
             const patternHeight = infiniteScrollRef.current.patternHeight || 0;
 
-            // Initialize repeat counters if they don't exist yet
-            if (infiniteScrollRef.current.topRepeats === undefined) {
-                infiniteScrollRef.current.topRepeats = 0;
-            }
-            if (infiniteScrollRef.current.totalRows === undefined) {
-                infiniteScrollRef.current.totalRows = 5;
+            // Define scroll limits - only scroll within content height
+            // Calculate maximum scroll amount (negative value to scroll down)
+            const maxScrollOffset = 0; // Top limit always 0
+            const minScrollOffset = patternHeight !== 0 ? -patternHeight + window.innerHeight / 2 : -1000;
+
+            // Calculate the new potential scroll offset
+            const delta = e.deltaY / scrollFactor;
+            const newScrollOffset = gridScrollOffsetRef.current - delta;
+
+            // Apply limits to scroll
+            if (newScrollOffset > maxScrollOffset) {
+                gridScrollOffsetRef.current = maxScrollOffset;
+            } else if (newScrollOffset < minScrollOffset) {
+                gridScrollOffsetRef.current = minScrollOffset;
+            } else {
+                gridScrollOffsetRef.current = newScrollOffset;
             }
 
-            // Detect scroll direction
-            const isScrollingUp = delta < 0;
-            const isScrollingDown = delta > 0;
+            // Update target position with bounded value
+            targetOffsetYRef.current = gridScrollOffsetRef.current;
 
-            // If scrolling up and approaching the upper limit
-            if (isScrollingUp && gridScrollOffsetRef.current > patternHeight * 0.5) {
-                // Add repetitions above and shift offset
-                infiniteScrollRef.current.topRepeats += 5;
-                infiniteScrollRef.current.virtualOffset -= patternHeight * 5;
-                gridScrollOffsetRef.current -= patternHeight * 5;
-                targetOffsetYRef.current = gridScrollOffsetRef.current;
-            }
-
-            // If scrolling down and approaching the lower limit
-            const totalRepeats = infiniteScrollRef.current.totalRows;
-            if (isScrollingDown && gridScrollOffsetRef.current < -(patternHeight * totalRepeats * 0.7)) {
-                // Add more rows when approaching the bottom
-                infiniteScrollRef.current.totalRows += 5;
-            }
+            // Store limits in infiniteScrollRef for other components to access
+            infiniteScrollRef.current.maxOffset = maxScrollOffset;
+            infiniteScrollRef.current.minOffset = minScrollOffset;
         }
     }, [isGridModeRef, calculateGridLayout, infiniteScrollRef, gridScrollOffsetRef, targetOffsetYRef, wheelEventOccurredRef]);
 
