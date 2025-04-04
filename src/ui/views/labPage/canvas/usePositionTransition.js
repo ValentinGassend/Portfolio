@@ -34,6 +34,12 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             return;
         }
 
+        // IMPORTANT: Réinitialiser les flags globaux qui contrôlent le comportement du grid layout
+        if (typeof window !== 'undefined') {
+            window.useFinalGridPositions = false;
+            window.isGridTransitioning = true;
+        }
+
         // Activer l'état de transition
         setIsTransitioning(true);
 
@@ -402,10 +408,10 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             if (elapsed < TOTAL_DURATION) {
                 requestAnimationFrame(animate);
             } else {
-
-// Animation terminée - appliquer les positions exactes finales
+                // Animation terminée - appliquer les positions exactes finales
                 const finalUpdatedImages = [...images];
 
+                // Mettre à jour les images avec les positions finales exactes
                 visibleIndices.forEach(idx => {
                     finalUpdatedImages[idx] = {
                         ...finalUpdatedImages[idx],
@@ -420,36 +426,55 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 setImages(finalUpdatedImages);
                 imagesRef.current = finalUpdatedImages;
 
-// ⚠️ IMPORTANT: Indiquer que l'animation est terminée
+                // Indiquer que l'animation est terminée
                 animationInProgress = false;
 
-// Étape 4: SEULEMENT MAINTENANT changer le mode
+                // SEULEMENT MAINTENANT changer le mode
                 console.log(`✅ Animation terminée, changement de mode vers ${targetMode ? "grille" : "libre"}`);
                 isGridModeRef.current = targetMode;
 
-// Pour le mode grille, forcer le recalcul du layout complet incluant les duplicatas
+                // Pour le mode grille, solution définitive pour éviter tout décalage visuel:
+                // Forcer le grid layout à utiliser EXACTEMENT les positions finales de la transition
                 if (targetMode) {
-                    setTimeout(() => {
-                        console.log("🔄 Calcul final et affichage des duplications");
+                    if (typeof window !== 'undefined') {
+                        window.useFinalGridPositions = true;
+                    }
 
-                        // Au lieu de simplement appeler calculateGridLayout,
-                        // nous devons nous assurer que le layout est entièrement recalculé
-                        // et que les duplicatas sont correctement positionnés
+                    setTimeout(() => {
+                        console.log("🔒 Verrouillage des positions finales pour assurer une transition parfaite");
+
+                        // Désactiver le flag de transition
+                        if (typeof window !== 'undefined') {
+                            window.isGridTransitioning = false;
+                        }
+
+                        // Recalculer le layout avec les positions verrouillées
                         const gridPositions = calculateGridLayout();
 
-                        // Assurons-nous que les duplicatas sont visibles en appliquant
-                        // progressivement leur opacité
-                        const updatedWithDuplicates = [...imagesRef.current];
-
-                        // Pour chaque duplicata, mettre à jour son opacité progressivement
+                        // Terminer la transition
                         setTimeout(() => {
                             setIsTransitioning(false);
-                            console.log("✅ Transition terminée, mode grille actif");
-                        }, 300);
-                    }, 100);
+                            console.log("✅ Transition terminée, mode grille actif avec positions préservées");
+
+                            // Désactiver le verrouillage après un court délai pour permettre
+                            // le défilement normal par la suite
+                            setTimeout(() => {
+                                if (typeof window !== 'undefined') {
+                                    window.useFinalGridPositions = false;
+                                }
+                            }, 500);
+                        }, 100);
+                    }, 50);
                 } else {
                     // Mode libre, terminer immédiatement
                     setIsTransitioning(false);
+
+                    // Désactiver les flags
+                    if (typeof window !== 'undefined') {
+                        window.isGridTransitioning = false;
+                        window.useFinalGridPositions = false;
+                    }
+
                     console.log("✅ Transition terminée, mode libre actif");
                 }
             }

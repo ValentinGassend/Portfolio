@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+
 export const useGridLayout = (
     canvasRef,
     imagesRef,
@@ -7,84 +8,221 @@ export const useGridLayout = (
     debugInfoRef,
     images
 ) => {
+    // Fonction pour grouper les projets connexes
+    const groupProjects = (images) => {
+        const groups = {
+            'Project 1': ['Project 1', 'How'],
+            'Year': ['Year', 'What', 'Why'],
+            'Preview': ['Preview'],
+            'Other': []
+        };
+
+        const groupedImages = [];
+        const processedIndices = new Set();
+
+        // Parcourir les groupes
+        Object.values(groups).forEach(groupMembers => {
+            const groupImages = images.filter((img, index) =>
+                groupMembers.some(member =>
+                    img.name.includes(member) && !processedIndices.has(index)
+                )
+            );
+
+            // Trier les images du groupe par taille (plus grands en premier)
+            groupImages.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+
+            groupImages.forEach(img => {
+                const imgIndex = images.indexOf(img);
+                groupedImages.push(img);
+                processedIndices.add(imgIndex);
+            });
+        });
+
+        // Ajouter les images restantes non traitées
+        images.forEach((img, index) => {
+            if (!processedIndices.has(index)) {
+                groupedImages.push(img);
+            }
+        });
+
+        return groupedImages;
+    };
+
     // Function to calculate grid layout positions
     const calculateGridLayout = useCallback(() => {
         if (images.length === 0) return [];
         const canvas = canvasRef.current;
         if (!canvas) return [];
 
+        // SOLUTION CLÉ POUR GARANTIR LA CONTINUITÉ:
+        // Si nous venons de finir une transition et que le flag est activé,
+        // utiliser exactement les positions actuelles des images
+        const isUsingDirectImagePositions = window.useFinalGridPositions === true && window.isGridModeRef?.current;
+
+        if (isUsingDirectImagePositions && imagesRef.current && imagesRef.current.length > 0) {
+            console.log("🔄 Utilisation des positions EXACTES des images pour le layout grille");
+
+            // Obtenir les positions actuelles directement depuis les images
+            const basePositions = imagesRef.current.map((img, idx) => ({
+                x: img.patternX,
+                y: img.patternY,
+                width: img.width,
+                height: img.height,
+                originalIndex: idx,
+                name: img.name
+            }));
+
+            // Ajouter des informations de debug
+            debugInfoRef.current = {
+                ...debugInfoRef.current,
+                usingDirectPositions: true,
+                positionsCount: basePositions.length
+            };
+
+            // Utiliser directement ces positions comme positions de base
+            return basePositions.map(pos => ({
+                ...pos,
+                repeatIndex: 0,
+                isVisible: true
+            }));
+        }
+
+        // Grouper les projets
+        const groupedImages = groupProjects(images);
+
         // Get canvas dimensions
         const canvasWidth = canvas.width;
         const canvasHeight = canvas.height;
 
-        // Grid parameters
-        const horizontalSpacing = 100;     // Horizontal spacing between projects
-        const verticalSpacing = horizontalSpacing;       // Vertical spacing between lines of projects
-        const groupSpacing = verticalSpacing;         // Spacing between the repeated groups
-        const targetHeight = 250;         // Target height for projects
-        const columnCount = 2;            // Columns per row
-        const baseImagesCount = images.length;
+        // Grid parameters - AJUSTÉ POUR ÉVITER LES CHEVAUCHEMENTS
+        const horizontalSpacing = 50;     // Espacement horizontal augmenté
+        const verticalSpacing = 50;       // Espacement vertical augmenté
+        const groupSpacing = 50;          // Espacement entre groupes augmenté
+        const targetHeight = 200;          // Hauteur cible légèrement réduite
+        const columnCount = 2;             // Toujours 2 colonnes par ligne
+
+        // Nombre d'images à positionner
+        const baseImagesCount = groupedImages.length;
 
         // Store these values for infinite scroll
         infiniteScrollRef.current.itemsPerRow = columnCount;
 
-        // Calculate positions for base images (single repetition)
-        const baseGridPositions = [];
+        // Calcul des lignes et colonnes
+        const fullRows = Math.floor(baseImagesCount / columnCount);
+        const remainingProjects = baseImagesCount % columnCount;
+        const totalRows = remainingProjects > 0 ? fullRows + 1 : fullRows;
 
-        // Calculate total height first to center vertically
-        let totalHeight = 0;
-        const rows = Math.ceil(baseImagesCount / columnCount);
+        // Positions de base pour tous les projets
+        let baseGridPositions = [];
 
-        // Estimate height based on targetHeight and spacing
+        // Hauteur estimée pour centrage vertical
         const estimatedRowHeight = targetHeight + verticalSpacing;
-        totalHeight = rows * estimatedRowHeight - verticalSpacing; // Subtract the last spacing
+        const totalHeight = totalRows * estimatedRowHeight;
+        const startY = Math.max(0, (canvasHeight - totalHeight) / 2);
 
-        // Calculate Y offset to center vertically
-        const initialY = Math.max(0, (canvasHeight - totalHeight) / 2) - estimatedRowHeight / 2;
-        let currentY = initialY; // Start with an offset that centers vertically
+        // Position chaque projet ligne par ligne
+        for (let row = 0; row < totalRows; row++) {
+            // Déterminer le nombre de colonnes pour cette ligne
+            const isLastRow = row === fullRows;
+            const colsInThisRow = isLastRow && remainingProjects > 0 ? remainingProjects : columnCount;
 
-        // Go through images in pairs to create rows
-        for (let i = 0; i < baseImagesCount; i += columnCount) {
-            // Calculate dimensions while preserving aspect ratio
-            const calculateSize = (img) => {
+            // Position Y pour cette ligne
+            const rowY = startY + row * estimatedRowHeight;
+
+            // Collecter tailles pour cette ligne
+            const rowSizes = [];
+            for (let col = 0; col < colsInThisRow; col++) {
+                const imgIndex = row * columnCount + col;
+                const img = groupedImages[imgIndex];
+
+                // Calculer la taille en préservant le ratio d'aspect
                 const aspectRatio = img.width / img.height;
-                let newHeight = targetHeight;
-                let newWidth = newHeight * aspectRatio;
-                return {width: newWidth, height: newHeight};
-            };
+                const newHeight = targetHeight;
+                const newWidth = aspectRatio * newHeight;
 
-            // Collect sizes for this row
-            const sizes = [];
-            const availableImages = [];
-            for (let j = 0; j < columnCount && i + j < baseImagesCount; j++) {
-                availableImages.push(images[i + j]);
-                sizes.push(calculateSize(images[i + j]));
+                rowSizes.push({
+                    width: newWidth,
+                    height: newHeight,
+                    index: imgIndex,
+                    name: img.name
+                });
             }
 
-            // Total width of the row with UNIFORM horizontal spacing
-            const totalWidth = sizes.reduce((sum, size) => sum + size.width, 0) + ((sizes.length - 1) * horizontalSpacing);
-            const startX = (canvasWidth - totalWidth) / 2;
+            // Calculer largeur totale de la ligne
+            const totalRowWidth = rowSizes.reduce((sum, size) => sum + size.width, 0) +
+                (colsInThisRow - 1) * horizontalSpacing;
 
-            // Position of each image in the row
-            let currentX = startX;
-            availableImages.forEach((img, index) => {
-                const size = sizes[index];
+            // Position X de départ (centrée)
+            let currentX = (canvasWidth - totalRowWidth) / 2;
+
+            // Positionner chaque image dans cette ligne
+            for (let i = 0; i < rowSizes.length; i++) {
+                const size = rowSizes[i];
+                const img = groupedImages[size.index];
+
+                // Ajouter la position
                 baseGridPositions.push({
-                    x: currentX, y: currentY, width: size.width, height: size.height, originalIndex: i + index
+                    x: currentX,
+                    y: rowY,
+                    width: size.width,
+                    height: size.height,
+                    originalIndex: size.index,
+                    name: size.name
                 });
 
-                // Use constant horizontalSpacing between elements
+                // Avancer X pour le prochain élément
                 currentX += size.width + horizontalSpacing;
-            });
-
-            // Move to next row with UNIFORM vertical spacing
-            const rowHeight = Math.max(...sizes.map(s => s.height));
-            currentY += rowHeight + verticalSpacing;
+            }
         }
 
+        // Vérification de sécurité: s'assurer que tous les projets sont positionnés
+        // et qu'ils ont des positions uniques
+        const positionedIndices = baseGridPositions.map(p => p.originalIndex);
+        for (let i = 0; i < baseImagesCount; i++) {
+            if (!positionedIndices.includes(i)) {
+                console.warn(`Projet #${i} non positionné, ajout position par défaut`);
+                // Position par défaut au centre si non positionné
+                baseGridPositions.push({
+                    x: canvasWidth / 2 - 150,
+                    y: canvasHeight / 2 + i * 80,
+                    width: 300,
+                    height: 200,
+                    originalIndex: i,
+                    name: groupedImages[i].name
+                });
+            }
+        }
+
+        // Vérification des duplicatas
+        const indexCounts = {};
+        baseGridPositions.forEach(pos => {
+            indexCounts[pos.originalIndex] = (indexCounts[pos.originalIndex] || 0) + 1;
+        });
+
+        Object.entries(indexCounts).forEach(([idx, count]) => {
+            if (count > 1) {
+                console.warn(`Projet #${idx} a ${count} positions, correction nécessaire`);
+                // Garder seulement la première occurrence et supprimer les autres
+                let found = false;
+                baseGridPositions = baseGridPositions.filter(pos => {
+                    if (pos.originalIndex == idx) {
+                        if (!found) {
+                            found = true;
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        });
+
         // Recalculate the actual pattern height
-        const patternHeight = currentY - initialY + (groupSpacing - verticalSpacing);
-        infiniteScrollRef.current.rowHeight = patternHeight / Math.ceil(baseImagesCount / columnCount);
+        const maxY = Math.max(...baseGridPositions.map(pos => pos.y + pos.height));
+        const minY = Math.min(...baseGridPositions.map(pos => pos.y));
+        const patternHeight = maxY - minY + groupSpacing;
+
+        infiniteScrollRef.current.rowHeight = patternHeight / totalRows;
         infiniteScrollRef.current.patternHeight = patternHeight;
 
         // Now, create the complete layout with duplication for infinite scroll
@@ -103,16 +241,15 @@ export const useGridLayout = (
         }
 
         // Number of repetitions needed to fill the view
-        const visibleRows = Math.ceil(canvasHeight / infiniteScrollRef.current.rowHeight) + 5; // +5 to avoid visual jumps
+        const visibleRows = Math.ceil(canvasHeight / infiniteScrollRef.current.rowHeight) + 5;
 
         // Number of repetitions needed in each direction
         const requiredRepeatsDown = Math.max(infiniteScrollRef.current.totalRows, Math.ceil(visibleRows * 2));
         const requiredRepeatsUp = Math.max(infiniteScrollRef.current.topRepeats, Math.ceil(visibleRows * 2));
 
-
         // Create repetitions above (negative repetitions)
         for (let repeat = -requiredRepeatsUp; repeat < 0; repeat++) {
-            baseGridPositions.forEach((basePos, idx) => {
+            baseGridPositions.forEach((basePos) => {
                 // Y position with UNIFORM spacing between repetitions
                 const repeatY = basePos.y + (repeat * patternHeight);
 
@@ -134,7 +271,7 @@ export const useGridLayout = (
 
         // Create repetitions below (positive repetitions)
         for (let repeat = 0; repeat < requiredRepeatsDown; repeat++) {
-            baseGridPositions.forEach((basePos, idx) => {
+            baseGridPositions.forEach((basePos) => {
                 // Y position with UNIFORM spacing between repetitions
                 const repeatY = basePos.y + (repeat * patternHeight);
 
@@ -161,7 +298,12 @@ export const useGridLayout = (
             virtualOffset,
             topRepeats: infiniteScrollRef.current.topRepeats,
             totalRows: infiniteScrollRef.current.totalRows,
-            visibleProjects: gridPositions.length
+            visibleProjects: gridPositions.length,
+            remainingProjects,
+            fullRows,
+            totalRows,
+            uniqueIndices: Object.keys(indexCounts).length,
+            basePositionsCount: baseGridPositions.length
         };
 
         return gridPositions;
