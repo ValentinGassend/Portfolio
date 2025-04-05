@@ -312,41 +312,66 @@ export const useCanvasAnimation = ({
             // Disable fisheye effect in grid mode
             fisheyeStrengthRef.current = 0;
         } else {
-            // Free mode - original behavior
-            // Smoothly transition to target offset with improved easing
-            offsetXRef.current += (targetOffsetXRef.current - offsetXRef.current) * 0.066;
-            offsetYRef.current += (targetOffsetYRef.current - offsetYRef.current) * 0.066;
+            // MODIFICATION: Après une transition grid → free, forcer la position à (0, 0)
+            // Détectez si nous venons de terminer une transition de grid → free
+            if (typeof window !== 'undefined' &&
+                window._justCompletedGridToFreeTransition === true &&
+                !isTransitioning) {
 
-            // Calculate velocity with smoother response
-            if (isDragging) {
-                // Smoother during drag - reacts more gradually
-                dragVelocityXRef.current = dragVelocityXRef.current * 0.6 + (targetOffsetXRef.current - lastDragXRef.current) * 0.5;
-                dragVelocityYRef.current = dragVelocityYRef.current * 0.6 + (targetOffsetYRef.current - lastDragYRef.current) * 0.5;
+                // Réinitialiser progressivement vers (0, 0) pendant quelques trames
+                const resetSpeed = 0.2; // Facteur de vitesse
 
-                // Gradually increase effect strength
-                effectStrengthRef.current = Math.min(effectStrengthRef.current + 0.08, 1.5);
+                offsetXRef.current = offsetXRef.current * (1 - resetSpeed);
+                offsetYRef.current = offsetYRef.current * (1 - resetSpeed);
+                targetOffsetXRef.current = targetOffsetXRef.current * (1 - resetSpeed);
+                targetOffsetYRef.current = targetOffsetYRef.current * (1 - resetSpeed);
 
-                // Increase fisheye effect more smoothly
-                fisheyeStrengthRef.current = Math.min(fisheyeStrengthRef.current + 0.035, 0.5);
-            } else {
-                // Even more gradual for release - maintains the effect longer
-                if (Math.abs(dragVelocityXRef.current) > 1.0 || Math.abs(dragVelocityYRef.current) > 1.0) {
-                    // Higher velocities: slow down more gently to keep effect visible longer
-                    dragVelocityXRef.current *= 0.99;
-                    dragVelocityYRef.current *= 0.99;
-                } else {
-                    // Lower velocities: still slow decay
-                    dragVelocityXRef.current *= 0.975;
-                    dragVelocityYRef.current *= 0.975;
+                // Si suffisamment proche de zéro, forcer à exactement zéro et supprimer le flag
+                if (Math.abs(offsetXRef.current) < 0.1 && Math.abs(offsetYRef.current) < 0.1) {
+                    offsetXRef.current = 0;
+                    offsetYRef.current = 0;
+                    targetOffsetXRef.current = 0;
+                    targetOffsetYRef.current = 0;
+                    window._justCompletedGridToFreeTransition = false;
+                    console.log("🔄 Camera position smoothly reset to (0, 0)");
                 }
+            } else {
+                // Free mode - original behavior
+                // Smoothly transition to target offset with improved easing
+                offsetXRef.current += (targetOffsetXRef.current - offsetXRef.current) * 0.066;
+                offsetYRef.current += (targetOffsetYRef.current - offsetYRef.current) * 0.066;
 
-                // Threshold to stop very small movements
-                if (Math.abs(dragVelocityXRef.current) < 0.05) dragVelocityXRef.current = 0;
-                if (Math.abs(dragVelocityYRef.current) < 0.05) dragVelocityYRef.current = 0;
+                // Calculate velocity with smoother response
+                if (isDragging) {
+                    // Smoother during drag - reacts more gradually
+                    dragVelocityXRef.current = dragVelocityXRef.current * 0.6 + (targetOffsetXRef.current - lastDragXRef.current) * 0.5;
+                    dragVelocityYRef.current = dragVelocityYRef.current * 0.6 + (targetOffsetYRef.current - lastDragYRef.current) * 0.5;
 
-                // Very gradual reduction of effects for a smooth transition
-                fisheyeStrengthRef.current = Math.max(fisheyeStrengthRef.current - 0.01, 0);
-                effectStrengthRef.current = Math.max(effectStrengthRef.current - 0.008, 0);
+                    // Gradually increase effect strength
+                    effectStrengthRef.current = Math.min(effectStrengthRef.current + 0.08, 1.5);
+
+                    // Increase fisheye effect more smoothly
+                    fisheyeStrengthRef.current = Math.min(fisheyeStrengthRef.current + 0.035, 0.5);
+                } else {
+                    // Even more gradual for release - maintains the effect longer
+                    if (Math.abs(dragVelocityXRef.current) > 1.0 || Math.abs(dragVelocityYRef.current) > 1.0) {
+                        // Higher velocities: slow down more gently to keep effect visible longer
+                        dragVelocityXRef.current *= 0.99;
+                        dragVelocityYRef.current *= 0.99;
+                    } else {
+                        // Lower velocities: still slow decay
+                        dragVelocityXRef.current *= 0.975;
+                        dragVelocityYRef.current *= 0.975;
+                    }
+
+                    // Threshold to stop very small movements
+                    if (Math.abs(dragVelocityXRef.current) < 0.05) dragVelocityXRef.current = 0;
+                    if (Math.abs(dragVelocityYRef.current) < 0.05) dragVelocityYRef.current = 0;
+
+                    // Very gradual reduction of effects for a smooth transition
+                    fisheyeStrengthRef.current = Math.max(fisheyeStrengthRef.current - 0.01, 0);
+                    effectStrengthRef.current = Math.max(effectStrengthRef.current - 0.008, 0);
+                }
             }
         }
         // Calculate velocity magnitude for debug and effects

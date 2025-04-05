@@ -24,7 +24,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             .map((img, idx) => img.visible ? idx : -1)
             .filter(idx => idx !== -1);
 
-        if (visibleIndices.length === 0) return { uniqueIndices: [], projectGroups: new Map() };
+        if (visibleIndices.length === 0) return {uniqueIndices: [], projectGroups: new Map()};
 
         // Deuxième passe : construire la correspondance des indices source
         // et identifier les groupes de projets
@@ -83,8 +83,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             // Si cette image n'appartient à aucun groupe ou si le groupe n'a pas été traité
             if (!projectName || !projectGroups.has(projectName)) {
                 // Si pas d'index source ou premier élément avec cet index source
-                if (img.sourceImageIndex === undefined ||
-                    sourceImageToIndexMap.get(img.sourceImageIndex) === idx) {
+                if (img.sourceImageIndex === undefined || sourceImageToIndexMap.get(img.sourceImageIndex) === idx) {
                     // Éviter les doublons
                     if (!uniqueIndices.includes(idx)) {
                         uniqueIndices.push(idx);
@@ -96,8 +95,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         console.log(`Filtré ${visibleIndices.length} images visibles en ${uniqueIndices.length} éléments uniques`);
 
         return {
-            uniqueIndices,
-            projectGroups
+            uniqueIndices, projectGroups
         };
     }, []);
     // Improved transition function that eliminates duplicates
@@ -111,7 +109,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
         // Get current images and filter out duplicates
         const images = imagesRef.current;
-        const { uniqueIndices, projectGroups } = getUniqueVisibleIndices(images);
+        const {uniqueIndices, projectGroups} = getUniqueVisibleIndices(images);
 
         let visibleIndices = uniqueIndices;
 
@@ -126,6 +124,19 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
         if (typeof window !== 'undefined') {
             window.useFinalGridPositions = false;
             window.isGridTransitioning = true;
+        }
+
+        // Save original camera state
+        // Stockez la position initiale de la caméra pour la transition Grid → Free
+        const originalCameraX = typeof window !== 'undefined' ? (window.offsetXRef?.current || 0) : 0;
+        const originalCameraY = typeof window !== 'undefined' ? (window.offsetYRef?.current || 0) : 0;
+
+        // IMPORTANT: Si on fait une transition grid → free, on mémorise les coordonnées originales
+        // pour pouvoir y revenir progressivement
+        if (!targetMode && typeof window !== 'undefined') {
+            window._originalCameraX = originalCameraX;
+            window._originalCameraY = originalCameraY;
+            console.log(`📸 Saved original camera position: (${originalCameraX}, ${originalCameraY}) for smooth return`);
         }
 
         // Activate transition state
@@ -249,9 +260,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     for (const idx of indicesToHide) {
                         if (images[idx]) {
                             images[idx] = {
-                                ...images[idx],
-                                opacity: 0,
-                                visible: false
+                                ...images[idx], opacity: 0, visible: false
                             };
                         }
                     }
@@ -390,11 +399,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
             intermediatePositions[idx] = {
                 // Always horizontally centered on screen
-                x: screenCenterX - stackedWidth / 2,
-                y: stackY,
-                width: stackedWidth,
-                height: stackedHeight,
-                // Adjust opacity based on position in stack
+                x: screenCenterX - stackedWidth / 2, y: stackY, width: stackedWidth, height: stackedHeight, // Adjust opacity based on position in stack
                 // Elements lower in stack are slightly more transparent
                 opacity: Math.max(0.7, 0.95 - (i * 0.03))
             };
@@ -446,13 +451,21 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
             const easedProgress = easeInOutCubic(phaseProgress);
 
             // Progressively recenter canvas if transitioning from free to grid (phase 1)
-            if (phase === 1 && needsCanvasRecentering && window._updateCanvasOffset) {
-                // Calculate progressive offset toward center (0, 0)
-                const newOffsetX = originalOffsetX * (1 - easedProgress);
-                const newOffsetY = originalOffsetY * (1 - easedProgress);
+            if (phase === 1 && window._updateCanvasOffset) {
+                if (targetMode) {
+                    // Transition Free → Grid: Recentrer vers (0, 0) comme avant
+                    const newOffsetX = originalOffsetX * (1 - easedProgress);
+                    const newOffsetY = originalOffsetY * (1 - easedProgress);
+                    window._updateCanvasOffset(newOffsetX, newOffsetY);
+                }
+            }
+            if (phase === 1 && window._updateCanvasOffset) {
+                if (!targetMode) {
 
-                // Update canvas positions via global function
-                window._updateCanvasOffset(newOffsetX, newOffsetY);
+                    const newOffsetX = originalOffsetX * (1 - easedProgress);
+                    const newOffsetY = originalOffsetY * (1 - easedProgress);
+                    window._updateCanvasOffset(newOffsetX, newOffsetY);
+                }
             }
 
             // Prepare new array for updated images
@@ -471,8 +484,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     // If not a visible index, low opacity
                     if (!visibleIndices.includes(i)) {
                         updatedImages[i] = {
-                            ...img,
-                            opacity: Math.max(0, img.opacity - 0.1) // Gradually reduce
+                            ...img, opacity: Math.max(0, img.opacity - 0.1) // Gradually reduce
                         };
                         continue;
                     }
@@ -482,8 +494,7 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         if (processedSourceIndices.has(img.sourceImageIndex)) {
                             // It's a duplicate, reduce opacity
                             updatedImages[i] = {
-                                ...img,
-                                opacity: 0
+                                ...img, opacity: 0
                             };
                         } else {
                             // It's the original, mark as processed
@@ -562,6 +573,16 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 // Animation complete - apply exact final positions
                 const finalUpdatedImages = [...images];
 
+                // IMPORTANT: NE PAS forcer immédiatement la caméra à (0,0) pour grid → free
+                // Enlever ou modifier ce bloc :
+                /*
+                if (!targetMode && typeof window !== 'undefined' && window._updateCanvasOffset) {
+                    // Forcer une dernière fois la position de la caméra à (0, 0)
+                    window._updateCanvasOffset(0, 0);
+                    console.log("📸 Camera position reset to (0, 0) for free mode");
+                }
+                */
+
                 // Update images with exact final positions
                 visibleIndices.forEach(idx => {
                     finalUpdatedImages[idx] = {
@@ -576,11 +597,9 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
 
                 // Keep opacity at 0 for all duplicates
                 if (targetMode) {
-                    const sourceIndicesInTransition = new Set(
-                        visibleIndices
-                            .map(idx => finalUpdatedImages[idx].sourceImageIndex)
-                            .filter(idx => idx !== undefined)
-                    );
+                    const sourceIndicesInTransition = new Set(visibleIndices
+                        .map(idx => finalUpdatedImages[idx].sourceImageIndex)
+                        .filter(idx => idx !== undefined));
 
                     // Process all images
                     for (let i = 0; i < finalUpdatedImages.length; i++) {
@@ -590,15 +609,18 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                         const img = finalUpdatedImages[i];
 
                         // If it's a duplicate of a processed image, make it invisible
-                        if (img.sourceImageIndex !== undefined &&
-                            sourceIndicesInTransition.has(img.sourceImageIndex)) {
+                        if (img.sourceImageIndex !== undefined && sourceIndicesInTransition.has(img.sourceImageIndex)) {
                             finalUpdatedImages[i] = {
-                                ...img,
-                                opacity: 0
+                                ...img, opacity: 0
                             };
                         }
                     }
                 }
+                // if (!targetMode) { // Si on va vers le mode free
+                //     if (typeof window !== 'undefined' && window._updateCanvasOffset) {
+                //         window._updateCanvasOffset(0, 0);
+                //     }
+                // }
 
                 setImages(finalUpdatedImages);
                 imagesRef.current = finalUpdatedImages;
@@ -670,6 +692,10 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                     if (typeof window !== 'undefined') {
                         window.isGridTransitioning = false;
                         window.useFinalGridPositions = false;
+
+                        // IMPORTANT: Définir le flag pour le retour progressif au lieu de forcer la position
+                        window._justCompletedGridToFreeTransition = true;
+                        console.log("✅ Transition complete, setting gradual return flag for smooth camera reset");
                     }
 
                     console.log("✅ Transition complete, free mode active");
@@ -683,6 +709,8 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
     }, [imagesRef, calculateGridLayout, initialPositionsRef, setImages, setIsTransitioning, isGridModeRef, getUniqueVisibleIndices]);
 
     // Update images layout based on mode (grid or free)
+    // Dans usePositionTransition.js, modifiez la fonction updateImagesLayout
+
     const updateImagesLayout = useCallback((useGridLayout) => {
         // If we're already in the requested mode, no need to transition
         if (isGridModeRef.current === useGridLayout) {
@@ -725,7 +753,23 @@ export const usePositionTransition = (imagesRef, originalPositionsRef, initialPo
                 performNoTeleportTransition(useGridLayout, true);
             }, 50);
         } else {
-            // In free mode, no need to reset
+            // Transition from grid mode to free mode
+            if (typeof window !== 'undefined') {
+                // Save current canvas state for animation
+                window._canvasOffsetX = window.offsetXRef?.current || 0;
+                window._canvasOffsetY = window.offsetYRef?.current || 0;
+
+                // Define function to update offsets during animation
+                window._updateCanvasOffset = (x, y) => {
+                    if (window.offsetXRef && window.offsetYRef) {
+                        window.offsetXRef.current = x;
+                        window.offsetYRef.current = y;
+                        window.targetOffsetXRef.current = x;
+                        window.targetOffsetYRef.current = y;
+                    }
+                };
+            }
+
             // Ensure initial positions are stored
             if (imagesRef.current.length > 0) {
                 storeInitialPositions(imagesRef.current);
