@@ -76,13 +76,35 @@ export const useHoverDetection = (
             return null;
         }
 
-        // Free mode - existing logic
+        // Free mode - correction de l'utilisation des coordonnées pour résoudre le décalage
         const patternWidth = window.innerWidth;
         const patternHeight = window.innerHeight;
 
-        // Calculate visible tiles
-        const offsetX = offsetYRef.current;
-        const offsetY = offsetYRef.current;
+        // Récupérer les offsets depuis useCanvasAnimation via window
+        // C'est crucial d'avoir accès aux mêmes offsets que ceux utilisés pour le rendu
+        let offsetX, offsetY;
+
+        // Tenter d'accéder aux offsets globaux (si disponibles via window)
+        if (typeof window !== 'undefined' && window.offsetXRef && window.offsetYRef) {
+            offsetX = window.offsetXRef.current;
+            offsetY = window.offsetYRef.current;
+        } else {
+            // IMPORTANT: Si window.offsetXRef n'est pas disponible, utiliser prevOffsetXRef et prevOffsetYRef
+            // qui sont les références externes passées à useCanvasAnimation
+            offsetX = window.__prevOffsetXRef || offsetYRef.current;
+            offsetY = window.__prevOffsetYRef || offsetYRef.current;
+        }
+
+        // Enregistrer les références pour un accès plus facile (pour debug)
+        if (typeof window !== 'undefined') {
+            window.__HOVER_DETECTION = {
+                offsetX,
+                offsetY,
+                local: offsetYRef.current
+            };
+        }
+
+        // Calcul des tuiles visibles avec les offsets corrects
         const startTileX = Math.floor((-offsetX - canvas.width) / patternWidth);
         const endTileX = Math.ceil((-offsetX + canvas.width) / patternWidth);
         const startTileY = Math.floor((-offsetY - canvas.height) / patternHeight);
@@ -90,13 +112,14 @@ export const useHoverDetection = (
 
         // Collect all visible images, largest first
         const visibleImagesData = [];
+        const processedSourceIndices = new Set(); // To avoid duplicates
 
         for (let tileY = startTileY; tileY <= endTileY; tileY++) {
             for (let tileX = startTileX; tileX <= endTileX; tileX++) {
-                // For each tile, collect visible images
+                // Pour chaque tuile, collecter les images visibles comme dans l'implémentation d'origine
                 imagesRef.current.forEach((image, index) => {
                     // Apply parallax factor specific to each image
-                    const parallaxFactor = image.parallaxFactor;
+                    const parallaxFactor = image.parallaxFactor || 1;
                     const imgOffsetX = offsetX * parallaxFactor;
                     const imgOffsetY = offsetY * parallaxFactor;
 
@@ -107,6 +130,7 @@ export const useHoverDetection = (
                     const imgX = image.patternX + tilePixelX;
                     const imgY = image.patternY + tilePixelY;
 
+                    // Vérifier si l'image est visible dans le viewport
                     if (isInViewport(imgX, imgY, image.width, image.height, canvas.width, canvas.height)) {
                         visibleImagesData.push({
                             image,
@@ -122,7 +146,7 @@ export const useHoverDetection = (
             }
         }
 
-        // Sort images by size in descending order
+        // Sort images by size in descending order to prioritize larger ones
         visibleImagesData.sort((a, b) => b.size - a.size);
 
         // Check for projects under the pointer
