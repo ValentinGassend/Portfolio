@@ -140,7 +140,9 @@
         letter-spacing: -5.28px;
         display: grid;
         grid-auto-flow: column;
-        grid-column-gap: 1em;
+        //padding: 0 46px;
+        overflow: hidden;
+
         @include media("<=medium") {
           text-align: center;
           @include font($ff_1, 80px, 800, 74px);
@@ -149,32 +151,39 @@
         @include media("<=small") {
           @include font($ff_1_C_10pt, 56px, 800, 92.5%);
           letter-spacing: -2.4px;
-
         }
 
-        .swiper {
-          padding: 0 46px;
+        .scrolling-text-container {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .scrolling-text {
+          display: flex;
+          animation: scrollText 20s linear infinite;
           width: max-content;
+        }
 
-          &-wrapper {
-            transition-timing-function: linear;
-            width: max-content;
+        h4 {
+          width: fit-content;
+          margin-right: 30px;
+          white-space: nowrap;
 
-            .swiper-slide {
-              width: fit-content;
+          &:before {
+            content: ">";
+          }
 
-            }
+          &:after {
+            content: "<";
+          }
+        }
 
-            h4 {
-              width: fit-content;
-              &:before {
-                content: ">";
-              }
-
-              &:after {
-                content: "<";
-              }
-            }
+        @keyframes scrollText {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
           }
         }
       }

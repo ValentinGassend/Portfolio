@@ -1,11 +1,7 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import SvgManager from "../../../../../managers/SvgManager.jsx";
 import GridFullWidth from "../../../../components/GridFullWidth.jsx";
 import BackgroundLine from "../../../../components/BackgroundLine.jsx";
-import gsap from "gsap";
-import {Autoplay} from "swiper/modules";
-import {Swiper, SwiperSlide} from "swiper/react";
-import MenuSection from "../../../../components/menu/components/MenuSection.jsx";
 import {IsMobile} from "../../../../../utils/utils.jsx";
 
 const ContactMaskingBackground = ({cursorClicked}) => {
@@ -45,39 +41,22 @@ const ContactMaskingBackground = ({cursorClicked}) => {
             <div className="ContactMaskingBackground-content">
                 <h3 className="ContactMaskingBackground-content--title Center Uppercase">
                     click pour voir
-
                 </h3>
                 <div className={`ContactMaskingBackground-content--bottom ${cursorClicked ? "__clicked" : ''}`}>
 
                     <GridFullWidth parentClassName={`ContactMaskingBackground-content--bottom`}
                                    childrensInArray={childrensInArray} itemByLine={IsMobile() ? 2 : 3}/>
 
-                    <Swiper
-                        className="ContactMaskingBackground-content--bottom---title Uppercase __ScrollText"
-
-                        slidesPerView={'auto'}
-                        autoplay={{
-                            enabled: true, delay: 0, disableOnInteraction: false,
-                        }}
-                        spaceBetween={30}
-                        loop={true}
-                        modules={[Autoplay]}
-                        speed={10000}
-
-                    >
-                        <SwiperSlide>
-                            <h4 className={"After Before"}>Développement créatif</h4>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <h4 className={"After Before"}>À l'écoute de tes idées</h4>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <h4 className={"After Before"}>Développement créatif</h4>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <h4 className={"After Before"}>À l'écoute de tes idées</h4>
-                        </SwiperSlide>
-                    </Swiper>
+                    <div className="ContactMaskingBackground-content--bottom---title Uppercase __ScrollText">
+                        <div className="scrolling-text-container">
+                            <div className="scrolling-text">
+                                <h4 className="After Before">Développement créatif</h4>
+                                <h4 className="After Before">À l'écoute de tes idées</h4>
+                                <h4 className="After Before">Développement créatif</h4>
+                                <h4 className="After Before">À l'écoute de tes idées</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
