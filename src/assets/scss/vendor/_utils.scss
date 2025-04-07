@@ -1,3 +1,7 @@
+@use "sass:math";
+
+
+
 *.Before {
   display: grid;
   width: fit-content;
@@ -47,19 +51,104 @@
 *.TxtCenter {
   text-align: center;
 }
+//@use "sass:math";
 
-/// Définit un ensemble de propriétés de police de caractères.
-/// @param {string} $fontFamily
-///   La famille de police de caractères à utiliser.
-/// @param {number|string} $fontSize
-///   La taille de la police de caractères.
-/// @param {number} $fontWeight
-///   L'épaisseur de la police de caractères.
-/// @param {number|string} $lineHeight
-///   La hauteur de ligne de la police de caractères.
-@mixin font($fontFamily,$fontSize,$fontWeight, $lineHeight:normal) {
+@mixin font($fontFamily, $fontSize, $fontWeight, $lineHeight: normal) {
   font-family: $fontFamily;
-  font-size: $fontSize;
   font-weight: $fontWeight;
-  line-height: $lineHeight;
+
+  // Extraire la valeur numérique sans unité
+  $fontSizeValue: if(unit($fontSize) == 'px', math.div($fontSize, 1px), $fontSize);
+
+  // Calcul des valeurs fixes pour les écrans de moins de 768px
+  $smallScreenFontSize: 0;
+  @if $fontSizeValue >= 72 {
+    // Pour les grandes tailles, réduire à environ 40% sur petit écran
+    $smallScreenFontSize: $fontSizeValue;
+  } @else if $fontSizeValue >= 24 {
+    // Pour les tailles moyennes, réduire à environ 55%
+    $smallScreenFontSize: $fontSizeValue;
+  } @else {
+    // Pour les petites tailles, réduire à environ 70%
+    $smallScreenFontSize: $fontSizeValue;
+  }
+
+  // Version responsive pour les écrans > 768px
+  @media (min-width: 769px) {
+    // Pour les grandes tailles (≥72px)
+    @if $fontSizeValue >= 72 {
+      $vwComponent: math.div($fontSizeValue, 1600) * 100 * 0.25;
+      $pxComponent: $fontSizeValue * 0.65;
+
+      font-size: #{$fontSizeValue}px; // Fallback
+      font-size: calc(#{$pxComponent}px + #{$vwComponent}vw);
+    }
+      // Pour les tailles moyennes (24px-72px)
+    @else if $fontSizeValue >= 24 {
+      $vwFontSize: math.div($fontSizeValue, 1600) * 100 * 1.2;
+
+      font-size: #{$fontSizeValue}px; // Fallback
+      font-size: clamp(#{$fontSizeValue * 0.6}px, #{$vwFontSize}vw, #{$fontSizeValue * 1.1}px);
+    }
+      // Pour les petites tailles (<24px)
+    @else {
+      $vwFontSize: math.div($fontSizeValue, 1600) * 100;
+
+      font-size: #{$fontSizeValue}px; // Fallback
+      font-size: clamp(#{$fontSizeValue * 0.8}px, #{$vwFontSize}vw, #{$fontSizeValue * 1.1}px);
+    }
+  }
+
+  // Version fixe pour les écrans ≤ 768px
+  @media (max-width: 768px) {
+    font-size: #{$smallScreenFontSize}px;
+  }
+
+  // Traitement similaire pour line-height
+  @if $lineHeight != normal {
+    @if unit($lineHeight) == 'px' {
+      $lineHeightValue: math.div($lineHeight, 1px);
+
+      // Calcul de la valeur fixe pour line-height sur petit écran
+      $smallScreenLineHeight: 0;
+      @if $fontSizeValue >= 72 {
+        $smallScreenLineHeight: $lineHeightValue ;
+      } @else if $fontSizeValue >= 24 {
+        $smallScreenLineHeight: $lineHeightValue ;
+      } @else {
+        $smallScreenLineHeight: $lineHeightValue;
+      }
+
+      // Version responsive pour les écrans > 768px
+      @media (min-width: 769px) {
+        @if $fontSizeValue >= 72 {
+          $vwLineHeight: math.div($lineHeightValue, 1600) * 100 * 0.25;
+          $pxLineHeight: $lineHeightValue * 0.65;
+
+          line-height: #{$lineHeightValue}px; // Fallback
+          line-height: calc(#{$pxLineHeight}px + #{$vwLineHeight}vw);
+        }
+        @else if $fontSizeValue >= 24 {
+          $vwLineHeight: math.div($lineHeightValue, 1600) * 100 * 1.2;
+
+          line-height: #{$lineHeightValue}px; // Fallback
+          line-height: clamp(#{$lineHeightValue * 0.6}px, #{$vwLineHeight}vw, #{$lineHeightValue * 1.1}px);
+        }
+        @else {
+          $vwLineHeight: math.div($lineHeightValue, 1600) * 100;
+
+          line-height: #{$lineHeightValue}px; // Fallback
+          line-height: clamp(#{$lineHeightValue * 0.8}px, #{$vwLineHeight}vw, #{$lineHeightValue * 1.1}px);
+        }
+      }
+
+      // Version fixe pour les écrans ≤ 768px
+      @media (max-width: 768px) {
+        line-height: #{$smallScreenLineHeight}px;
+      }
+    } @else {
+      // Pour les line-heights sans unité (ex: 1.5)
+      line-height: $lineHeight;
+    }
+  }
 }

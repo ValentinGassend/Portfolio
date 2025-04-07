@@ -16,18 +16,45 @@
   &.active {
     opacity: 1;
     pointer-events: auto;
-
   }
 
-  .swiper {
+  // Conteneur de défilement
+  &-scroll-container {
     height: 100%;
+    width: 100%;
+    overflow: hidden;
 
-    &-wrapper {
-      transition-timing-function: linear;
+    @include media("<=small") {
+      overflow: visible; // Supprimer l'overflow hidden sur mobile
+    }
+  }
 
-      .swiper-slide {
-        height: 100%;
-        width: fit-content;
+  // Track pour le défilement
+  &-scroll-track {
+    display: flex;
+    width: fit-content;
+    height: 100%;
+    animation: menuScroll 60s linear infinite;
+    transition-timing-function: linear;
+
+    &:hover {
+      animation-play-state: paused;
+    }
+
+    @include media("<=small") {
+      animation: none; // Désactiver l'animation sur mobile
+      width: 100%; // Prendre toute la largeur
+      justify-content: center; // Centrer la section
+
+      // Cacher toutes les sections sauf la première
+      & > *:not(:first-child) {
+        display: none;
+      }
+
+      // S'assurer que la première section prend tout l'écran
+      & > *:first-child {
+        width: 100vw;
+        max-width: 100%;
       }
     }
   }
@@ -45,16 +72,28 @@
     border-radius: 50%;
 
     @include media("<=small") {
-
       width: 56px;
       height: 56px;
       padding: 16px;
+      top: 16px;
+      right: 16px;
     }
+
     svg {
       pointer-events: none;
       path {
         fill: $color_white;
       }
     }
+  }
+}
+
+// Animation pour le défilement horizontal infini
+@keyframes menuScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); // On défile de 50% puisqu'on duplique les éléments
   }
 }

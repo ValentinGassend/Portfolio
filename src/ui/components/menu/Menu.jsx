@@ -1,20 +1,28 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import MenuSection from "./components/MenuSection.jsx";
-import {Swiper} from "swiper/react";
-import {SwiperSlide} from "swiper/react";
 
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import {Autoplay} from "swiper/modules";
-
-const Menu = ({scrollPosition}) => {
-
+const Menu = ({ scrollPosition }) => {
     const [menu, setMenu] = useState(null);
+    const [isMobile, setIsMobile] = useState(false);
 
-    // const [scrollPosition, setScrollPosition] = useState(0);
     useEffect(() => {
         const menuElement = document.querySelector('.Menu');
         setMenu(menuElement);
+
+        // Détecter si on est sur mobile
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        // Vérifier au chargement
+        checkMobile();
+
+        // Mettre à jour lors du redimensionnement
+        window.addEventListener('resize', checkMobile);
+
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+        };
     }, []);
 
     const closeMenu = (evt) => {
@@ -22,9 +30,9 @@ const Menu = ({scrollPosition}) => {
             menu.classList.remove("active");
             document.getElementById('root').classList.remove('no-scroll');
             window.scrollTo(0, scrollPosition);
-
         }
     };
+
     useEffect(() => {
         if (menu) {
             document.querySelector('.__MenuCloser').addEventListener("click", closeMenu);
@@ -34,46 +42,31 @@ const Menu = ({scrollPosition}) => {
         }
     }, [menu, scrollPosition]);
 
-    return (<div className={"Menu"}>
-        <Swiper
-            slidesPerView={'auto'}
-            autoplay={{
-                enabled: true,
-                delay: 0,
-                disableOnInteraction: false,
-            }}
-            loop={true}
-            modules={[Autoplay]}
-            speed={7500}
-            // breakpoints={{
-            //     768: {
-            //         slidesPerView: 1.25,
-            //     },
-            // }}
+    return (
+        <div className="Menu">
+            <div className="Menu-scroll-container">
+                <div className="Menu-scroll-track">
+                    {/* En mobile, seule la première section sera affichée grâce au CSS */}
+                    <MenuSection />
+                    {!isMobile && (
+                        <>
+                            <MenuSection />
+                            <MenuSection />
+                            <MenuSection />
+                            <MenuSection />
+                        </>
+                    )}
+                </div>
+            </div>
 
-        >
-            <SwiperSlide>
-                <MenuSection/>
-            </SwiperSlide>
-            <SwiperSlide>
-                <MenuSection/>
-            </SwiperSlide>
-            <SwiperSlide>
-                <MenuSection/>
-            </SwiperSlide>
-            <SwiperSlide>
-                <MenuSection/>
-            </SwiperSlide>
-            <SwiperSlide>
-                <MenuSection/>
-            </SwiperSlide>
-        </Swiper>
-        <div className={`Menu-close __MenuCloser`}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 37 37" fill="none">
-            <path d="M4.20458 -0.000234323L0 4.20435L32.7958 37.0001L37.0003 32.7955L4.20458 -0.000234323Z" fill="black"/>
-            <path d="M5.47257e-06 32.7955L4.20459 37.0001L37.0003 4.20434L32.7958 -0.000244141L5.47257e-06 32.7955Z" fill="black"/>
-        </svg>
+            <div className="Menu-close __MenuCloser">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 37 37" fill="none">
+                    <path d="M4.20458 -0.000234323L0 4.20435L32.7958 37.0001L37.0003 32.7955L4.20458 -0.000234323Z" fill="black"/>
+                    <path d="M5.47257e-06 32.7955L4.20459 37.0001L37.0003 4.20434L32.7958 -0.000244141L5.47257e-06 32.7955Z" fill="black"/>
+                </svg>
+            </div>
         </div>
-    </div>)
-}
-export default Menu
+    );
+};
+
+export default Menu;
