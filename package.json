@@ -1,17 +1,54 @@
 {
-  "name": "portfolio",
+  "name": "portfolio-valentin-gassend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "Portfolio de Valentin Gassend - Creative Developer spécialisé en ThreeJS, WebGL et GSAP",
+  "author": {
+    "name": "Valentin Gassend",
+    "email": "valentin.gassend@gmail.com",
+    "url": "https://valentingassend.com"
+  },
+  "keywords": [
+    "creative-developer",
+    "threejs",
+    "webgl",
+    "gsap",
+    "react",
+    "portfolio",
+    "aix-les-bains",
+    "developer",
+    "animations",
+    "3d-web"
+  ],
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "generate-sitemap": "node generateSitemap.js",
-    "static-export": "node static-export.js",
-    "build:static": "vite build && npm run static-export",
-    "postbuild": "npm run generate-sitemap && cp public/sitemap.xml dist/ && cp public/robots.txt dist/",
-    "lint": "eslint Portfolio --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+
+    "seo:generate": "node generateSitemap.js",
+    "seo:validate": "node seo-validator.js",
+    "seo:analyze": "node seo-analyzer.js",
+
+    "deploy": "node deploy.js",
+    "deploy:quick": "npm run build && npm run deploy",
+    "deploy:seo": "npm run seo:generate && npm run deploy",
+
+    "build:static": "vite build && node static-export.js",
+    "build:full": "npm run build && npm run seo:generate",
+
+    "test:seo": "npm run build && npm run seo:validate",
+    "test:performance": "lighthouse https://valentingassend.com --output=json --output-path=./lighthouse-report.json",
+
+    "analyze:bundle": "npm run build && npx vite-bundle-analyzer dist/assets/*.js",
+    "analyze:seo": "npm run seo:analyze",
+
+    "setup": "node setup.js",
+    "clean": "rm -rf dist && rm -rf public/sitemap.xml public/robots.txt",
+    "fresh": "npm run clean && npm install && npm run build:full",
+
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext js,jsx --fix"
   },
   "dependencies": {
     "@vercel/analytics": "^1.3.0",
@@ -37,10 +74,37 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "lighthouse": "^11.4.0",
     "lightningcss": "^1.29.3",
     "sass": "^1.72.0",
     "terser": "^5.39.0",
     "vite": "5.4.10",
+    "vite-bundle-analyzer": "^0.7.0",
     "vite-plugin-html": "^3.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ValentinGassend/Portfolio.git"
+  },
+  "homepage": "https://valentingassend.com",
+  "bugs": {
+    "url": "https://github.com/ValentinGassend/Portfolio/issues",
+    "email": "valentin.gassend@gmail.com"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

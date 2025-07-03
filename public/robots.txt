@@ -3,6 +3,4 @@
 # Autoriser tous les robots à explorer le site
 User-agent: *
 Allow: /
-
-# Sitemap
 Sitemap: https://valentingassend.com/sitemap.xml
