@@ -1,16 +1,30 @@
-# robots.txt optimisé
+# robots.txt pour Creative Developer - Valentin Gassend
 
 User-agent: *
 Allow: /
 
-# Fichiers à ignorer
+# Priorité SEO pour les pages importantes
+Allow: /about
+Allow: /projects
+Allow: /project/
+
+# Fichiers à ignorer pour optimiser le crawl
 Disallow: /assets/
 Disallow: /*.json$
 Disallow: /*.js.map$
 Disallow: /*.css.map$
+Disallow: /node_modules/
+Disallow: /src/
 
-# Sitemap
-Sitemap: https://votre-domaine.com/sitemap.xml
+# Sitemap pour l'indexation
+Sitemap: https://valentingassend.com/sitemap.xml
 
-# Crawl-delay pour éviter la surcharge
+# Optimisation crawl
 Crawl-delay: 1
+
+# Informations Creative Developer
+# Nom: Valentin Gassend
+# Titre: Creative Developer
+# École: École des Gobelins
+# Localisation: Aix-les-Bains
+# Technologies: ThreeJS, WebGL, GSAP, React, JavaScript
