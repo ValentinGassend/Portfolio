@@ -31,6 +31,14 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Fix permissions
+        run: chmod +x deploy.js
+
+      - name: Generate optimized deployment
+        run: npm run deploy
+
+
+
       # Créer le fichier .htaccess dans dist avant le déploiement
       - name: Create .htaccess for React Router
         run: |

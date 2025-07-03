@@ -1,8 +1,16 @@
-# robots.txt pour valentingassend.com
+# robots.txt optimisé
 
-# Autoriser tous les robots à explorer le site
 User-agent: *
 Allow: /
 
+# Fichiers à ignorer
+Disallow: /assets/
+Disallow: /*.json$
+Disallow: /*.js.map$
+Disallow: /*.css.map$
+
 # Sitemap
-Sitemap: https://valentingassend.com/sitemap.xml
+Sitemap: https://votre-domaine.com/sitemap.xml
+
+# Crawl-delay pour éviter la surcharge
+Crawl-delay: 1

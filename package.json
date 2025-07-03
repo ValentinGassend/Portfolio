@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "preview": "vite preview",
     "generate-sitemap": "node generateSitemap.js",
     "static-export": "node static-export.js",
     "build:static": "vite build && npm run static-export",
-    "postbuild": "npm run generate-sitemap && cp public/sitemap.xml dist/ && cp public/robots.txt dist/",
-    "lint": "eslint Portfolio --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "postbuild": "npm run generate-sitemap",
+    "deploy": "node deploy.js",
+    "deploy:quick": "npm run build && node deploy.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.3.0",
