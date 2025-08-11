@@ -1,5 +1,5 @@
-# .github/workflows/deploy.yml - OPTIMISATION FINALE (élimine 32 KiB)
-name: Deploy Final Optimization
+# .github/workflows/deploy.yml - CORRECTION CHEMIN CRITIQUE
+name: Deploy Critical Path Fix
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  final-optimization:
+  critical-path-optimization:
     runs-on: ubuntu-latest
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
@@ -34,14 +34,104 @@ jobs:
       - name: Generate deployment
         run: npm run deploy
 
-      # ✅ OPTIMISATION FINALE - Élimine les 32 KiB restants
-      - name: Create FINAL optimized htaccess
+      # ✅ CORRECTION CRITIQUE - Supprime les préchargements excessifs
+      - name: Fix critical path - Remove excessive font preloads
         run: |
-          echo "🎯 Création .htaccess FINAL pour éliminer les 32 KiB restants..."
+          echo "🚨 CORRECTION CHEMIN CRITIQUE - Suppression préchargements excessifs..."
+          
+          INDEX_FILE="dist/index.html"
+          
+          if [ -f "$INDEX_FILE" ]; then
+              echo "📝 Analyse du HTML avant correction..."
+              PRELOAD_COUNT_BEFORE=$(grep -c 'rel="preload".*font' "$INDEX_FILE" || echo "0")
+              echo "   • Préchargements polices avant: $PRELOAD_COUNT_BEFORE"
+          
+              # Sauvegarder le fichier original
+              cp "$INDEX_FILE" "$INDEX_FILE.backup"
+          
+              # ✅ SUPPRESSION DES PRÉCHARGEMENTS EXCESSIFS
+              # Garder seulement Regular et Bold
+              echo "🔧 Suppression des préchargements non critiques..."
+          
+              # Supprimer les préchargements de polices secondaires
+              sed -i '/rel="preload".*BricolageGrotesque-SemiBold\.woff2/d' "$INDEX_FILE"
+              sed -i '/rel="preload".*BricolageGrotesque-Light\.woff2/d' "$INDEX_FILE"
+              sed -i '/rel="preload".*BricolageGrotesque-ExtraBold\.woff2/d' "$INDEX_FILE"
+              sed -i '/rel="preload".*BricolageGrotesque-ExtraLight\.woff2/d' "$INDEX_FILE"
+              sed -i '/rel="preload".*BricolageGrotesque-Medium\.woff2/d' "$INDEX_FILE"
+          
+              # Supprimer les variantes condensées si présentes
+              sed -i '/rel="preload".*BricolageGrotesque10pt/d' "$INDEX_FILE"
+          
+              echo "✅ Préchargements non critiques supprimés"
+          
+              # Vérification après suppression
+              PRELOAD_COUNT_AFTER=$(grep -c 'rel="preload".*font' "$INDEX_FILE" || echo "0")
+              echo "   • Préchargements polices après: $PRELOAD_COUNT_AFTER"
+          
+              if [ "$PRELOAD_COUNT_AFTER" -le 2 ]; then
+                  echo "✅ Optimisation réussie: Maximum 2 polices préchargées"
+              else
+                  echo "⚠️ Attention: Encore $PRELOAD_COUNT_AFTER polices préchargées"
+              fi
+          
+              # Ajouter script de chargement différé si pas déjà présent
+              if ! grep -q "secondary-fonts-loading" "$INDEX_FILE"; then
+                  echo "📝 Ajout du script de chargement différé..."
+          
+                  # Créer le script d'optimisation
+                  cat >> font_loading_script.js << 'FONT_SCRIPT'
+          
+          // Script de chargement intelligent des polices
+          (function() {
+              if ('fonts' in document) {
+                  // Chargement des polices critiques
+                  Promise.all([
+                      document.fonts.load('400 1em "Bricolage Grotesque"'),
+                      document.fonts.load('700 1em "Bricolage Grotesque"')
+                  ]).then(function() {
+                      document.documentElement.classList.add('fonts-loaded');
+          
+                      // Chargement différé des polices secondaires
+                      setTimeout(function() {
+                          const secondaryFonts = [
+                              '600 1em "Bricolage Grotesque"',
+                              '300 1em "Bricolage Grotesque"',
+                              '500 1em "Bricolage Grotesque"',
+                              '800 1em "Bricolage Grotesque"',
+                              '200 1em "Bricolage Grotesque"'
+                          ];
+          
+                          secondaryFonts.forEach(font => {
+                              document.fonts.load(font).catch(() => {});
+                          });
+                      }, 200);
+                  });
+              }
+          })();
+          FONT_SCRIPT
+          
+                  # Injecter le script dans le HTML
+                  sed -i '/<script>/i\    <script>' "$INDEX_FILE"
+                  sed -i '/<script>/r font_loading_script.js' "$INDEX_FILE"
+                  sed -i '/<script>/a\    </script>' "$INDEX_FILE"
+          
+                  rm font_loading_script.js
+                  echo "✅ Script de chargement différé ajouté"
+              fi
+          
+          else
+              echo "❌ Fichier index.html non trouvé"
+              exit 1
+          fi
+
+      # ✅ .htaccess final avec toutes les optimisations
+      - name: Create final optimized htaccess
+        run: |
+          echo "🔧 Création .htaccess final avec optimisations complètes..."
           
           cat > dist/.htaccess << 'FINAL_HTACCESS'
-          # htaccess OPTIMISE FINAL - Elimine les 32 KiB restants Lighthouse
-          # Passe tous les assets de 1h vers 1 an de cache
+          # htaccess FINAL - Chemin critique optimisé + Cache
           
           <IfModule mod_rewrite.c>
               RewriteEngine On
@@ -53,20 +143,20 @@ jobs:
           <IfModule mod_expires.c>
               ExpiresActive On
           
-              # POLICES - Cache 1 an (elimine main.woff2)
+              # POLICES - Cache 1 an (elimine 32 KiB)
               ExpiresByType font/woff2 "access plus 1 year"
               ExpiresByType font/woff "access plus 1 year"
               ExpiresByType application/font-woff2 "access plus 1 year"
               ExpiresByType application/font-woff "access plus 1 year"
           
-              # CSS - Cache 1 an (elimine main.css et critical.css)
+              # CSS - Cache 1 an (elimine main.css, critical.css)
               ExpiresByType text/css "access plus 1 year"
           
               # JS - Cache 1 an (elimine script.js)
               ExpiresByType application/javascript "access plus 1 year"
               ExpiresByType application/x-javascript "access plus 1 year"
           
-              # SVG - Cache 1 an (elimine full_logo.svg et n_element.svg)
+              # SVG - Cache 1 an (elimine logos)
               ExpiresByType image/svg+xml "access plus 1 year"
           
               # IMAGES - Cache 1 an
@@ -75,41 +165,51 @@ jobs:
               ExpiresByType image/jpg "access plus 1 year"
               ExpiresByType image/jpeg "access plus 1 year"
           
-              # HTML - Garde 1h (correct)
+              # HTML - Cache court
               ExpiresByType text/html "access plus 1 hour"
           </IfModule>
           
           <IfModule mod_headers.c>
-              # POLICES - Headers immutables
+              # POLICES - Headers immutables + font-display
               <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
                   Header set Cache-Control "public, max-age=31536000, immutable"
                   Header set Access-Control-Allow-Origin "*"
+                  Header set X-Font-Display "swap"
+                  Header set X-Critical-Path "optimized"
               </FilesMatch>
           
-              # CSS - Headers immutables (main.css et critical.css)
+              # CSS - Headers immutables
               <FilesMatch "\.css$">
                   Header set Cache-Control "public, max-age=31536000, immutable"
+                  Header set X-CSS-Cache "1-year"
               </FilesMatch>
           
-              # JS - Headers immutables (script.js)
+              # JS - Headers immutables
               <FilesMatch "\.js$">
                   Header set Cache-Control "public, max-age=31536000, immutable"
+                  Header set X-JS-Cache "1-year"
               </FilesMatch>
           
-              # SVG - Headers immutables (logos)
+              # SVG - Headers immutables
               <FilesMatch "\.svg$">
                   Header set Cache-Control "public, max-age=31536000, immutable"
+                  Header set X-SVG-Cache "1-year"
               </FilesMatch>
           
               # IMAGES
               <FilesMatch "\.(png|jpg|jpeg|webp|gif)$">
                   Header set Cache-Control "public, max-age=31536000, immutable"
+                  Header set X-Image-Cache "1-year"
               </FilesMatch>
           
               # HTML
               <FilesMatch "\.html$">
                   Header set Cache-Control "public, max-age=3600, must-revalidate"
               </FilesMatch>
+          
+              # Sécurité
+              Header always set X-Content-Type-Options nosniff
+              Header always set X-Frame-Options SAMEORIGIN
           </IfModule>
           
           <IfModule mod_mime.c>
@@ -130,70 +230,21 @@ jobs:
           </IfModule>
           FINAL_HTACCESS
           
-          echo "✅ .htaccess FINAL créé - Tous assets passent à 1 an de cache"
+          echo "✅ .htaccess final créé"
 
-      # ✅ Validation spécifique aux 32 KiB
-      - name: Validate final cache optimization
+      # ✅ Validation finale
+      - name: Validate critical path optimization
         run: |
-          echo "🔍 Validation optimisation finale..."
+          echo "🔍 Validation de l'optimisation du chemin critique..."
           
-          # Vérifier que tous les types d'assets problématiques ont 1 an de cache
-          CHECKS=(
-              "text/css.*1 year:CSS 1 an"
-              "application/javascript.*1 year:JS 1 an" 
-              "image/svg.*1 year:SVG 1 an"
-              "font/woff2.*1 year:Polices 1 an"
-              "max-age=31536000:Headers 1 an"
-          )
+          INDEX_FILE="dist/index.html"
           
-          for check in "${CHECKS[@]}"; do
-              pattern="${check%:*}"
-              name="${check#*:}"
+          if [ -f "$INDEX_FILE" ]; then
+              # Compter les préchargements de polices
+              FONT_PRELOADS=$(grep -c 'rel="preload".*font' "$INDEX_FILE" || echo "0")
           
-              if grep -q "$pattern" dist/.htaccess; then
-                  echo "✅ $name configuré"
-              else
-                  echo "❌ $name manquant"
-                  exit 1
-              fi
-          done
+              # Compter les préchargements totaux
+              TOTAL_PRELOADS=$(grep -c 'rel="preload"' "$INDEX_FILE" || echo "0")
           
-          echo "🎯 Optimisation finale validée - 32 KiB éliminés"
-
-      - name: Deploy to Infomaniak via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /sites/valentingassend.com/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/.DS_Store
-            **/Thumbs.db
-          security: strict
-          timeout: 180000
-
-      - name: Final optimization summary
-        run: |
-          echo ""
-          echo "🎉 OPTIMISATION FINALE TERMINÉE"
-          echo "═══════════════════════════════════"
-          echo "🌐 Site: https://valentingassend.com"
-          echo "🎯 Cache optimisé pour TOUS les assets:"
-          echo "   • Polices: 1h → 1 an (main.woff2)"
-          echo "   • CSS: 1h → 1 an (main.css, critical.css)"
-          echo "   • JS: 1h → 1 an (script.js)"
-          echo "   • SVG: 1h → 1 an (logos)"
-          echo ""
-          echo "📊 Impact Lighthouse attendu:"
-          echo "   • Économies: 32 KiB → 0 KiB"
-          echo "   • Cache TTL: 1h → 365 days"
-          echo "   • Score: 100/100 maintenu"
-          echo ""
-          echo "🧪 Test dans 10 minutes:"
-          echo "curl -I https://valentingassend.com/css/main.css"
-          echo "👀 Attendu: Cache-Control: public, max-age=31536000, immutable"
+              echo "📊 Analyse finale:"
+              echo "   • Préchargements de polices: $FONT_
