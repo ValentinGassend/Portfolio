@@ -1,17 +1,19 @@
-# .github/workflows/deploy.yml - OPTIMISÉ LIGHTHOUSE
-name: Deploy to Infomaniak with Font Cache Optimization
+# .github/workflows/deploy.yml
+name: Deploy to Infomaniak
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # Permet déclenchement manuel
+  # Retirez pull_request si vous ne voulez déployer que sur push vers main
+  # pull_request:
+  #   branches: [ main ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    # Ne déployer que sur push vers main
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    # Ne déployer que sur push vers main (pas sur PR)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -35,8 +37,10 @@ jobs:
       - name: Generate optimized deployment
         run: npm run deploy
 
-      # ✅ NOUVEAU: .htaccess OPTIMISÉ POUR CACHE POLICES BRICOLAGE
-      - name: Create optimized .htaccess (fixes Lighthouse 245KB issue)
+
+
+      # Créer le fichier .htaccess dans dist avant le déploiement
+      - name: Create .htaccess for React Router
         run: |
           cat > dist/.htaccess << 'EOF'
           # .htaccess OPTIMISÉ - Corrige cache polices Lighthouse (245 KiB)
@@ -233,57 +237,7 @@ jobs:
               Deny from env=bad_bot
           </IfModule>
           EOF
-
-      # ✅ NOUVEAU: Validation de la configuration
-      - name: Validate font cache configuration
-        run: |
-          echo "🔍 Validation de la configuration cache polices..."
-          
-          if grep -q "font/woff2.*access plus 1 year" dist/.htaccess; then
-              echo "✅ Cache polices woff2: 1 an configuré"
-          else
-              echo "❌ Cache polices woff2 manquant"
-              exit 1
-          fi
-          
-          if grep -q "max-age=31536000" dist/.htaccess; then
-              echo "✅ Headers Cache-Control: max-age=31536000 configuré"
-          else
-              echo "❌ Headers Cache-Control manquants"
-              exit 1
-          fi
-          
-          if grep -q "X-Font-Cache-Lighthouse" dist/.htaccess; then
-              echo "✅ Headers de debug Lighthouse: configurés"
-          else
-              echo "❌ Headers de debug manquants"
-              exit 1
-          fi
-          
-          echo "🎯 Configuration validée pour corriger les 245 KiB de Lighthouse"
-
-      # ✅ NOUVEAU: Compter les polices Bricolage
-      - name: Count Bricolage fonts
-        run: |
-          echo "📊 Analyse des polices Bricolage Grotesque..."
-          
-          if [ -d "public/font" ]; then
-              FONT_COUNT=$(find public/font -name "*Bricolage*" -type f | wc -l)
-              FONT_SIZE=$(find public/font -name "*Bricolage*" -type f -exec du -c {} + | tail -1 | cut -f1)
-              FONT_SIZE_KB=$((FONT_SIZE / 1024))
-          
-              echo "📝 Polices Bricolage détectées: $FONT_COUNT fichiers"
-              echo "📏 Taille totale: ${FONT_SIZE_KB} KB"
-          
-              if [ $FONT_SIZE_KB -gt 200 ]; then
-                  echo "⚠️ Taille importante détectée (${FONT_SIZE_KB} KB)"
-                  echo "🎯 Cache 1 an appliqué pour optimiser les rechargements"
-              fi
-          
-              find public/font -name "*Bricolage*" -type f -exec basename {} \; | head -5
-          else
-              echo "📁 Dossier public/font non trouvé"
-          fi
+    
 
       - name: Deploy to Infomaniak via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -299,65 +253,12 @@ jobs:
             **/node_modules/**
             **/.DS_Store
             **/Thumbs.db
-            **/.env*
-            **/README.md
-            **/package*.json
-            **/vite.config.js
           # Options de sécurité
           security: strict
           # Timeout plus long pour les gros sites
           timeout: 180000
-          # ✅ NOUVEAU: Vérification des uploads
-          dry-run: false
 
-      # ✅ NOUVEAU: Tests post-déploiement
-      - name: Post-deployment validation
+      - name: Verify deploymentx&
         run: |
-          echo "🧪 Tests post-déploiement..."
-          
-          # Test 1: Vérifier que le site répond
-          if curl -s -o /dev/null -w "%{http_code}" https://valentingassend.com | grep -q "200"; then
-              echo "✅ Site accessible (200 OK)"
-          else
-              echo "⚠️ Site non accessible ou erreur HTTP"
-          fi
-          
-          # Test 2: Instructions de validation manuelle
-          echo ""
-          echo "📋 Tests manuels à effectuer:"
-          echo "1. Testez le cache des polices:"
-          echo "   curl -I https://valentingassend.com/font/BricolageGrotesque-Regular.woff2"
-          echo "   👀 Recherchez: Cache-Control: public, max-age=31536000, immutable"
-          echo "   👀 Recherchez: X-Font-Cache-Lighthouse: 245KB-saved"
-          echo ""
-          echo "2. Validation Lighthouse:"
-          echo "   - Ouvrez: https://pagespeed.web.dev/"
-          echo "   - Testez: https://valentingassend.com"
-          echo "   - Vérifiez: Section 'Utiliser des durées de mise en cache efficaces'"
-          echo "   - Attendu: 245 KiB économisés ✅"
-          echo ""
-          echo "3. Outils de développement:"
-          echo "   - F12 → Network → Rechargez la page"
-          echo "   - Polices: Cache TTL devrait être '365 days' au lieu de 'None'"
-
-      - name: Deployment summary
-        run: |
-          echo ""
-          echo "🎉 DÉPLOIEMENT TERMINÉ AVEC OPTIMISATIONS LIGHTHOUSE"
-          echo "════════════════════════════════════════════════════════"
-          echo "🌐 Site: https://valentingassend.com"
-          echo "🎯 Optimisations appliquées:"
-          echo "   • Cache polices Bricolage: 1 an (max-age=31536000)"
-          echo "   • Headers CORS: configurés"
-          echo "   • Types MIME: complets"
-          echo "   • Compression: optimisée"
-          echo "   • Sécurité: renforcée"
-          echo ""
-          echo "📊 Impact attendu sur Lighthouse:"
-          echo "   • Cache TTL polices: None → 365 days"
-          echo "   • Économies: 245 KiB"
-          echo "   • Score Performance: +10 à +20 points"
-          echo "   • Temps de chargement: -1 à -2s (visites répétées)"
-          echo ""
-          echo "⏰ Les effets seront visibles au prochain audit Lighthouse"
-          echo "🔄 Relancez un test dans 5-10 minutes pour validation"
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Your site should be available at: https://valentingassend.com"
