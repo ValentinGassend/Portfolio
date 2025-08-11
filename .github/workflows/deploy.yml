@@ -231,20 +231,3 @@ jobs:
           FINAL_HTACCESS
           
           echo "✅ .htaccess final créé"
-
-      # ✅ Validation finale
-      - name: Validate critical path optimization
-        run: |
-          echo "🔍 Validation de l'optimisation du chemin critique..."
-          
-          INDEX_FILE="dist/index.html"
-          
-          if [ -f "$INDEX_FILE" ]; then
-              # Compter les préchargements de polices
-              FONT_PRELOADS=$(grep -c 'rel="preload".*font' "$INDEX_FILE" || echo "0")
-          
-              # Compter les préchargements totaux
-              TOTAL_PRELOADS=$(grep -c 'rel="preload"' "$INDEX_FILE" || echo "0")
-          
-              echo "📊 Analyse finale:"
-              echo "   • Préchargements de polices: $FONT_
