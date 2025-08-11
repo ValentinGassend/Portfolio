@@ -74,7 +74,7 @@
     "isDynamicEntry": true
   },
   "index.html": {
-    "file": "assets/js/index.CN4Hi8h8.js",
+    "file": "assets/js/index.CAzVZCKk.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -101,7 +101,7 @@
       "node_modules/lenis/dist/lenis.mjs"
     ],
     "css": [
-      "assets/css/index.BX0lEBsH.css"
+      "assets/css/index.oPyNGZsg.css"
     ]
   },
   "node_modules/lenis/dist/lenis.mjs": {
