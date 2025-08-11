@@ -44,15 +44,6 @@ export default defineConfig({
                 quality: 80,
             },
         }),
-        createHtmlPlugin({
-            minify: true,
-            inject: {
-                data: {
-                    injectHeadPreload: '<link rel="preload" href="/img/landing.webp" as="image" fetchpriority="high">',
-                    injectBodyLcp: '<img src="/img/landing.webp" alt="Valentin Gassend" width="1080" height="1080" id="preloaded-lcp" style="position:absolute; z-index:1; width:100%; height:100vh; object-fit:cover;" fetchpriority="high" decoding="async">'
-                }
-            }
-        }),
     ],
     build: {
         treeshake: true,

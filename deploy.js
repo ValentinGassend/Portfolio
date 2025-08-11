@@ -1,4 +1,4 @@
-// deploy.js - SEO bilingue pour Creative Developer Gobelins
+// deploy.js - SEO bilingue pour Creative Developer Gobelins - FIXED
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -96,9 +96,53 @@ Crawl-delay: 1
 # Technologies: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}`;
 }
 
-// Fonction pour générer le HTML personnalisé par route
+// Fonction pour supprimer l'image LCP des pages autres que l'accueil
+function removeLCPImageFromHTML(html) {
+  // Supprimer complètement l'image LCP et son conteneur
+  return html
+      .replace(/<img[^>]*id="pre-lcp-element"[^>]*>/gi, '')
+      .replace(/<img[^>]*class="pre-lcp-image"[^>]*>/gi, '')
+      .replace(/<img[^>]*data-lcp="true"[^>]*>/gi, '')
+      .replace(/<img[^>]*src="\/img\/landing\.webp"[^>]*>/gi, '')
+      // Supprimer aussi les styles LCP spécifiques
+      .replace(/\.pre-lcp-image\s*\{[^}]*\}/gi, '')
+      .replace(/#pre-lcp-element\s*\{[^}]*\}/gi, '')
+      // Supprimer les attributs fetchpriority="high" sur d'autres images
+      .replace(/fetchpriority="high"/gi, 'fetchpriority="low"')
+      // Changer loading="eager" en loading="lazy" pour les autres pages
+      .replace(/loading="eager"/gi, 'loading="lazy"');
+}
+
+// Fonction pour optimiser les métadonnées LCP par page
+function optimizeLCPForPage(html, isHomePage = false) {
+  if (isHomePage) {
+    // Page d'accueil : garder l'optimisation LCP
+    return html
+        .replace(/fetchpriority="low"/gi, 'fetchpriority="high"')
+        .replace(/loading="lazy"/gi, 'loading="eager"');
+  } else {
+    // Autres pages : supprimer l'image LCP et optimiser différemment
+    let optimizedHTML = removeLCPImageFromHTML(html);
+
+    // Ajouter un préchargement conditionnel pour les ressources critiques de la page
+    const criticalPreloads = `
+    <!-- Préchargement des ressources critiques pour cette page -->
+    <link rel="preload" as="font" href="/fonts/main.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="style" href="/assets/css/critical.css">`;
+
+    optimizedHTML = optimizedHTML.replace('</head>', `${criticalPreloads}\n  </head>`);
+
+    return optimizedHTML;
+  }
+}
+
+// Fonction pour personnaliser le HTML par route
 function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
   let html = baseHtml;
+  const isHomePage = !route && type === 'page';
+
+  // Optimiser le LCP selon le type de page
+  html = optimizeLCPForPage(html, isHomePage);
 
   // Configuration SEO par page
   let title, description, canonicalUrl, keywords;
@@ -167,13 +211,15 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
   const keywordsTag = `<meta name="keywords" content="${keywords.join(', ')}" />`;
   html = html.replace('</head>', `${keywordsTag}\n  </head>`);
 
-  // Mettre à jour les balises Open Graph
+  // Mettre à jour les balises Open Graph avec image adaptée
+  const ogImage = isHomePage ? `${CONFIG.baseUrl}/img/landing.webp` : `${CONFIG.baseUrl}/img/og-default.jpg`;
+
   const ogTags = `
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:url" content="${canonicalUrl}" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="${CONFIG.baseUrl}/img/landing.webp" />
+    <meta property="og:image" content="${ogImage}" />
     <meta property="og:locale" content="fr_FR" />
     <meta property="og:site_name" content="${SEO_CONFIG.personal.name} - Creative Developer" />
     
@@ -181,7 +227,7 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${title}" />
     <meta name="twitter:description" content="${description}" />
-    <meta name="twitter:image" content="${CONFIG.baseUrl}/img/landing.webp" />
+    <meta name="twitter:image" content="${ogImage}" />
     <meta name="twitter:creator" content="${SEO_CONFIG.social.twitter}" />
     
     <!-- Balises professionnelles -->
@@ -197,6 +243,12 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     <meta name="school" content="${SEO_CONFIG.professional.school.name}" />
     <meta name="education" content="${SEO_CONFIG.professional.school.fullName}" />
     <meta name="company" content="${SEO_CONFIG.professional.company}" />
+    
+    <!-- Optimisation Core Web Vitals selon le type de page -->
+    ${isHomePage ?
+      `<link rel="preload" as="image" href="/img/landing.webp" fetchpriority="high">` :
+      `<meta name="robots" content="index, follow, max-image-preview:large">`
+  }
   `;
 
   // Remplacer les anciennes balises OG
@@ -419,11 +471,11 @@ async function deploy() {
     fs.writeFileSync(path.join(distPath, 'robots.txt'), generateRobots());
 
     // Génération des pages statiques optimisées
-    console.log('📄 Génération des pages SEO...');
+    console.log('📄 Génération des pages SEO avec optimisation LCP...');
 
     const indexHtml = fs.readFileSync(path.join(distPath, 'index.html'), 'utf-8');
 
-    // Pages principales
+    // Pages principales (autres que l'accueil)
     for (const route of CONFIG.routes) {
       const routeDir = path.join(distPath, route);
       if (!fs.existsSync(routeDir)) {
@@ -432,7 +484,7 @@ async function deploy() {
 
       const customHtml = customizeHtmlForRoute(indexHtml, route, 'page');
       fs.writeFileSync(path.join(routeDir, 'index.html'), customHtml);
-      console.log(`✅ Page SEO /${route} générée`);
+      console.log(`✅ Page SEO /${route} générée (image LCP supprimée)`);
     }
 
     // Pages projets
@@ -449,8 +501,13 @@ async function deploy() {
 
       const customHtml = customizeHtmlForRoute(indexHtml, null, 'project', id);
       fs.writeFileSync(path.join(idDir, 'index.html'), customHtml);
-      console.log(`✅ Page projet ${id} générée`);
+      console.log(`✅ Page projet ${id} générée (image LCP supprimée)`);
     }
+
+    // Optimiser la page d'accueil pour conserver l'image LCP
+    const homeHtml = customizeHtmlForRoute(indexHtml, null, 'page');
+    fs.writeFileSync(path.join(distPath, 'index.html'), homeHtml);
+    console.log(`✅ Page d'accueil optimisée (image LCP conservée)`);
 
     console.log('════════════════════════════════════════════════════');
     console.log('🎉 Déploiement SEO terminé avec succès!');
@@ -461,6 +518,8 @@ async function deploy() {
     console.log(`🔧 Technologies: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}`);
     console.log(`🌍 Villes ciblées: ${SEO_CONFIG.personal.location.cities.join(', ')}`);
     console.log(`📊 Pages générées: ${3 + CONFIG.projectIds.length} au total`);
+    console.log('🖼️ Image LCP optimisée : uniquement sur la page d\'accueil');
+    console.log('⚡ Core Web Vitals : optimisés par page');
     console.log('════════════════════════════════════════════════════');
 
   } catch (error) {
