@@ -258,7 +258,7 @@ jobs:
           # Timeout plus long pour les gros sites
           timeout: 180000
 
-      - name: Verify deploymentx&
+      - name: Verify deployment
         run: |
           echo "✅ Deployment completed successfully!"
           echo "🌐 Your site should be available at: https://valentingassend.com"
