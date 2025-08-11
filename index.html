@@ -3,19 +3,35 @@
 <head>
     <meta charset="UTF-8"/>
 
-    <!-- Préchargement des ressources critiques prioritaires -->
+    <!-- 🎯 RESSOURCES CRITIQUES UNIQUEMENT - Supprime chaîne 900ms -->
     <link rel="preload" as="image" href="/img/landing.webp" fetchpriority="high">
-    <link rel="preload" href="/assets/css/main.css" as="style">
+    <link rel="preload" href="/src/App.css" as="style">
     <link rel="preload" href="/src/main.jsx" as="script">
-    <link rel="preload" href="/img/landing.webp" as="image" fetchpriority="high">
+
+    <!-- ✅ POLICES CRITIQUES UNIQUEMENT - Maximum 2 polices -->
+    <link rel="preload" href="/font/BricolageGrotesque-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/font/BricolageGrotesque-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- ❌ SUPPRIMÉ - Ces préchargements créaient la chaîne de 900ms -->
+    <!-- <link rel="preload" href="/font/BricolageGrotesque-SemiBold.woff2" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/font/BricolageGrotesque-Light.woff2" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/font/BricolageGrotesque-ExtraBold.woff2" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/font/BricolageGrotesque-ExtraLight.woff2" as="font" type="font/woff2" crossorigin> -->
+    <!-- <link rel="preload" href="/font/BricolageGrotesque-Medium.woff2" as="font" type="font/woff2" crossorigin> -->
 
     <!-- Connexions anticipées -->
-    <link rel="preconnect" href="https://assets.lummi.ai">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://assets.lummi.ai" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <!-- Icône de favori optimisée -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Valentin" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Informations de base SEO optimisées -->
     <title>Valentin Gassend - Creative Developer | ThreeJS WebGL & GSAP | Diplômé Gobelins</title>
@@ -34,10 +50,26 @@
     <link rel="alternate" hreflang="en" href="https://valentingassend.com/en/" />
     <link rel="alternate" hreflang="x-default" href="https://valentingassend.com/" />
 
-    <!-- Styles critiques inlinés pour le rendu initial -->
+    <!-- 🎯 STYLES CRITIQUES OPTIMISÉS -->
     <style>
-        /* Styles minimaux pour le premier rendu */
-        body, html { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        /* Styles minimaux pour le premier rendu - Optimisé Critical Path */
+        body, html {
+            margin: 0;
+            padding: 0;
+            /* ✅ Fallback système optimisé - pas de Bricolage tant que pas chargé */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* ✅ Chargement progressif des polices */
+        .fonts-loading {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .fonts-loaded {
+            font-family: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Skeleton optimisé */
         .loading-skeleton { padding: 20px; max-width: 1200px; margin: 0 auto; }
         .skeleton-header { height: 60px; background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         .skeleton-hero { margin: 40px 0; }
@@ -49,6 +81,55 @@
 
     <!-- Chargement des styles principaux -->
     <link rel="stylesheet" href="/assets/css/main.css">
+
+    <!-- ✅ SCRIPT OPTIMISÉ - Chargement différé des polices secondaires -->
+    <script>
+        // Optimisation du chemin critique - chargement intelligent des polices
+        (function() {
+            // Marquer le début
+            performance.mark('font-loading-start');
+
+            // Chargement des polices critiques d'abord
+            if ('fonts' in document) {
+                // Seulement les 2 polices préchargées
+                Promise.all([
+                    document.fonts.load('400 1em "Bricolage Grotesque"'),
+                    document.fonts.load('700 1em "Bricolage Grotesque"')
+                ]).then(function() {
+                    document.documentElement.classList.add('fonts-loaded');
+                    performance.mark('critical-fonts-loaded');
+
+                    // Charger les polices secondaires APRÈS
+                    setTimeout(function() {
+                        const secondaryFonts = [
+                            '600 1em "Bricolage Grotesque"', // SemiBold
+                            '300 1em "Bricolage Grotesque"', // Light
+                            '500 1em "Bricolage Grotesque"', // Medium
+                            '800 1em "Bricolage Grotesque"', // ExtraBold
+                            '200 1em "Bricolage Grotesque"'  // ExtraLight
+                        ];
+
+                        secondaryFonts.forEach(font => {
+                            document.fonts.load(font).catch(() => {
+                                // Ignorer les erreurs pour polices optionnelles
+                            });
+                        });
+
+                        performance.mark('secondary-fonts-loading');
+                    }, 100); // Petit délai pour ne pas bloquer
+
+                }).catch(function() {
+                    // Fallback après 2 secondes si les polices critiques ne chargent pas
+                    setTimeout(function() {
+                        document.documentElement.classList.add('fonts-loaded');
+                    }, 2000);
+                });
+            } else {
+                // Fallback pour navigateurs sans Font Loading API
+                document.documentElement.classList.add('fonts-loaded');
+            }
+        })();
+    </script>
 
     <!-- Balises Twitter -->
     <meta name="twitter:card" content="summary_large_image">
@@ -193,14 +274,25 @@
 
     <!-- Metrics de performance -->
     <script>
-        // Marqueur de performance - début du chargement
         performance.mark('page-start');
     </script>
 </head>
 <body>
 <div id="root"></div>
 
-
+<!-- Image pré-rendue pour garantir un LCP -->
+<img
+        src="/img/landing.webp"
+        alt="Valentin Gassend - Creative Developer spécialisé en ThreeJS, WebGL et GSAP, diplômé de l'École des Gobelins Annecy"
+        width="1080"
+        height="1080"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        id="pre-lcp-element"
+        class="pre-lcp-image"
+        style="position: absolute; top: 0px; left: 0px; z-index: -1; opacity: 0;"
+/>
 
 <!-- Script principal avec attributs optimisés -->
 <script type="module" src="/src/main.jsx"></script>
@@ -225,54 +317,14 @@
         } catch (e) {
             console.warn('Erreur lors de la mesure du LCP:', e);
         }
-    });
-</script>
-<script>
-    // Force la reconnaissance du LCP
-    document.addEventListener('DOMContentLoaded', () => {
-        const lcpImage = document.getElementById('preloaded-lcp');
-        if (lcpImage) {
-            // Force un reflow
-            void lcpImage.offsetHeight;
 
-            // Masquer l'image préchargée une fois que React est chargé
-            const observer = new MutationObserver(() => {
-                const root = document.getElementById('root');
-                if (root && root.childNodes.length > 0) {
-                    lcpImage.style.opacity = '0';
-                    lcpImage.style.transition = 'opacity 0.5s';
-                    setTimeout(() => {
-                        lcpImage.style.display = 'none';
-                    }, 500);
-                    observer.disconnect();
-                }
-            });
-
-            observer.observe(document.getElementById('root'), {
-                childList: true,
-                subtree: true
-            });
-
-            // Diagnostic LCP
-            if ('PerformanceObserver' in window) {
-                try {
-                    const po = new PerformanceObserver((list) => {
-                        for (const entry of list.getEntries()) {
-                            if (entry.entryType === 'largest-contentful-paint') {
-                                console.log('LCP détecté:', entry.element);
-                                console.log('LCP timing:', entry.startTime);
-
-                                if (entry.element === lcpImage) {
-                                    console.log('✅ Image préchargée correctement identifiée comme LCP!');
-                                }
-                            }
-                        }
-                    });
-                    po.observe({type: 'largest-contentful-paint', buffered: true});
-                } catch (e) {
-                    console.warn('PerformanceObserver non supporté', e);
-                }
-            }
+        // Mesurer les performances des polices
+        try {
+            performance.measure('critical-fonts-time', 'font-loading-start', 'critical-fonts-loaded');
+            const fontTime = performance.getEntriesByName('critical-fonts-time')[0];
+            console.log('Temps chargement polices critiques:', fontTime.duration + 'ms');
+        } catch (e) {
+            // Ignorer si les marks n'existent pas
         }
     });
 </script>

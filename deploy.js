@@ -332,47 +332,144 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
 
 // Fonction pour générer le .htaccess avec optimisations SEO
 function generateHtaccess() {
-  const htaccess = `# .htaccess optimisé pour Creative Developer - ${SEO_CONFIG.personal.name}
+  const htaccess = `# .htaccess OPTIMISÉ POUR CACHE DES POLICES
+# Corrige le problème Lighthouse "Utiliser des durées de mise en cache efficaces"
 
-# Activer la réécriture d'URL pour React Router
 RewriteEngine On
 
-# Redirections SEO importantes
-RewriteCond %{THE_REQUEST} /([^?\\s]*) [NC]
-RewriteRule ^index\\.html$ / [R=301,L]
+# ========================================
+# 🎯 CACHE POLICES - PRIORITÉ ABSOLUE
+# ========================================
 
-# Gérer les routes React Router
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.html [L]
-
-# Optimisations de cache pour performance
 <IfModule mod_expires.c>
     ExpiresActive On
     
-    # Cache très long pour les assets avec hash (immutable)
+    # ✅ POLICES - Cache 1 an (365 jours) - TOUS les formats
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/eot "access plus 1 year"
+    
+    # ✅ POLICES - Types MIME alternatifs
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-sfnt "access plus 1 year"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+    ExpiresByType application/x-font-woff "access plus 1 year"
+    ExpiresByType application/x-font-woff2 "access plus 1 year"
+    ExpiresByType application/x-font-ttf "access plus 1 year"
+    ExpiresByType application/x-font-otf "access plus 1 year"
+    
+    # ✅ CSS et JS avec hash - Cache immutable
     ExpiresByType text/css "access plus 1 year"
     ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/x-javascript "access plus 1 year"
+    
+    # ✅ IMAGES - Cache long
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType application/font-woff2 "access plus 1 year"
-    ExpiresByType application/font-woff "access plus 1 year"
     
-    # Cache HTML optimisé pour SEO
+    # ✅ HTML - Cache court avec revalidation
     ExpiresByType text/html "access plus 1 hour"
     
-    # Cache pour les fichiers SEO
+    # ✅ Fichiers SEO
     ExpiresByType application/xml "access plus 1 day"
     ExpiresByType text/xml "access plus 1 day"
-    ExpiresByType application/manifest+json "access plus 1 week"
 </IfModule>
 
-# Compression pour optimiser les Core Web Vitals
+# ========================================
+# 🎯 HEADERS DE CACHE EXPLICITES
+# ========================================
+
+<IfModule mod_headers.c>
+    # ✅ POLICES - Headers de cache explicites et CORS
+    <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+        # Cache immutable 1 an
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        
+        # CORS pour polices cross-domain
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type, Accept, Origin"
+        
+        # Optimisations compression
+        Header set Vary "Accept-Encoding"
+        
+        # Sécurité
+        Header set X-Content-Type-Options "nosniff"
+        
+        # Debug (à supprimer en production)
+        Header set X-Font-Cache "1-year-immutable"
+    </FilesMatch>
+    
+    # ✅ CSS et JS avec hash
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header set X-Asset-Cache "1-year-immutable"
+    </FilesMatch>
+    
+    # ✅ IMAGES
+    <FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|avif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+        Header set X-Image-Cache "1-year-immutable"
+    </FilesMatch>
+    
+    # ✅ HTML avec revalidation
+    <FilesMatch "\.html$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+        Header set X-HTML-Cache "1-hour-revalidate"
+    </FilesMatch>
+    
+    # ✅ Headers de sécurité globaux
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ========================================
+# 🎯 TYPES MIME COMPLETS POUR POLICES
+# ========================================
+
+<IfModule mod_mime.c>
+    # ✅ Types MIME modernes pour polices
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+    AddType font/ttf .ttf
+    AddType font/otf .otf
+    AddType font/eot .eot
+    
+    # ✅ Types MIME alternatifs
+    AddType application/font-woff2 .woff2
+    AddType application/font-woff .woff
+    AddType application/font-sfnt .ttf .otf
+    AddType application/vnd.ms-fontobject .eot
+    AddType application/x-font-woff .woff
+    AddType application/x-font-woff2 .woff2
+    AddType application/x-font-ttf .ttf
+    AddType application/x-font-otf .otf
+    
+    # ✅ Autres types importants
+    AddType image/webp .webp
+    AddType image/avif .avif
+    AddType application/manifest+json .webmanifest
+    AddType application/json .json
+    
+    # ✅ Charset par défaut
+    AddDefaultCharset UTF-8
+</IfModule>
+
+# ========================================
+# 🎯 COMPRESSION OPTIMISÉE
+# ========================================
+
 <IfModule mod_deflate.c>
+    # ✅ Compression pour fichiers texte
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
     AddOutputFilterByType DEFLATE text/xml
@@ -383,61 +480,53 @@ RewriteRule . /index.html [L]
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
     AddOutputFilterByType DEFLATE application/json
-    AddOutputFilterByType DEFLATE application/ld+json
     AddOutputFilterByType DEFLATE image/svg+xml
+    
+    # ✅ Exclure les polices de la compression (déjà optimisées)
+    SetEnvIfNoCase Request_URI \.(?:woff|woff2|ttf|otf|eot)$ no-gzip dont-vary
+    
+    # ✅ Exclure autres fichiers binaires
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|zip|gz|rar|bz2|7z)$ no-gzip dont-vary
 </IfModule>
 
-# Headers de sécurité et performance
-<IfModule mod_headers.c>
-    # Sécurité
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
-    # Performance pour Creative Developer
-    Header always set X-Creative-Developer "${SEO_CONFIG.personal.name}"
-    Header always set X-Technologies "${SEO_CONFIG.professional.specialties.fr.slice(0, 4).join(', ')}"
-    Header always set X-School "${SEO_CONFIG.professional.school.name}"
-    Header always set X-Location "${SEO_CONFIG.personal.location.primary}"
-    
-    # Cache Control optimisé
-    <FilesMatch "\\.(css|js|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$">
-        Header set Cache-Control "public, max-age=31536000, immutable"
-    </FilesMatch>
-    
-    <FilesMatch "\\.html$">
-        Header set Cache-Control "public, max-age=3600, must-revalidate"
-    </FilesMatch>
-</IfModule>
+# ========================================
+# 🎯 OPTIMISATIONS SPÉCIFIQUES BRICOLAGE
+# ========================================
 
-# Types MIME pour technologies modernes
-<IfModule mod_mime.c>
-    AddType image/webp .webp
-    AddType application/font-woff2 .woff2
-    AddType application/manifest+json .webmanifest
-    AddType application/json .json
-    AddType application/ld+json .jsonld
-</IfModule>
+# ✅ Cache spécifique pour les polices Bricolage Grotesque
+<LocationMatch "^/font/Bricolage.*\.(woff2|woff|ttf|otf)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, max-age=31536000, immutable"
+    Header set X-Font-Family "Bricolage-Grotesque"
+    Header set X-Font-Cache-Optimized "true"
+</LocationMatch>
 
-# Sécurité renforcée
-<Files ~ "^\\.(env|git|htaccess|htpasswd|log)">
+# ========================================
+# 🎯 GESTION DES ROUTES REACT
+# ========================================
+
+# ✅ Redirection SPA (après les règles de cache)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/font/
+RewriteCond %{REQUEST_URI} !^/assets/
+RewriteRule . /index.html [L]
+
+# ========================================
+# 🎯 RÈGLES DE SÉCURITÉ
+# ========================================
+
+# ✅ Bloquer accès aux fichiers sensibles
+<FilesMatch "^\.">
     Order allow,deny
     Deny from all
-</Files>
+</FilesMatch>
 
-# Optimisations pour les moteurs de recherche
-<Files "sitemap.xml">
-    Header set Cache-Control "public, max-age=86400"
-</Files>
-
-<Files "robots.txt">
-    Header set Cache-Control "public, max-age=86400"
-</Files>
-
-# Redirection HTTPS pour SEO (à décommenter si nécessaire)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]`;
+# ✅ Protection des logs et configs
+<FilesMatch "\.(env|git|htaccess|htpasswd|log|ini|conf)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>`;
 
   return htaccess;
 }

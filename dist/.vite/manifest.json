@@ -1,38 +1,40 @@
 {
-  "_about-page.BzjTgdnZ.js": {
-    "file": "assets/js/about-page.BzjTgdnZ.js",
+  "_about-page.CkPg-5ZI.js": {
+    "file": "assets/js/about-page.CkPg-5ZI.js",
     "name": "about-page",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
-      "_components.F-1U99vP.js",
+      "_components.d2lhwppj.js",
       "_vendor-gsap.Cs9RNQ8N.js",
-      "_vendor-swiper.DFczTlU7.js"
+      "_vendor-swiper.DiDM-5ts.js"
     ]
   },
-  "_components.F-1U99vP.js": {
-    "file": "assets/js/components.F-1U99vP.js",
+  "_components.d2lhwppj.js": {
+    "file": "assets/js/components.d2lhwppj.js",
     "name": "components",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
       "_vendor-gsap.Cs9RNQ8N.js",
-      "_about-page.BzjTgdnZ.js"
+      "_about-page.CkPg-5ZI.js",
+      "_vendor-swiper.DiDM-5ts.js"
     ]
   },
-  "_home-page.DXgDUFep.js": {
-    "file": "assets/js/home-page.DXgDUFep.js",
+  "_home-page.BWDJbtEL.js": {
+    "file": "assets/js/home-page.BWDJbtEL.js",
     "name": "home-page",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
-      "_about-page.BzjTgdnZ.js",
-      "_components.F-1U99vP.js",
+      "_about-page.CkPg-5ZI.js",
+      "_components.d2lhwppj.js",
       "_vendor-three.tPfcuwPN.js",
-      "_vendor-gsap.Cs9RNQ8N.js"
+      "_vendor-gsap.Cs9RNQ8N.js",
+      "_vendor-swiper.DiDM-5ts.js"
     ],
     "dynamicImports": [
-      "_components.F-1U99vP.js",
+      "_components.d2lhwppj.js",
       "_vendor-gsap.Cs9RNQ8N.js"
     ]
   },
@@ -48,11 +50,18 @@
       "_vendor.2uABU8et.js"
     ]
   },
-  "_vendor-swiper.DFczTlU7.js": {
-    "file": "assets/js/vendor-swiper.DFczTlU7.js",
+  "_vendor-swiper.!~{006}~.js": {
+    "file": "assets/css/vendor-swiper.8CSGW0I3.css",
+    "src": "_vendor-swiper.!~{006}~.js"
+  },
+  "_vendor-swiper.DiDM-5ts.js": {
+    "file": "assets/js/vendor-swiper.DiDM-5ts.js",
     "name": "vendor-swiper",
     "imports": [
       "_vendor-react.C4Z-mENq.js"
+    ],
+    "css": [
+      "assets/css/vendor-swiper.8CSGW0I3.css"
     ]
   },
   "_vendor-three.tPfcuwPN.js": {
@@ -65,24 +74,24 @@
     "isDynamicEntry": true
   },
   "index.html": {
-    "file": "assets/js/index.CcifpMnK.js",
+    "file": "assets/js/index.CAzVZCKk.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
-      "_home-page.DXgDUFep.js",
-      "_about-page.BzjTgdnZ.js",
-      "_components.F-1U99vP.js",
+      "_home-page.BWDJbtEL.js",
+      "_about-page.CkPg-5ZI.js",
       "_vendor.2uABU8et.js",
-      "_vendor-three.tPfcuwPN.js",
+      "_components.d2lhwppj.js",
       "_vendor-gsap.Cs9RNQ8N.js",
-      "_vendor-swiper.DFczTlU7.js"
+      "_vendor-swiper.DiDM-5ts.js",
+      "_vendor-three.tPfcuwPN.js"
     ],
     "dynamicImports": [
-      "_home-page.DXgDUFep.js",
+      "_home-page.BWDJbtEL.js",
       "src/ui/views/projectsPage/projects.jsx",
-      "_about-page.BzjTgdnZ.js",
+      "_about-page.CkPg-5ZI.js",
       "src/ui/views/singleProjectPage/singleProjectPage.jsx",
       "_vendor.2uABU8et.js",
       "_vendor-gsap.Cs9RNQ8N.js",
@@ -92,7 +101,7 @@
       "node_modules/lenis/dist/lenis.mjs"
     ],
     "css": [
-      "assets/css/index.hNpQZbsN.css"
+      "assets/css/index.oPyNGZsg.css"
     ]
   },
   "node_modules/lenis/dist/lenis.mjs": {
@@ -102,35 +111,35 @@
     "isDynamicEntry": true
   },
   "src/ui/views/projectsPage/projects.jsx": {
-    "file": "assets/js/projects-page.Q8bUKXjy.js",
+    "file": "assets/js/projects-page.Ck81Cv9d.js",
     "name": "projects-page",
     "src": "src/ui/views/projectsPage/projects.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
-      "_components.F-1U99vP.js",
+      "_components.d2lhwppj.js",
       "_vendor-gsap.Cs9RNQ8N.js",
-      "_about-page.BzjTgdnZ.js",
-      "_home-page.DXgDUFep.js",
+      "_about-page.CkPg-5ZI.js",
+      "_home-page.BWDJbtEL.js",
       "_vendor.2uABU8et.js",
-      "_vendor-swiper.DFczTlU7.js",
+      "_vendor-swiper.DiDM-5ts.js",
       "_vendor-three.tPfcuwPN.js"
     ]
   },
   "src/ui/views/singleProjectPage/singleProjectPage.jsx": {
-    "file": "assets/js/project-page.DNBeUARW.js",
+    "file": "assets/js/project-page.C3V9xxi1.js",
     "name": "project-page",
     "src": "src/ui/views/singleProjectPage/singleProjectPage.jsx",
     "isDynamicEntry": true,
     "imports": [
       "_vendor-react.C4Z-mENq.js",
-      "_home-page.DXgDUFep.js",
-      "_components.F-1U99vP.js",
+      "_home-page.BWDJbtEL.js",
+      "_components.d2lhwppj.js",
       "_vendor-gsap.Cs9RNQ8N.js",
-      "_about-page.BzjTgdnZ.js",
+      "_about-page.CkPg-5ZI.js",
       "_vendor.2uABU8et.js",
       "_vendor-three.tPfcuwPN.js",
-      "_vendor-swiper.DFczTlU7.js"
+      "_vendor-swiper.DiDM-5ts.js"
     ]
   }
 }
