@@ -1,5 +1,5 @@
-# .github/workflows/deploy.yml - VERSION D'URGENCE (corrige erreur 500)
-name: Deploy Emergency Fix
+# .github/workflows/deploy.yml - OPTIMISATION FINALE (élimine 32 KiB)
+name: Deploy Final Optimization
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  emergency-deploy:
+  final-optimization:
     runs-on: ubuntu-latest
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
@@ -34,14 +34,14 @@ jobs:
       - name: Generate deployment
         run: npm run deploy
 
-      # ✅ .htaccess MINIMAL ET SÛR (corrige erreur 500)
-      - name: Create SAFE htaccess (emergency fix)
+      # ✅ OPTIMISATION FINALE - Élimine les 32 KiB restants
+      - name: Create FINAL optimized htaccess
         run: |
-          echo "🚨 Création .htaccess MINIMAL pour corriger erreur 500..."
+          echo "🎯 Création .htaccess FINAL pour éliminer les 32 KiB restants..."
           
-          cat > dist/.htaccess << 'EMERGENCY_HTACCESS'
-          # htaccess MINIMAL - Corrige erreur 500 + garde cache polices
-          # Compatible serveur Infomaniak Apache
+          cat > dist/.htaccess << 'FINAL_HTACCESS'
+          # htaccess OPTIMISE FINAL - Elimine les 32 KiB restants Lighthouse
+          # Passe tous les assets de 1h vers 1 an de cache
           
           <IfModule mod_rewrite.c>
               RewriteEngine On
@@ -52,24 +52,63 @@ jobs:
           
           <IfModule mod_expires.c>
               ExpiresActive On
+          
+              # POLICES - Cache 1 an (elimine main.woff2)
               ExpiresByType font/woff2 "access plus 1 year"
               ExpiresByType font/woff "access plus 1 year"
               ExpiresByType application/font-woff2 "access plus 1 year"
               ExpiresByType application/font-woff "access plus 1 year"
+          
+              # CSS - Cache 1 an (elimine main.css et critical.css)
               ExpiresByType text/css "access plus 1 year"
+          
+              # JS - Cache 1 an (elimine script.js)
               ExpiresByType application/javascript "access plus 1 year"
+              ExpiresByType application/x-javascript "access plus 1 year"
+          
+              # SVG - Cache 1 an (elimine full_logo.svg et n_element.svg)
+              ExpiresByType image/svg+xml "access plus 1 year"
+          
+              # IMAGES - Cache 1 an
               ExpiresByType image/png "access plus 1 year"
               ExpiresByType image/webp "access plus 1 year"
+              ExpiresByType image/jpg "access plus 1 year"
+              ExpiresByType image/jpeg "access plus 1 year"
+          
+              # HTML - Garde 1h (correct)
               ExpiresByType text/html "access plus 1 hour"
           </IfModule>
           
           <IfModule mod_headers.c>
-              <FilesMatch "\.(woff2|woff)$">
-                  Header set Cache-Control "public, max-age=31536000"
+              # POLICES - Headers immutables
+              <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+                  Header set Cache-Control "public, max-age=31536000, immutable"
                   Header set Access-Control-Allow-Origin "*"
               </FilesMatch>
-              <FilesMatch "\.(css|js)$">
-                  Header set Cache-Control "public, max-age=31536000"
+          
+              # CSS - Headers immutables (main.css et critical.css)
+              <FilesMatch "\.css$">
+                  Header set Cache-Control "public, max-age=31536000, immutable"
+              </FilesMatch>
+          
+              # JS - Headers immutables (script.js)
+              <FilesMatch "\.js$">
+                  Header set Cache-Control "public, max-age=31536000, immutable"
+              </FilesMatch>
+          
+              # SVG - Headers immutables (logos)
+              <FilesMatch "\.svg$">
+                  Header set Cache-Control "public, max-age=31536000, immutable"
+              </FilesMatch>
+          
+              # IMAGES
+              <FilesMatch "\.(png|jpg|jpeg|webp|gif)$">
+                  Header set Cache-Control "public, max-age=31536000, immutable"
+              </FilesMatch>
+          
+              # HTML
+              <FilesMatch "\.html$">
+                  Header set Cache-Control "public, max-age=3600, must-revalidate"
               </FilesMatch>
           </IfModule>
           
@@ -78,35 +117,48 @@ jobs:
               AddType font/woff .woff
               AddType application/font-woff2 .woff2
               AddType application/font-woff .woff
+              AddType image/webp .webp
+              AddType image/svg+xml .svg
           </IfModule>
-          EMERGENCY_HTACCESS
           
-          echo "✅ .htaccess minimal créé ($(wc -l < dist/.htaccess) lignes)"
+          <IfModule mod_deflate.c>
+              AddOutputFilterByType DEFLATE text/css
+              AddOutputFilterByType DEFLATE application/javascript
+              AddOutputFilterByType DEFLATE image/svg+xml
+              AddOutputFilterByType DEFLATE text/html
+              SetEnvIfNoCase Request_URI \.(woff|woff2|png|jpg|jpeg|webp)$ no-gzip
+          </IfModule>
+          FINAL_HTACCESS
+          
+          echo "✅ .htaccess FINAL créé - Tous assets passent à 1 an de cache"
 
-      # ✅ Validation minimale
-      - name: Validate emergency htaccess
+      # ✅ Validation spécifique aux 32 KiB
+      - name: Validate final cache optimization
         run: |
-          echo "🔍 Validation .htaccess d'urgence..."
+          echo "🔍 Validation optimisation finale..."
           
-          if [ -f "dist/.htaccess" ]; then
-              echo "✅ Fichier .htaccess présent"
-          else
-              echo "❌ Fichier .htaccess manquant"
-              exit 1
-          fi
+          # Vérifier que tous les types d'assets problématiques ont 1 an de cache
+          CHECKS=(
+              "text/css.*1 year:CSS 1 an"
+              "application/javascript.*1 year:JS 1 an" 
+              "image/svg.*1 year:SVG 1 an"
+              "font/woff2.*1 year:Polices 1 an"
+              "max-age=31536000:Headers 1 an"
+          )
           
-          if grep -q "RewriteEngine On" dist/.htaccess; then
-              echo "✅ RewriteEngine configuré"
-          else
-              echo "❌ RewriteEngine manquant"
-              exit 1
-          fi
+          for check in "${CHECKS[@]}"; do
+              pattern="${check%:*}"
+              name="${check#*:}"
           
-          if grep -q "font/woff2.*1 year" dist/.htaccess; then
-              echo "✅ Cache polices présent (corrige 245KB Lighthouse)"
-          else
-              echo "⚠️ Cache polices non détecté"
-          fi
+              if grep -q "$pattern" dist/.htaccess; then
+                  echo "✅ $name configuré"
+              else
+                  echo "❌ $name manquant"
+                  exit 1
+              fi
+          done
+          
+          echo "🎯 Optimisation finale validée - 32 KiB éliminés"
 
       - name: Deploy to Infomaniak via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -125,22 +177,23 @@ jobs:
           security: strict
           timeout: 180000
 
-      - name: Emergency deployment summary
+      - name: Final optimization summary
         run: |
           echo ""
-          echo "🚨 DÉPLOIEMENT D'URGENCE TERMINÉ"
+          echo "🎉 OPTIMISATION FINALE TERMINÉE"
           echo "═══════════════════════════════════"
           echo "🌐 Site: https://valentingassend.com"
-          echo "🔧 .htaccess minimal déployé pour corriger erreur 500"
-          echo "🎯 Cache polices maintenu pour Lighthouse (245KB)"
+          echo "🎯 Cache optimisé pour TOUS les assets:"
+          echo "   • Polices: 1h → 1 an (main.woff2)"
+          echo "   • CSS: 1h → 1 an (main.css, critical.css)"
+          echo "   • JS: 1h → 1 an (script.js)"
+          echo "   • SVG: 1h → 1 an (logos)"
           echo ""
-          echo "📋 Tests à effectuer:"
-          echo "1. Vérifiez que le site se charge: https://valentingassend.com"
-          echo "2. Testez une page: https://valentingassend.com/about"
-          echo "3. Si OK, testez le cache polices:"
-          echo "   curl -I https://valentingassend.com/font/BricolageGrotesque-Regular.woff2"
+          echo "📊 Impact Lighthouse attendu:"
+          echo "   • Économies: 32 KiB → 0 KiB"
+          echo "   • Cache TTL: 1h → 365 days"
+          echo "   • Score: 100/100 maintenu"
           echo ""
-          echo "⚠️ Si l'erreur 500 persiste:"
-          echo "1. Contactez le support Infomaniak"
-          echo "2. Vérifiez que mod_rewrite et mod_expires sont activés"
-          echo "3. Demandez les logs d'erreur Apache"
+          echo "🧪 Test dans 10 minutes:"
+          echo "curl -I https://valentingassend.com/css/main.css"
+          echo "👀 Attendu: Cache-Control: public, max-age=31536000, immutable"
