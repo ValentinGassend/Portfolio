@@ -1,8 +1,9 @@
-// seo-config.js - Configuration SEO bilingue pour Creative Developer
+// seo-config.js - Configuration SEO bilingue pour développeur web freelance - OPTIMISÉ
 export const SEO_CONFIG = {
     // Informations personnelles
     personal: {
-        name: 'Valentin Gassend',
+        name: 'Valentin',
+        fullName: 'Valentin Gassend',
         firstName: 'Valentin',
         lastName: 'Gassend',
         email: 'valentin.gassend@gmail.com',
@@ -24,15 +25,15 @@ export const SEO_CONFIG = {
 
     // Profil professionnel
     professional: {
-        title: 'Creative Developer',
-        subtitle: 'ThreeJS WebGL & GSAP',
-        titleEn: 'Creative Developer',
-        subtitleEn: 'ThreeJS WebGL & GSAP',
-        jobTitle: 'Développeur Full Stack - Creative Developer',
-        jobTitleEn: 'Full Stack Developer - Creative Developer',
+        title: 'Développeur web freelance WordPress',
+        subtitle: 'Aix-les-Bains & Annecy',
+        titleEn: 'Freelance Web Developer WordPress',
+        subtitleEn: 'Aix-les-Bains & Annecy',
+        jobTitle: 'Développeur web freelance - Spécialiste WordPress',
+        jobTitleEn: 'Freelance Web Developer - WordPress Specialist',
         company: 'Mcube',
-        experience: 'Alternance depuis septembre 2024',
-        experienceEn: 'Apprenticeship since September 2024',
+        experience: 'Freelance disponible - 3 ans d\'expérience',
+        experienceEn: 'Available freelance - 3 years experience',
         previousCompany: 'Agence Altimax',
         previousExperience: 'Alternance 2022-2024',
 
@@ -49,28 +50,28 @@ export const SEO_CONFIG = {
             url: 'https://www.gobelins.fr/'
         },
 
-        // Spécialités techniques (français/anglais)
+        // Spécialités techniques (français/anglais) - RÉORGANISÉES
         specialties: {
             fr: [
-                'ThreeJS', 'WebGL', 'GSAP', 'React', 'JavaScript',
-                'WordPress', 'Lenis', 'Twig', 'Blade', 'Sass',
-                'Vite', 'Node.js', 'Core Web Vitals', 'Performance Web',
-                'Animations 3D', 'Smooth Scrolling', 'Responsive Design',
+                'WordPress', 'Développement web', 'Sites sur mesure', 'Animations créatives',
+                'React', 'JavaScript', 'ThreeJS', 'WebGL', 'GSAP',
+                'Lenis', 'Twig', 'Blade', 'Sass', 'Vite', 'Node.js',
+                'Core Web Vitals', 'Performance Web', 'Responsive Design',
                 'Développement Créatif', 'Expériences Interactives'
             ],
             en: [
-                'ThreeJS', 'WebGL', 'GSAP', 'React', 'JavaScript',
-                'WordPress', 'Lenis', 'Twig', 'Blade', 'Sass',
-                'Vite', 'Node.js', 'Core Web Vitals', 'Web Performance',
-                '3D Animations', 'Smooth Scrolling', 'Responsive Design',
+                'WordPress', 'Web Development', 'Custom Websites', 'Creative Animations',
+                'React', 'JavaScript', 'ThreeJS', 'WebGL', 'GSAP',
+                'Lenis', 'Twig', 'Blade', 'Sass', 'Vite', 'Node.js',
+                'Core Web Vitals', 'Web Performance', 'Responsive Design',
                 'Creative Development', 'Interactive Experiences'
             ]
         },
 
         // Secteurs d'activité
         sectors: {
-            fr: ['High-tech', 'Développement Web', 'Création Numérique', 'Agence Digitale'],
-            en: ['High-tech', 'Web Development', 'Digital Creation', 'Digital Agency']
+            fr: ['Freelance Web', 'Développement WordPress', 'Création Numérique', 'Sites Internet'],
+            en: ['Freelance Web', 'WordPress Development', 'Digital Creation', 'Website Creation']
         },
 
         // Langues
@@ -80,131 +81,134 @@ export const SEO_CONFIG = {
         ]
     },
 
-    // Mots-clés SEO bilingues par importance
+    // Mots-clés SEO bilingues par importance - COMPLÈTEMENT RÉORGANISÉS
     keywords: {
-        // Mots-clés principaux (français)
+        // Mots-clés principaux (français) - FOCUS LOCAL + WORDPRESS
         primary_fr: [
-            'creative developer',
-            'développeur créatif',
-            'développeur threejs',
-            'développeur webgl',
-            'développeur gsap',
+            'développeur web freelance aix-les-bains',
+            'freelance wordpress aix-les-bains',
+            'développeur wordpress aix-les-bains',
+            'creative developer annecy freelance',
+            'développeur web aix-les-bains',
+            'freelance aix-les-bains',
             'valentin gassend',
-            'gobelins annecy',
-            'école des gobelins'
+            'développeur freelance savoie'
         ],
 
         // Mots-clés principaux (anglais)
         primary_en: [
-            'creative developer',
-            'threejs developer',
-            'webgl developer',
-            'gsap developer',
-            'frontend developer',
-            '3d web developer',
-            'interactive developer',
-            'gobelins graduate'
+            'freelance web developer aix-les-bains',
+            'wordpress developer aix-les-bains',
+            'freelance wordpress aix-les-bains',
+            'creative developer annecy freelance',
+            'web developer aix-les-bains',
+            'freelance developer france',
+            'valentin gassend',
+            'freelance developer savoie'
         ],
 
         // Mots-clés secondaires (français)
         secondary_fr: [
-            'développeur créatif france',
-            'expert threejs',
-            'spécialiste webgl',
-            'animations gsap',
-            'développement créatif',
-            'développeur 3d web',
-            'animations web',
-            'développeur react',
-            'développeur wordpress',
-            'développeur full stack',
-            'création numérique interactive',
-            'expériences interactives'
+            'développeur web freelance annecy',
+            'freelance wordpress annecy',
+            'développeur wordpress annecy',
+            'créateur site web aix-les-bains',
+            'développeur web chambéry',
+            'freelance développeur savoie',
+            'site internet sur mesure aix-les-bains',
+            'animations web créatives',
+            'développeur react freelance',
+            'création site wordpress',
+            'développeur web haute-savoie',
+            'freelance web savoie'
         ],
 
         // Mots-clés secondaires (anglais)
         secondary_en: [
-            'creative developer france',
-            'threejs expert',
-            'webgl specialist',
-            'gsap animations',
-            'creative coding',
-            '3d web developer',
-            'web animations',
-            'react developer',
-            'wordpress developer',
-            'full stack developer',
-            'interactive digital creation',
-            'interactive experiences'
+            'freelance web developer annecy',
+            'wordpress developer annecy',
+            'freelance wordpress annecy',
+            'website creator aix-les-bains',
+            'web developer chambery',
+            'freelance developer savoie',
+            'custom website aix-les-bains',
+            'creative web animations',
+            'freelance react developer',
+            'wordpress website creation',
+            'web developer haute-savoie',
+            'freelance web savoie'
         ],
 
-        // SEO local multi-villes (français)
+        // SEO local multi-villes (français) - PRIORITÉ WORDPRESS
         local_fr: [
-            'développeur créatif aix les bains',
-            'creative developer chambéry',
-            'développeur threejs annecy',
-            'développeur webgl lyon',
-            'développeur créatif savoie',
-            'développeur web savoie',
-            'développeur rhône alpes',
-            'freelance aix les bains',
-            'développeur annecy',
-            'développeur chambéry',
-            'développeur lyon',
-            'gobelins annecy étudiant',
-            'mcube développeur',
-            'alternance développeur savoie'
+            'développeur wordpress freelance aix-les-bains',
+            'freelance wordpress aix-les-bains pas cher',
+            'créateur site web aix-les-bains',
+            'développeur web freelance chambéry',
+            'freelance wordpress annecy',
+            'développeur site internet aix-les-bains',
+            'freelance développeur web savoie',
+            'création site wordpress aix-les-bains',
+            'développeur web annecy',
+            'freelance web haute-savoie',
+            'développeur wordpress chambéry',
+            'site internet freelance aix-les-bains',
+            'développeur web lyon freelance',
+            'création site web savoie'
         ],
 
         // SEO local multi-villes (anglais)
         local_en: [
-            'creative developer aix les bains',
-            'threejs developer chambery',
-            'webgl developer annecy',
-            'gsap developer lyon',
-            'developer rhone alpes',
-            'web developer france',
-            'creative developer france',
-            'freelance developer france',
-            'gobelins annecy graduate',
-            'french web developer',
-            'developer french alps',
-            'lyon web developer',
-            'annecy developer'
+            'freelance wordpress developer aix-les-bains',
+            'wordpress freelance aix-les-bains',
+            'website creator aix-les-bains',
+            'freelance web developer chambery',
+            'wordpress freelance annecy',
+            'website developer aix-les-bains',
+            'freelance web developer savoie',
+            'wordpress website creation aix-les-bains',
+            'web developer annecy',
+            'freelance web haute-savoie',
+            'wordpress developer chambery',
+            'freelance website aix-les-bains',
+            'web developer lyon freelance',
+            'website creation savoie'
         ],
 
-        // Mots-clés techniques (français)
+        // Mots-clés techniques (français) - WORDPRESS EN PREMIER
         technical_fr: [
+            'développement wordpress avancé',
+            'site wordpress sur mesure',
+            'animations css avancées',
+            'optimisation wordpress',
+            'site web responsive',
+            'performance web wordpress',
+            'javascript pour wordpress',
+            'react développement',
+            'animations gsap',
+            'threejs intégration',
             'lenis smooth scroll',
             'core web vitals',
-            'performance web',
-            'animations 3d',
-            'rendus webgl',
-            'interfaces interactives',
-            'développement créatif web',
-            'optimisation performance',
-            'javascript expert',
-            'react expert',
-            'wordpress expert',
-            'vite build tool',
-            'sass expert'
+            'seo wordpress',
+            'wordpress headless'
         ],
 
         // Mots-clés techniques (anglais)
         technical_en: [
+            'advanced wordpress development',
+            'custom wordpress website',
+            'advanced css animations',
+            'wordpress optimization',
+            'responsive web design',
+            'wordpress web performance',
+            'javascript for wordpress',
+            'react development',
+            'gsap animations',
+            'threejs integration',
             'lenis smooth scroll',
             'core web vitals',
-            'web performance',
-            '3d animations',
-            'webgl rendering',
-            'interactive interfaces',
-            'creative web development',
-            'performance optimization',
-            'javascript expert',
-            'react expert',
-            'wordpress expert',
-            'vite build tool',
-            'sass expert'
+            'wordpress seo',
+            'headless wordpress'
         ],
 
         // Mots-clés éducation/formation
@@ -222,25 +226,25 @@ export const SEO_CONFIG = {
         ]
     },
 
-    // Descriptions SEO bilingues
+    // Descriptions SEO bilingues - COMPLÈTEMENT RÉÉCRITES
     descriptions: {
         home: {
-            short_fr: 'Creative Developer spécialisé en ThreeJS/WebGL et GSAP. Diplômé des Gobelins Annecy, je transforme le code en expériences visuelles captivantes.',
-            short_en: 'Creative Developer specialized in ThreeJS/WebGL and GSAP. Gobelins Annecy graduate, I transform code into captivating visual experiences.',
-            long_fr: 'Valentin Gassend, Creative Developer Full Stack chez Mcube, diplômé de l\'École des Gobelins Annecy. Spécialisé en ThreeJS/WebGL et GSAP, expert en animations web avancées et rendus 3D. Basé en région Rhône-Alpes (Aix-les-Bains, Chambéry, Annecy, Lyon), je crée des expériences interactives mémorables avec React, WordPress et les technologies web modernes.',
-            long_en: 'Valentin Gassend, Full Stack Creative Developer at Mcube, graduated from École des Gobelins Annecy. Specialized in ThreeJS/WebGL and GSAP, expert in advanced web animations and 3D rendering. Based in Rhône-Alpes region (Aix-les-Bains, Chambéry, Annecy, Lyon), I create memorable interactive experiences with React, WordPress and modern web technologies.'
+            short_fr: 'Développeur web freelance sur Aix-les-Bains et Annecy, spécialisé WordPress, animations créatives et sites sur mesure depuis 3 ans.',
+            short_en: 'Freelance web developer in Aix-les-Bains and Annecy, specialized in WordPress, creative animations and custom websites for 3 years.',
+            long_fr: 'Valentin, développeur web freelance basé à Aix-les-Bains. Création de sites WordPress, animations web créatives et expériences sur mesure pour entreprises en Savoie et Haute-Savoie. Diplômé de l\'École des Gobelins Annecy, expert en développement WordPress, React et animations web. Disponible pour vos projets web créatifs.',
+            long_en: 'Valentin, freelance web developer based in Aix-les-Bains. WordPress websites creation, creative web animations and custom experiences for businesses in Savoie and Haute-Savoie. Graduate from École des Gobelins Annecy, expert in WordPress development, React and web animations. Available for your creative web projects.'
         },
         about: {
-            short_fr: 'Découvrez le profil de Valentin Gassend, Creative Developer diplômé des Gobelins Annecy, passionné par les technologies 3D et les animations web.',
-            short_en: 'Discover the profile of Valentin Gassend, Creative Developer graduated from Gobelins Annecy, passionate about 3D technologies and web animations.',
-            long_fr: 'Creative Developer Full Stack en alternance chez Mcube depuis septembre 2024. Diplômé de l\'École des Gobelins Annecy (Bachelor Développement Web et Mobile, Master Création Numérique Interactive en cours). Spécialisé en ThreeJS, WebGL, GSAP, React et WordPress. Expert en optimisation performance et Core Web Vitals. Disponible sur Aix-les-Bains, Chambéry, Annecy et Lyon.',
-            long_en: 'Full Stack Creative Developer in apprenticeship at Mcube since September 2024. Graduated from École des Gobelins Annecy (Bachelor Web and Mobile Development, Master Interactive Digital Creation in progress). Specialized in ThreeJS, WebGL, GSAP, React and WordPress. Expert in performance optimization and Core Web Vitals. Available in Aix-les-Bains, Chambéry, Annecy and Lyon.'
+            short_fr: 'Développeur web freelance diplômé des Gobelins Annecy, passionné par WordPress et les animations web créatives.',
+            short_en: 'Freelance web developer graduated from Gobelins Annecy, passionate about WordPress and creative web animations.',
+            long_fr: 'Développeur web freelance en alternance chez Mcube depuis septembre 2024. Diplômé de l\'École des Gobelins Annecy (Bachelor Développement Web et Mobile, Master Création Numérique Interactive en cours). Spécialisé en WordPress, React, animations créatives et optimisation performance. Expert en création de sites sur mesure. Disponible sur Aix-les-Bains, Chambéry, Annecy et Lyon.',
+            long_en: 'Freelance web developer in apprenticeship at Mcube since September 2024. Graduated from École des Gobelins Annecy (Bachelor Web and Mobile Development, Master Interactive Digital Creation in progress). Specialized in WordPress, React, creative animations and performance optimization. Expert in custom website creation. Available in Aix-les-Bains, Chambéry, Annecy and Lyon.'
         },
         projects: {
-            short_fr: 'Portfolio de projets créatifs réalisés avec ThreeJS, WebGL, GSAP, React. Formation École des Gobelins Annecy. Expériences web interactives innovantes.',
-            short_en: 'Portfolio of creative projects made with ThreeJS, WebGL, GSAP, React. École des Gobelins Annecy education. Innovative interactive web experiences.',
-            long_fr: 'Portfolio de Valentin Gassend, diplômé des Gobelins Annecy, présentant mes projets de développement créatif : applications ThreeJS, animations WebGL, interfaces React, sites WordPress optimisés. Chaque projet démontre mon expertise technique acquise à l\'École des Gobelins et ma créativité en développement web. Réalisations pour clients de la région Rhône-Alpes.',
-            long_en: 'Portfolio of Valentin Gassend, Gobelins Annecy graduate, showcasing my creative development projects: ThreeJS applications, WebGL animations, React interfaces, optimized WordPress sites. Each project demonstrates my technical expertise acquired at École des Gobelins and my creativity in web development. Projects for clients in the Rhône-Alpes region.'
+            short_fr: 'Portfolio de sites WordPress et projets créatifs réalisés avec animations web innovantes. Formation École des Gobelins Annecy.',
+            short_en: 'Portfolio of WordPress websites and creative projects made with innovative web animations. École des Gobelins Annecy education.',
+            long_fr: 'Portfolio de Valentin, développeur web freelance diplômé des Gobelins Annecy, présentant mes créations : sites WordPress sur mesure, animations web créatives, interfaces React, expériences interactives. Chaque projet démontre mon expertise technique acquise à l\'École des Gobelins et ma créativité en développement web. Réalisations pour clients de la région Rhône-Alpes.',
+            long_en: 'Portfolio of Valentin, freelance web developer graduated from Gobelins Annecy, showcasing my creations: custom WordPress websites, creative web animations, React interfaces, interactive experiences. Each project demonstrates my technical expertise acquired at École des Gobelins and my creativity in web development. Projects for clients in the Rhône-Alpes region.'
         }
     },
 
@@ -275,27 +279,27 @@ export const SEO_CONFIG = {
         }
     ],
 
-    // Compétences techniques par niveau
+    // Compétences techniques par niveau - RÉORGANISÉES
     skills: {
-        expert: ['ThreeJS', 'React', 'JavaScript', 'GSAP'],
-        advanced: ['WebGL', 'WordPress', 'Lenis', 'Sass', 'Vite'],
-        intermediate: ['Node.js', 'Twig', 'Blade', 'Core Web Vitals'],
+        expert: ['WordPress', 'React', 'JavaScript', 'Développement web'],
+        advanced: ['GSAP', 'ThreeJS', 'WebGL', 'Animations créatives', 'Sass', 'Vite'],
+        intermediate: ['Node.js', 'Twig', 'Blade', 'Core Web Vitals', 'Lenis'],
         tools: ['Git', 'Figma', 'Photoshop', 'After Effects']
     },
 
-    // Données structurées par page (multilingue)
+    // Données structurées par page (multilingue) - MISES À JOUR
     structuredData: {
         person: {
             '@context': 'https://schema.org',
             '@type': 'Person',
             name: 'Valentin Gassend',
-            jobTitle: 'Creative Developer',
-            alternateName: ['Développeur Créatif', 'Creative Developer France'],
-            description: 'Creative Developer spécialisé en ThreeJS, WebGL et GSAP, diplômé de l\'École des Gobelins Annecy',
+            jobTitle: 'Développeur web freelance WordPress',
+            alternateName: ['Valentin', 'Développeur web Aix-les-Bains', 'Freelance WordPress Aix-les-Bains'],
+            description: 'Développeur web freelance spécialisé en WordPress et animations créatives, diplômé de l\'École des Gobelins Annecy',
             worksFor: {
                 '@type': 'Organization',
-                name: 'Mcube',
-                description: 'Entreprise de développement web et solutions digitales'
+                name: 'Freelance',
+                description: 'Développeur web freelance disponible pour projets WordPress et sites créatifs'
             },
             alumniOf: {
                 '@type': 'EducationalOrganization',
@@ -350,11 +354,11 @@ export const SEO_CONFIG = {
                 }
             ],
             knowsAbout: [
-                'ThreeJS', 'WebGL', 'GSAP', 'React', 'JavaScript',
-                'WordPress', 'Creative Development', 'Web Animation',
-                '3D Web Development', 'Performance Optimization',
-                'Interactive Experiences', 'Digital Creation',
-                'Smooth Scrolling', 'Core Web Vitals'
+                'WordPress', 'Développement web', 'Sites sur mesure', 'Animations créatives',
+                'React', 'JavaScript', 'ThreeJS', 'WebGL', 'GSAP',
+                'Création de sites internet', 'Optimisation performance',
+                'Expériences interactives', 'Développement créatif',
+                'Responsive Design', 'Core Web Vitals'
             ],
             knowsLanguage: [
                 {
@@ -389,16 +393,29 @@ export const SEO_CONFIG = {
                         name: 'École des Gobelins'
                     }
                 }
-            ]
+            ],
+            offers: {
+                '@type': 'Offer',
+                itemOffered: {
+                    '@type': 'Service',
+                    name: 'Développement web freelance',
+                    description: 'Création de sites WordPress, animations web créatives, développement React',
+                    provider: {
+                        '@type': 'Person',
+                        name: 'Valentin Gassend'
+                    },
+                    areaServed: ['Aix-les-Bains', 'Annecy', 'Chambéry', 'Lyon', 'Savoie', 'Haute-Savoie']
+                }
+            }
         },
 
         website: {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
-            name: 'Valentin Gassend - Creative Developer',
-            alternateName: 'Portfolio Creative Developer Gobelins',
+            name: 'Valentin - Développeur web freelance WordPress Aix-les-Bains',
+            alternateName: 'Portfolio Développeur web Freelance Gobelins',
             url: 'https://valentingassend.com',
-            description: 'Portfolio de Valentin Gassend, Creative Developer diplômé des Gobelins spécialisé en ThreeJS, WebGL et GSAP',
+            description: 'Portfolio de Valentin, développeur web freelance diplômé des Gobelins spécialisé en WordPress, animations créatives et sites sur mesure',
             inLanguage: ['fr', 'en'],
             author: {
                 '@type': 'Person',
@@ -417,7 +434,7 @@ export const SEO_CONFIG = {
             mainEntity: {
                 '@type': 'Person',
                 name: 'Valentin Gassend',
-                jobTitle: 'Creative Developer',
+                jobTitle: 'Développeur web freelance WordPress',
                 alumniOf: 'École des Gobelins'
             }
         },
@@ -425,17 +442,17 @@ export const SEO_CONFIG = {
         portfolio: {
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
-            name: 'Portfolio Creative Developer - Gobelins Graduate',
-            alternateName: 'Portfolio Développeur Créatif',
+            name: 'Portfolio Développeur web freelance - Gobelins Graduate',
+            alternateName: 'Portfolio Développeur WordPress Freelance',
             creator: {
                 '@type': 'Person',
                 name: 'Valentin Gassend',
                 alumniOf: 'École des Gobelins'
             },
-            about: 'Projets de développement créatif utilisant ThreeJS, WebGL, GSAP et React par un diplômé des Gobelins',
-            genre: 'Web Development Portfolio',
+            about: 'Projets de développement web utilisant WordPress, animations créatives et React par un diplômé des Gobelins',
+            genre: 'Freelance Web Development Portfolio',
             inLanguage: ['fr', 'en'],
-            keywords: 'Creative Developer, ThreeJS, WebGL, GSAP, Gobelins, Portfolio',
+            keywords: 'Développeur web freelance, WordPress, Animations créatives, Gobelins, Portfolio',
             educationalCredentialAwarded: 'Master Création Numérique Interactive - École des Gobelins'
         },
 
@@ -456,7 +473,7 @@ export const SEO_CONFIG = {
             hasAlumni: {
                 '@type': 'Person',
                 name: 'Valentin Gassend',
-                jobTitle: 'Creative Developer'
+                jobTitle: 'Développeur web freelance WordPress'
             }
         }
     },
@@ -491,7 +508,7 @@ export const SEO_CONFIG = {
     }
 };
 
-// Fonction pour générer les mots-clés par page (bilingue)
+// Fonction pour générer les mots-clés par page (bilingue) - MISE À JOUR
 export function getKeywordsForPage(page, language = 'fr') {
     const keywords = SEO_CONFIG.keywords;
 
@@ -516,12 +533,12 @@ export function getKeywordsForPage(page, language = 'fr') {
             if (language === 'en') {
                 return [
                     'valentin gassend',
-                    'creative developer france',
+                    'freelance web developer aix-les-bains',
                     'gobelins annecy graduate',
-                    'threejs developer france',
-                    'webgl developer rhone alpes',
-                    'mcube developer',
-                    'interactive digital creation',
+                    'wordpress developer france',
+                    'freelance wordpress aix-les-bains',
+                    'web developer rhone alpes',
+                    'freelance developer available',
                     'french web developer',
                     ...keywords.local_en.slice(0, 4),
                     ...keywords.technical_en.slice(0, 3)
@@ -529,12 +546,12 @@ export function getKeywordsForPage(page, language = 'fr') {
             }
             return [
                 'valentin gassend',
-                'creative developer aix les bains',
+                'développeur web freelance aix-les-bains',
                 'gobelins annecy diplômé',
-                'développeur créatif savoie',
-                'développeur threejs france',
-                'mcube développeur',
-                'création numérique interactive',
+                'développeur wordpress freelance savoie',
+                'freelance wordpress aix-les-bains',
+                'développeur web disponible',
+                'création site web aix-les-bains',
                 'école des gobelins',
                 ...keywords.local_fr.slice(0, 4),
                 ...keywords.technical_fr.slice(0, 3)
@@ -543,27 +560,27 @@ export function getKeywordsForPage(page, language = 'fr') {
         case 'projects':
             if (language === 'en') {
                 return [
-                    'creative developer portfolio',
-                    'threejs projects',
-                    'webgl projects',
-                    'gsap animations',
-                    'react projects',
+                    'freelance web developer portfolio',
                     'wordpress projects',
+                    'creative web animations',
+                    'custom website projects',
+                    'react projects',
                     'gobelins graduate portfolio',
-                    'interactive experiences',
+                    'interactive web experiences',
+                    'freelance portfolio',
                     ...keywords.technical_en,
                     ...keywords.local_en.slice(0, 2)
                 ];
             }
             return [
-                'portfolio creative developer',
-                'projets threejs',
-                'projets webgl',
-                'animations gsap',
-                'projets react',
+                'portfolio développeur web freelance',
                 'projets wordpress',
+                'animations web créatives',
+                'projets sites sur mesure',
+                'projets react',
                 'portfolio gobelins',
-                'expériences interactives',
+                'expériences web interactives',
+                'portfolio freelance',
                 ...keywords.technical_fr,
                 ...keywords.local_fr.slice(0, 2)
             ];
@@ -571,25 +588,25 @@ export function getKeywordsForPage(page, language = 'fr') {
         case 'project':
             if (language === 'en') {
                 return [
-                    'creative developer project',
-                    'threejs development',
-                    'webgl development',
-                    'gsap animation',
+                    'freelance web project',
+                    'wordpress development',
+                    'creative web development',
+                    'custom website development',
                     'react development',
                     'interactive project',
                     'gobelins project',
-                    'creative coding'
+                    'freelance web work'
                 ];
             }
             return [
-                'projet creative developer',
-                'développement créatif',
-                'projet threejs',
-                'développement webgl',
-                'animation gsap',
+                'projet développeur web freelance',
+                'développement wordpress',
+                'développement web créatif',
+                'développement site sur mesure',
                 'développement react',
                 'projet interactif',
-                'projet gobelins'
+                'projet gobelins',
+                'travail freelance web'
             ];
 
         default:
@@ -600,7 +617,7 @@ export function getKeywordsForPage(page, language = 'fr') {
     }
 }
 
-// Fonction pour générer la description par page (bilingue)
+// Fonction pour générer la description par page (bilingue) - MISE À JOUR
 export function getDescriptionForPage(page, projectId = null, language = 'fr') {
     const descriptions = SEO_CONFIG.descriptions;
 
@@ -616,49 +633,49 @@ export function getDescriptionForPage(page, projectId = null, language = 'fr') {
 
         case 'project':
             if (language === 'en') {
-                return `Discover project ${projectId} by Valentin Gassend, Creative Developer and Gobelins Annecy graduate. Implementation using ThreeJS, WebGL, GSAP or React with performance optimization and refined user experience.`;
+                return `Discover project ${projectId} by Valentin, freelance web developer and Gobelins Annecy graduate. WordPress development, creative animations or React with performance optimization and refined user experience.`;
             }
-            return `Découvrez le projet ${projectId} de Valentin Gassend, Creative Developer diplômé des Gobelins Annecy. Réalisation utilisant ThreeJS, WebGL, GSAP ou React avec optimisation performance et expérience utilisateur soignée.`;
+            return `Découvrez le projet ${projectId} de Valentin, développeur web freelance diplômé des Gobelins Annecy. Développement WordPress, animations créatives ou React avec optimisation performance et expérience utilisateur soignée.`;
 
         default:
             return language === 'en' ? descriptions.home.short_en : descriptions.home.short_fr;
     }
 }
 
-// Fonction pour générer le titre par page (bilingue)
+// Fonction pour générer le titre par page (bilingue) - MISE À JOUR
 export function getTitleForPage(page, projectId = null, language = 'fr') {
     const { personal, professional } = SEO_CONFIG;
 
     switch (page) {
         case 'home':
             if (language === 'en') {
-                return `${personal.name} - ${professional.titleEn} | ${professional.subtitleEn} | Gobelins Graduate`;
+                return `${personal.name}, freelance web developer WordPress | ${professional.subtitleEn} | Gobelins Graduate`;
             }
-            return `${personal.name} - ${professional.title} | ${professional.subtitle} | Diplômé Gobelins`;
+            return `${personal.name}, développeur web freelance WordPress | ${professional.subtitle} | Diplômé Gobelins`;
 
         case 'about':
             if (language === 'en') {
-                return `About - ${personal.name} | ${professional.titleEn} Gobelins Annecy | Rhône-Alpes`;
+                return `About - ${personal.name} | Freelance Web Developer Gobelins Annecy | WordPress Specialist`;
             }
-            return `À Propos - ${personal.name} | ${professional.title} Gobelins Annecy | Rhône-Alpes`;
+            return `À Propos - ${personal.name} | Développeur web freelance Gobelins Annecy | Spécialiste WordPress`;
 
         case 'projects':
             if (language === 'en') {
-                return `Projects & Portfolio - ${personal.name} | ThreeJS WebGL GSAP | Gobelins Graduate`;
+                return `Projects & Portfolio - ${personal.name} | WordPress & Creative Web | Gobelins Graduate`;
             }
-            return `Projets & Portfolio - ${personal.name} | ThreeJS WebGL GSAP | Diplômé Gobelins`;
+            return `Projets & Portfolio - ${personal.name} | WordPress & Web Créatif | Diplômé Gobelins`;
 
         case 'project':
             if (language === 'en') {
-                return `Project ${projectId} - ${personal.name} | Creative Development | Gobelins`;
+                return `Project ${projectId} - ${personal.name} | Freelance Web Development | Gobelins`;
             }
-            return `Projet ${projectId} - ${personal.name} | Développement Créatif | Gobelins`;
+            return `Projet ${projectId} - ${personal.name} | Développement web freelance | Gobelins`;
 
         default:
             if (language === 'en') {
-                return `${personal.name} - ${professional.titleEn} | Gobelins Graduate`;
+                return `${personal.name} - Freelance Web Developer WordPress | Gobelins Graduate`;
             }
-            return `${personal.name} - ${professional.title} | Diplômé Gobelins`;
+            return `${personal.name} - Développeur web freelance WordPress | Diplômé Gobelins`;
     }
 }
 

@@ -1,4 +1,4 @@
-# robots.txt pour Creative Developer - Valentin Gassend
+# robots.txt pour Creative Developer - Valentin
 
 User-agent: *
 Allow: /
@@ -23,8 +23,8 @@ Sitemap: https://valentingassend.com/sitemap.xml
 Crawl-delay: 1
 
 # Informations Creative Developer
-# Nom: Valentin Gassend
-# Titre: Creative Developer
+# Nom: Valentin
+# Titre: Développeur web freelance WordPress
 # École: École des Gobelins
 # Localisation: Aix-les-Bains
-# Technologies: ThreeJS, WebGL, GSAP, React, JavaScript
+# Technologies: WordPress, Développement web, Sites sur mesure, Animations créatives, React

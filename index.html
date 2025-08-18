@@ -12,35 +12,51 @@
     <link rel="preload" href="/font/BricolageGrotesque-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/font/BricolageGrotesque-Bold.woff2" as="font" type="font/woff2" crossorigin>
 
-    <!-- ❌ SUPPRIMÉ - Ces préchargements créaient la chaîne de 900ms -->
-    <!-- <link rel="preload" href="/font/BricolageGrotesque-SemiBold.woff2" as="font" type="font/woff2" crossorigin> -->
-    <!-- <link rel="preload" href="/font/BricolageGrotesque-Light.woff2" as="font" type="font/woff2" crossorigin> -->
-    <!-- <link rel="preload" href="/font/BricolageGrotesque-ExtraBold.woff2" as="font" type="font/woff2" crossorigin> -->
-    <!-- <link rel="preload" href="/font/BricolageGrotesque-ExtraLight.woff2" as="font" type="font/woff2" crossorigin> -->
-    <!-- <link rel="preload" href="/font/BricolageGrotesque-Medium.woff2" as="font" type="font/woff2" crossorigin> -->
-
     <!-- Connexions anticipées -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://assets.lummi.ai" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    <!-- Icône de favori optimisée -->
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Valentin" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <!-- 🚨 FAVICON OPTIMISÉ POUR GOOGLE - ORDRE IMPORTANT -->
+    <!-- 1. ICO d'abord pour compatibilité maximale -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
-    <!-- Informations de base SEO optimisées -->
-    <title>Valentin Gassend - Creative Developer | ThreeJS WebGL & GSAP | Diplômé Gobelins</title>
+    <!-- 2. PNG pour Google Search (taille exacte 192x192) -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <!-- 3. SVG moderne (fallback) -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- 4. Apple et autres plateformes -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.png">
+
+    <!-- 5. Manifest -->
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Métadonnées Apple -->
+    <meta name="apple-mobile-web-app-title" content="Valentin">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- 🎯 SEO OPTIMISÉ - VERSION DÉTENDUE -->
+    <title>Valentin, développeur web freelance WordPress Aix-les-Bains</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="Valentin Gassend, Creative Developer Full Stack chez Mcube, diplômé de l'École des Gobelins Annecy. Spécialisé en ThreeJS/WebGL et GSAP, expert en animations web avancées et rendus 3D. Basé en région Rhône-Alpes (Aix-les-Bains, Chambéry, Annecy, Lyon), je crée des expériences interactives mémorables avec React, WordPress et les technologies web modernes."/>
-    <meta name="keywords" content="creative developer, développeur créatif, développeur threejs, développeur webgl, développeur gsap, valentin gassend, gobelins annecy, école des gobelins, mcube, aix-les-bains, chambéry, annecy, lyon, react, wordpress, animations 3d, smooth scrolling, performance web"/>
+    <meta name="description" content="Développeur web freelance sur Aix-les-Bains et Annecy, spécialisé WordPress, animations créatives et sites sur mesure depuis 3 ans."/>
+    <meta name="keywords" content="développeur web freelance aix-les-bains, freelance wordpress aix-les-bains, développeur wordpress aix-les-bains, creative developer annecy freelance, développeur web aix-les-bains, freelance aix-les-bains, valentin gassend, créateur site web aix-les-bains, développeur web annecy, freelance web savoie"/>
+
+    <!-- Métadonnées essentielles -->
     <meta name="author" content="Valentin Gassend">
-    <meta name="robots" content="index, follow"/>
+    <meta name="designer" content="Valentin Gassend">
+    <meta name="developer" content="Valentin Gassend">
+    <meta name="robots" content="index, follow, max-image-preview:large"/>
     <meta name="theme-color" content="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
 
     <!-- URL canonique -->
     <link rel="canonical" href="https://valentingassend.com">
@@ -131,57 +147,66 @@
         })();
     </script>
 
-    <!-- Balises Twitter -->
+    <!-- 🌐 RÉSEAUX SOCIAUX OPTIMISÉS -->
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Valentin Gassend - Creative Developer | ThreeJS WebGL & GSAP | Diplômé Gobelins">
-    <meta name="twitter:description" content="Creative Developer Full Stack chez Mcube, diplômé de l'École des Gobelins Annecy. Spécialisé en ThreeJS/WebGL et GSAP, expert en animations web avancées et rendus 3D.">
-    <meta name="twitter:image" content="https://www.valentingassend.com/img/landing.webp">
+    <meta name="twitter:title" content="Valentin, développeur web freelance WordPress Aix-les-Bains">
+    <meta name="twitter:description" content="Développeur web freelance sur Aix-les-Bains et Annecy, spécialisé WordPress, animations créatives et sites sur mesure depuis 3 ans.">
+    <meta name="twitter:image" content="https://valentingassend.com/img/landing.webp">
     <meta name="twitter:creator" content="@ValentinGassend">
+    <meta name="twitter:site" content="@ValentinGassend">
 
-    <!-- Balises Open Graph pour Facebook et Discord -->
+    <!-- Open Graph (Facebook, LinkedIn, Discord) -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Valentin Gassend - Creative Developer | ThreeJS WebGL & GSAP | Diplômé Gobelins">
-    <meta property="og:description" content="Creative Developer Full Stack chez Mcube, diplômé de l'École des Gobelins Annecy. Spécialisé en ThreeJS/WebGL et GSAP, expert en animations web avancées et rendus 3D.">
-    <meta property="og:image" content="https://www.valentingassend.com/img/landing.webp">
+    <meta property="og:title" content="Valentin, développeur web freelance WordPress Aix-les-Bains">
+    <meta property="og:description" content="Développeur web freelance sur Aix-les-Bains et Annecy, spécialisé WordPress, animations créatives et sites sur mesure depuis 3 ans.">
+    <meta property="og:image" content="https://valentingassend.com/img/landing.webp">
+    <meta property="og:image:width" content="1080">
+    <meta property="og:image:height" content="1080">
+    <meta property="og:image:alt" content="Valentin Gassend - Développeur web freelance WordPress">
     <meta property="og:url" content="https://valentingassend.com">
     <meta property="og:locale" content="fr_FR">
-    <meta property="og:site_name" content="Valentin Gassend - Creative Developer">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:site_name" content="Valentin - Développeur web freelance">
 
-    <!-- Balises professionnelles et géographiques -->
+    <!-- 📍 GÉOLOCALISATION PROFESSIONNELLE -->
     <meta name="geo.region" content="FR-84">
     <meta name="geo.placename" content="Aix-les-Bains">
     <meta name="geo.position" content="45.6887;5.9165">
     <meta name="ICBM" content="45.6887, 5.9165">
 
-    <!-- Balises éducation et entreprise -->
+    <!-- 🎓 INFORMATIONS PROFESSIONNELLES -->
     <meta name="school" content="École des Gobelins">
     <meta name="education" content="École by CCI - Gobelins Annecy">
-    <meta name="company" content="Mcube">
-    <meta name="designer" content="Valentin Gassend">
-    <meta name="developer" content="Valentin Gassend">
+    <meta name="company" content="Freelance - Disponible">
+    <meta name="availability" content="Disponible pour nouveaux projets">
+    <meta name="specialization" content="WordPress, Animations créatives, Sites sur mesure">
+    <meta name="service-area" content="Aix-les-Bains, Annecy, Chambéry, Lyon, Savoie, Haute-Savoie">
 
-    <!-- Données structurées Schema.org optimisées -->
+    <!-- 🏗️ DONNÉES STRUCTURÉES SCHEMA.ORG OPTIMISÉES -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Valentin Gassend",
-            "jobTitle": "Creative Developer",
-            "alternateName": ["Développeur Créatif", "Creative Developer France"],
-            "description": "Creative Developer spécialisé en ThreeJS, WebGL et GSAP, diplômé de l'École des Gobelins Annecy",
+            "alternateName": ["Valentin", "Développeur web Aix-les-Bains", "Freelance WordPress Aix-les-Bains"],
+            "jobTitle": "Développeur web freelance WordPress",
+            "description": "Développeur web freelance spécialisé en WordPress et animations créatives, diplômé de l'École des Gobelins Annecy",
             "url": "https://valentingassend.com",
             "email": "valentin.gassend@gmail.com",
             "telephone": "+33768935996",
+            "image": "https://valentingassend.com/img/landing.webp",
             "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "Aix-les-Bains",
                 "addressRegion": "Auvergne-Rhône-Alpes",
-                "addressCountry": "FR"
+                "addressCountry": "FR",
+                "postalCode": "73100"
             },
             "worksFor": {
                 "@type": "Organization",
-                "name": "Mcube",
-                "description": "Entreprise de développement web et solutions digitales"
+                "name": "Freelance",
+                "description": "Développeur web freelance disponible pour projets WordPress et sites créatifs"
             },
             "alumniOf": {
                 "@type": "EducationalOrganization",
@@ -195,25 +220,10 @@
                     "addressCountry": "FR"
                 }
             },
-            "knowsAbout": [
-                "ThreeJS", "WebGL", "GSAP", "React", "JavaScript",
-                "WordPress", "Creative Development", "Web Animation",
-                "3D Web Development", "Performance Optimization",
-                "Interactive Experiences", "Digital Creation",
-                "Smooth Scrolling", "Core Web Vitals"
-            ],
             "serviceArea": [
                 {
                     "@type": "City",
                     "name": "Aix-les-Bains",
-                    "containedInPlace": {
-                        "@type": "AdministrativeArea",
-                        "name": "Savoie"
-                    }
-                },
-                {
-                    "@type": "City",
-                    "name": "Chambéry",
                     "containedInPlace": {
                         "@type": "AdministrativeArea",
                         "name": "Savoie"
@@ -229,6 +239,14 @@
                 },
                 {
                     "@type": "City",
+                    "name": "Chambéry",
+                    "containedInPlace": {
+                        "@type": "AdministrativeArea",
+                        "name": "Savoie"
+                    }
+                },
+                {
+                    "@type": "City",
                     "name": "Lyon",
                     "containedInPlace": {
                         "@type": "AdministrativeArea",
@@ -236,33 +254,46 @@
                     }
                 }
             ],
-            "hasCredential": [
-                {
-                    "@type": "EducationalOccupationalCredential",
-                    "name": "Master Expert en Création Numérique Interactive",
-                    "credentialCategory": "degree",
-                    "educationalLevel": "Master",
-                    "recognizedBy": {
-                        "@type": "EducationalOrganization",
-                        "name": "École des Gobelins"
-                    }
-                },
-                {
-                    "@type": "EducationalOccupationalCredential",
-                    "name": "Bachelor Développement Web et Mobile",
-                    "credentialCategory": "degree",
-                    "educationalLevel": "Bachelor",
-                    "recognizedBy": {
-                        "@type": "EducationalOrganization",
-                        "name": "École des Gobelins"
-                    }
-                }
+            "knowsAbout": [
+                "WordPress", "Développement web", "Sites sur mesure", "Animations créatives",
+                "React", "JavaScript", "ThreeJS", "WebGL", "GSAP",
+                "Création de sites internet", "Optimisation performance",
+                "Expériences interactives", "Développement créatif",
+                "Responsive Design", "Core Web Vitals"
             ],
             "hasOccupation": {
                 "@type": "Occupation",
-                "name": "Creative Developer",
-                "description": "Développeur créatif spécialisé en ThreeJS, WebGL et GSAP",
-                "skills": "ThreeJS, WebGL, GSAP, React, JavaScript, WordPress, Creative Development, Web Animation, 3D Web Development, Performance Optimization, Interactive Experiences, Digital Creation, Smooth Scrolling, Core Web Vitals"
+                "name": "Développeur web freelance",
+                "description": "Développeur web spécialisé en WordPress et animations créatives",
+                "skills": "WordPress, React, JavaScript, Animations web, Sites sur mesure, Performance web",
+                "occupationLocation": {
+                    "@type": "City",
+                    "name": "Aix-les-Bains"
+                }
+            },
+            "offers": {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Service",
+                    "name": "Développement web freelance",
+                    "description": "Création de sites WordPress, animations web créatives, développement React sur mesure",
+                    "provider": {
+                        "@type": "Person",
+                        "name": "Valentin Gassend"
+                    },
+                    "areaServed": [
+                        "Aix-les-Bains", "Annecy", "Chambéry", "Lyon",
+                        "Savoie", "Haute-Savoie", "Rhône-Alpes"
+                    ],
+                    "availableChannel": {
+                        "@type": "ServiceChannel",
+                        "serviceUrl": "https://valentingassend.com",
+                        "serviceSmsNumber": "+33768935996",
+                        "serviceEmail": "valentin.gassend@gmail.com"
+                    }
+                },
+                "availability": "https://schema.org/InStock",
+                "businessFunction": "https://schema.org/Sell"
             },
             "sameAs": [
                 "https://www.linkedin.com/in/valentin-gassend/",
@@ -272,9 +303,54 @@
         }
     </script>
 
+    <!-- 🌐 DONNÉES STRUCTURÉES WEBSITE -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Valentin - Développeur web freelance WordPress Aix-les-Bains",
+            "alternateName": "Portfolio Développeur web Freelance Gobelins",
+            "url": "https://valentingassend.com",
+            "description": "Portfolio de Valentin, développeur web freelance diplômé des Gobelins spécialisé en WordPress, animations créatives et sites sur mesure",
+            "inLanguage": ["fr", "en"],
+            "author": {
+                "@type": "Person",
+                "name": "Valentin Gassend"
+            },
+            "publisher": {
+                "@type": "Person",
+                "name": "Valentin Gassend"
+            },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://valentingassend.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+
+    <!-- 📊 ANALYTICS ET VÉRIFICATIONS -->
+    <!-- Google Site Verification (à ajouter) -->
+    <!-- <meta name="google-site-verification" content="VOTRE_CODE_ICI"> -->
+
+    <!-- Bing Webmaster (à ajouter) -->
+    <!-- <meta name="msvalidate.01" content="VOTRE_CODE_ICI"> -->
+
     <!-- Metrics de performance -->
     <script>
         performance.mark('page-start');
+
+        // Mesurer spécifiquement le temps de chargement des favicon
+        if ('PerformanceObserver' in window) {
+            const faviconObserver = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (entry.name.includes('favicon')) {
+                        console.log('Favicon loaded:', entry.name, entry.responseEnd - entry.startTime, 'ms');
+                    }
+                }
+            });
+            faviconObserver.observe({entryTypes: ['resource']});
+        }
     </script>
 </head>
 <body>
@@ -283,7 +359,7 @@
 <!-- Image pré-rendue pour garantir un LCP -->
 <img
         src="/img/landing.webp"
-        alt="Valentin Gassend - Creative Developer spécialisé en ThreeJS, WebGL et GSAP, diplômé de l'École des Gobelins Annecy"
+        alt="Valentin, développeur web freelance WordPress spécialisé en animations créatives, diplômé de l'École des Gobelins Annecy"
         width="1080"
         height="1080"
         fetchpriority="high"
