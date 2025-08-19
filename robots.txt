@@ -1,6 +1,62 @@
-# robots.txt pour www.example.com
+# robots.txt pour développeur web freelance - Valentin Gassend
+# Domaine: https://valentingassend.com
+# Généré le: 2025-01-20
 
-# Interdire à tous les robots d'explorer tout le site
+# Autoriser tous les robots d'indexation
 User-agent: *
 Allow: /
+
+# Pages importantes à indexer en priorité
+Allow: /about
+Allow: /projects
+Allow: /project/
+
+# Fichiers et dossiers à éviter pour optimiser le crawl
+Disallow: /assets/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /*.json$
+Disallow: /*.js.map$
+Disallow: /*.css.map$
+Disallow: /.*
+
+# Fichiers temporaires et de développement
+Disallow: /tmp/
+Disallow: /temp/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /.env
+
+# Sitemap pour faciliter l'indexation
 Sitemap: https://valentingassend.com/sitemap.xml
+
+# Optimisation du crawl
+Crawl-delay: 1
+
+# Directives spécifiques pour les moteurs de recherche
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Informations complémentaires pour SEO
+# Contact: valentin.gassend@gmail.com
+# Développeur: Valentin Gassend
+# École: École des Gobelins Annecy
+# Spécialités: WordPress, Développement web, Sites sur mesure, Animations créatives, React
+# Localisation: Aix-les-Bains, Auvergne-Rhône-Alpes, France
+# Villes: Aix-les-Bains, Chambéry, Annecy, Lyon
+# Disponibilité: Freelance pour projets WordPress et sites créatifs
+# Technologies: WordPress, React, JavaScript, ThreeJS, WebGL, GSAP
+# Services: Création sites WordPress, Animations web créatives, Développement React

@@ -1,4 +1,4 @@
-// deploy.js - SEO bilingue pour Creative Developer Gobelins - FIXED
+// deploy.js - SEO optimisé pour développeur web freelance - VERSION DÉTENDUE
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -21,7 +21,7 @@ function generateSitemap() {
 
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-   <!-- Page principale - Creative Developer -->
+   <!-- Page principale - Développeur web freelance WordPress -->
    <url>
       <loc>${CONFIG.baseUrl}/</loc>
       <lastmod>${today}</lastmod>
@@ -37,7 +37,7 @@ function generateSitemap() {
       <priority>0.9</priority>
    </url>
    
-   <!-- Projets - Portfolio technique -->
+   <!-- Projets - Portfolio créatif -->
    <url>
       <loc>${CONFIG.baseUrl}/projects</loc>
       <lastmod>${today}</lastmod>
@@ -64,7 +64,7 @@ function generateSitemap() {
 
 // Fonction pour générer robots.txt optimisé
 function generateRobots() {
-  return `# robots.txt pour Creative Developer - ${SEO_CONFIG.personal.name}
+  return `# robots.txt pour développeur web freelance - ${SEO_CONFIG.personal.fullName}
 
 User-agent: *
 Allow: /
@@ -88,50 +88,42 @@ Sitemap: ${CONFIG.baseUrl}/sitemap.xml
 # Optimisation crawl
 Crawl-delay: 1
 
-# Informations Creative Developer
-# Nom: ${SEO_CONFIG.personal.name}
+# Informations développeur web freelance
+# Nom: ${SEO_CONFIG.personal.fullName}
 # Titre: ${SEO_CONFIG.professional.title}
 # École: ${SEO_CONFIG.professional.school.name}
 # Localisation: ${SEO_CONFIG.personal.location.primary}
-# Technologies: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}`;
+# Spécialités: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}
+# Disponibilité: Freelance pour projets WordPress et sites créatifs`;
 }
 
 // Fonction pour supprimer l'image LCP des pages autres que l'accueil
 function removeLCPImageFromHTML(html) {
-  // Supprimer complètement l'image LCP et son conteneur
   return html
       .replace(/<img[^>]*id="pre-lcp-element"[^>]*>/gi, '')
       .replace(/<img[^>]*class="pre-lcp-image"[^>]*>/gi, '')
       .replace(/<img[^>]*data-lcp="true"[^>]*>/gi, '')
       .replace(/<img[^>]*src="\/img\/landing\.webp"[^>]*>/gi, '')
-      // Supprimer aussi les styles LCP spécifiques
       .replace(/\.pre-lcp-image\s*\{[^}]*\}/gi, '')
       .replace(/#pre-lcp-element\s*\{[^}]*\}/gi, '')
-      // Supprimer les attributs fetchpriority="high" sur d'autres images
       .replace(/fetchpriority="high"/gi, 'fetchpriority="low"')
-      // Changer loading="eager" en loading="lazy" pour les autres pages
       .replace(/loading="eager"/gi, 'loading="lazy"');
 }
 
 // Fonction pour optimiser les métadonnées LCP par page
 function optimizeLCPForPage(html, isHomePage = false) {
   if (isHomePage) {
-    // Page d'accueil : garder l'optimisation LCP
     return html
         .replace(/fetchpriority="low"/gi, 'fetchpriority="high"')
         .replace(/loading="lazy"/gi, 'loading="eager"');
   } else {
-    // Autres pages : supprimer l'image LCP et optimiser différemment
     let optimizedHTML = removeLCPImageFromHTML(html);
-
-    // Ajouter un préchargement conditionnel pour les ressources critiques de la page
     const criticalPreloads = `
     <!-- Préchargement des ressources critiques pour cette page -->
-    <link rel="preload" as="font" href="/fonts/main.woff2" type="font/woff2" crossorigin>
+    <link rel="preload" as="font" href="/font/BricolageGrotesque-Regular.woff2" type="font/woff2" crossorigin>
     <link rel="preload" as="style" href="/assets/css/critical.css">`;
 
     optimizedHTML = optimizedHTML.replace('</head>', `${criticalPreloads}\n  </head>`);
-
     return optimizedHTML;
   }
 }
@@ -144,61 +136,62 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
   // Optimiser le LCP selon le type de page
   html = optimizeLCPForPage(html, isHomePage);
 
-  // Configuration SEO par page
+  // Configuration SEO par page avec nouveau positionnement
   let title, description, canonicalUrl, keywords;
 
   if (type === 'page') {
     switch (route) {
       case 'about':
-        title = `À Propos - ${SEO_CONFIG.personal.name} | ${SEO_CONFIG.professional.title}`;
-        description = `Découvrez le profil de ${SEO_CONFIG.personal.name}, Creative Developer Full Stack chez ${SEO_CONFIG.professional.company}. Spécialiste ThreeJS, WebGL, GSAP et animations web à ${SEO_CONFIG.personal.location.primary}.`;
+        title = `À Propos - ${SEO_CONFIG.personal.name} | Développeur web freelance Gobelins Annecy | Spécialiste WordPress`;
+        description = `Découvrez le profil de ${SEO_CONFIG.personal.name}, développeur web freelance diplômé des Gobelins Annecy. Spécialisé WordPress, animations créatives et sites sur mesure à ${SEO_CONFIG.personal.location.primary}.`;
         canonicalUrl = `${CONFIG.baseUrl}/about`;
         keywords = [
           'valentin gassend',
-          'creative developer aix les bains',
-          'threejs developer france',
-          'gsap developer',
-          'mcube developer',
-          'webgl expert',
-          'full stack developer savoie',
-          'gobelins annecy diplômé'
+          'développeur web freelance aix-les-bains',
+          'gobelins annecy diplômé',
+          'développeur wordpress freelance savoie',
+          'freelance wordpress aix-les-bains',
+          'développeur web disponible',
+          'création site web aix-les-bains',
+          'école des gobelins'
         ];
         break;
 
       case 'projects':
-        title = `Projets & Portfolio - ${SEO_CONFIG.personal.name} | ThreeJS & WebGL`;
-        description = `Portfolio de ${SEO_CONFIG.personal.name} : projets ThreeJS, WebGL, GSAP, React et WordPress. Découvrez mes créations d'expériences web interactives et animations 3D.`;
+        title = `Projets & Portfolio - ${SEO_CONFIG.personal.name} | WordPress & Web Créatif | Diplômé Gobelins`;
+        description = `Portfolio de ${SEO_CONFIG.personal.name} : sites WordPress sur mesure, animations web créatives, interfaces React. Réalisations freelance pour clients en Savoie et Haute-Savoie.`;
         canonicalUrl = `${CONFIG.baseUrl}/projects`;
         keywords = [
-          'portfolio threejs',
-          'projets webgl',
-          'animations gsap',
-          'creative developer portfolio',
-          'react projects',
-          'wordpress developer',
-          'web 3d projects',
-          'gobelins portfolio'
+          'portfolio développeur web freelance',
+          'projets wordpress',
+          'animations web créatives',
+          'projets sites sur mesure',
+          'projets react',
+          'portfolio gobelins',
+          'expériences web interactives',
+          'portfolio freelance'
         ];
         break;
 
       default:
-        title = `${SEO_CONFIG.personal.name} - ${SEO_CONFIG.professional.title} | ${SEO_CONFIG.personal.location.primary}`;
+        title = `${SEO_CONFIG.personal.name}, développeur web freelance WordPress | ${SEO_CONFIG.professional.subtitle} | Diplômé Gobelins`;
         description = SEO_CONFIG.descriptions.home.long_fr;
         canonicalUrl = CONFIG.baseUrl;
         keywords = SEO_CONFIG.keywords.primary_fr;
     }
   } else if (type === 'project' && id) {
-    title = `Projet ${id} - ${SEO_CONFIG.personal.name} | Creative Development`;
-    description = `Découvrez le projet ${id} de ${SEO_CONFIG.personal.name}, Creative Developer. Réalisation ThreeJS, WebGL, GSAP ou React avec optimisation performance.`;
+    title = `Projet ${id} - ${SEO_CONFIG.personal.name} | Développement web freelance | Gobelins`;
+    description = `Découvrez le projet ${id} de ${SEO_CONFIG.personal.name}, développeur web freelance diplômé des Gobelins Annecy. Développement WordPress, animations créatives ou React avec optimisation performance.`;
     canonicalUrl = `${CONFIG.baseUrl}/project/${id}`;
     keywords = [
-      `projet ${id} creative developer`,
-      'threejs project',
-      'webgl development',
-      'gsap animation',
-      'react development',
-      'creative coding',
-      'gobelins project'
+      `projet ${id} développeur web freelance`,
+      'développement wordpress',
+      'développement web créatif',
+      'développement site sur mesure',
+      'développement react',
+      'projet interactif',
+      'projet gobelins',
+      'travail freelance web'
     ];
   }
 
@@ -211,7 +204,7 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
   const keywordsTag = `<meta name="keywords" content="${keywords.join(', ')}" />`;
   html = html.replace('</head>', `${keywordsTag}\n  </head>`);
 
-  // Mettre à jour les balises Open Graph avec image adaptée
+  // Mettre à jour les balises Open Graph
   const ogImage = isHomePage ? `${CONFIG.baseUrl}/img/landing.webp` : `${CONFIG.baseUrl}/img/og-default.jpg`;
 
   const ogTags = `
@@ -221,7 +214,7 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     <meta property="og:type" content="website" />
     <meta property="og:image" content="${ogImage}" />
     <meta property="og:locale" content="fr_FR" />
-    <meta property="og:site_name" content="${SEO_CONFIG.personal.name} - Creative Developer" />
+    <meta property="og:site_name" content="${SEO_CONFIG.personal.name} - Développeur web freelance" />
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -231,9 +224,9 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     <meta name="twitter:creator" content="${SEO_CONFIG.social.twitter}" />
     
     <!-- Balises professionnelles -->
-    <meta name="author" content="${SEO_CONFIG.personal.name}" />
-    <meta name="designer" content="${SEO_CONFIG.personal.name}" />
-    <meta name="developer" content="${SEO_CONFIG.personal.name}" />
+    <meta name="author" content="${SEO_CONFIG.personal.fullName}" />
+    <meta name="designer" content="${SEO_CONFIG.personal.fullName}" />
+    <meta name="developer" content="${SEO_CONFIG.personal.fullName}" />
     <meta name="geo.region" content="${SEO_CONFIG.personal.location.countryCode}-84" />
     <meta name="geo.placename" content="${SEO_CONFIG.personal.location.primary}" />
     <meta name="geo.position" content="${SEO_CONFIG.personal.location.coordinates['aix-les-bains'].lat};${SEO_CONFIG.personal.location.coordinates['aix-les-bains'].lng}" />
@@ -242,13 +235,10 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     <!-- Balises éducation -->
     <meta name="school" content="${SEO_CONFIG.professional.school.name}" />
     <meta name="education" content="${SEO_CONFIG.professional.school.fullName}" />
-    <meta name="company" content="${SEO_CONFIG.professional.company}" />
-    
-    <!-- Optimisation Core Web Vitals selon le type de page -->
-    ${isHomePage ?
-      `<link rel="preload" as="image" href="/img/landing.webp" fetchpriority="high">` :
-      `<meta name="robots" content="index, follow, max-image-preview:large">`
-  }
+    <meta name="company" content="Freelance - Disponible" />
+    <meta name="availability" content="Disponible pour nouveaux projets" />
+    <meta name="specialization" content="WordPress, Animations créatives, Sites sur mesure" />
+    <meta name="service-area" content="${SEO_CONFIG.personal.location.cities.join(', ')}" />
   `;
 
   // Remplacer les anciennes balises OG
@@ -256,25 +246,29 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
   html = html.replace(/<meta name="twitter:.*?>/gi, '');
   html = html.replace('</head>', `${ogTags}\n  </head>`);
 
-  // Ajouter les données structurées JSON-LD optimisées
+  // Ajouter les données structurées JSON-LD optimisées avec corrections
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": SEO_CONFIG.personal.name,
+    "name": SEO_CONFIG.personal.fullName,
+    "alternateName": [SEO_CONFIG.personal.name, "Développeur web Aix-les-Bains", "Freelance WordPress Aix-les-Bains"],
     "jobTitle": SEO_CONFIG.professional.jobTitle,
     "description": SEO_CONFIG.descriptions.home.short_fr,
     "url": CONFIG.baseUrl,
     "email": SEO_CONFIG.personal.email,
     "telephone": SEO_CONFIG.personal.phone,
+    "image": `${CONFIG.baseUrl}/img/landing.webp`,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": SEO_CONFIG.personal.location.primary,
       "addressRegion": SEO_CONFIG.personal.location.region,
-      "addressCountry": SEO_CONFIG.personal.location.countryCode
+      "addressCountry": SEO_CONFIG.personal.location.countryCode,
+      "postalCode": "73100"
     },
     "worksFor": {
       "@type": "Organization",
-      "name": SEO_CONFIG.professional.company
+      "name": "Freelance",
+      "description": "Développeur web freelance disponible pour projets WordPress et sites créatifs"
     },
     "alumniOf": {
       "@type": "EducationalOrganization",
@@ -304,9 +298,47 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     ],
     "hasOccupation": {
       "@type": "Occupation",
-      "name": SEO_CONFIG.professional.title,
-      "description": `Développeur créatif spécialisé en ${SEO_CONFIG.professional.specialties.fr.slice(0, 4).join(', ')}`,
-      "skills": SEO_CONFIG.professional.specialties.fr.join(", ")
+      "name": "Développeur web freelance",
+      "description": "Développeur web spécialisé en WordPress et animations créatives",
+      "skills": "WordPress, React, JavaScript, Animations web, Sites sur mesure, Performance web",
+      "occupationLocation": {
+        "@type": "City",
+        "name": SEO_CONFIG.personal.location.primary
+      },
+      "estimatedSalary": {
+        "@type": "MonetaryAmount",
+        "currency": "EUR",
+        "value": {
+          "@type": "QuantitativeValue",
+          "minValue": 400,
+          "maxValue": 800,
+          "unitText": "DAY"
+        }
+      }
+    },
+    "offers": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Développement web freelance",
+        "description": "Création de sites WordPress, animations web créatives, développement React sur mesure",
+        "provider": {
+          "@type": "Person",
+          "name": SEO_CONFIG.personal.fullName
+        },
+        "areaServed": SEO_CONFIG.personal.location.cities.map(city => ({
+          "@type": "City",
+          "name": city
+        })),
+        "availableChannel": {
+          "@type": "ServiceChannel",
+          "serviceUrl": CONFIG.baseUrl,
+          "serviceSmsNumber": SEO_CONFIG.personal.phone,
+          "serviceEmail": SEO_CONFIG.personal.email
+        }
+      },
+      "availability": "https://schema.org/InStock",
+      "businessFunction": "https://schema.org/Sell"
     }
   };
 
@@ -315,12 +347,12 @@ function customizeHtmlForRoute(baseHtml, route, type = 'page', id = null) {
     structuredData["@type"] = "CreativeWork";
     structuredData["creator"] = {
       "@type": "Person",
-      "name": SEO_CONFIG.personal.name,
+      "name": SEO_CONFIG.personal.fullName,
       "jobTitle": SEO_CONFIG.professional.jobTitle,
       "alumniOf": SEO_CONFIG.professional.school.name
     };
-    structuredData["about"] = `Projet ${id} de développement créatif utilisant ${SEO_CONFIG.professional.specialties.fr.slice(0, 4).join(', ')}`;
-    structuredData["genre"] = "Creative Web Development";
+    structuredData["about"] = `Projet ${id} de développement web utilisant ${SEO_CONFIG.professional.specialties.fr.slice(0, 4).join(', ')}`;
+    structuredData["genre"] = "Freelance Web Development";
     structuredData["keywords"] = keywords.join(", ");
   }
 
@@ -389,7 +421,7 @@ RewriteEngine On
 
 <IfModule mod_headers.c>
     # ✅ POLICES - Headers de cache explicites et CORS
-    <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
+    <FilesMatch "\\.(woff2|woff|ttf|otf|eot)$">
         # Cache immutable 1 an
         Header set Cache-Control "public, max-age=31536000, immutable"
         
@@ -409,19 +441,19 @@ RewriteEngine On
     </FilesMatch>
     
     # ✅ CSS et JS avec hash
-    <FilesMatch "\.(css|js)$">
+    <FilesMatch "\\.(css|js)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
         Header set X-Asset-Cache "1-year-immutable"
     </FilesMatch>
     
     # ✅ IMAGES
-    <FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|avif)$">
+    <FilesMatch "\\.(png|jpg|jpeg|gif|svg|webp|avif)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
         Header set X-Image-Cache "1-year-immutable"
     </FilesMatch>
     
     # ✅ HTML avec revalidation
-    <FilesMatch "\.html$">
+    <FilesMatch "\\.html$">
         Header set Cache-Control "public, max-age=3600, must-revalidate"
         Header set X-HTML-Cache "1-hour-revalidate"
     </FilesMatch>
@@ -483,10 +515,10 @@ RewriteEngine On
     AddOutputFilterByType DEFLATE image/svg+xml
     
     # ✅ Exclure les polices de la compression (déjà optimisées)
-    SetEnvIfNoCase Request_URI \.(?:woff|woff2|ttf|otf|eot)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \\.(?:woff|woff2|ttf|otf|eot)$ no-gzip dont-vary
     
     # ✅ Exclure autres fichiers binaires
-    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|zip|gz|rar|bz2|7z)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \\.(?:gif|jpe?g|png|webp|avif|zip|gz|rar|bz2|7z)$ no-gzip dont-vary
 </IfModule>
 
 # ========================================
@@ -494,7 +526,7 @@ RewriteEngine On
 # ========================================
 
 # ✅ Cache spécifique pour les polices Bricolage Grotesque
-<LocationMatch "^/font/Bricolage.*\.(woff2|woff|ttf|otf)$">
+<LocationMatch "^/font/Bricolage.*\\.(woff2|woff|ttf|otf)$">
     ExpiresDefault "access plus 1 year"
     Header set Cache-Control "public, max-age=31536000, immutable"
     Header set X-Font-Family "Bricolage-Grotesque"
@@ -517,13 +549,13 @@ RewriteRule . /index.html [L]
 # ========================================
 
 # ✅ Bloquer accès aux fichiers sensibles
-<FilesMatch "^\.">
+<FilesMatch "^\\.">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
 # ✅ Protection des logs et configs
-<FilesMatch "\.(env|git|htaccess|htpasswd|log|ini|conf)$">
+<FilesMatch "\\.(env|git|htaccess|htpasswd|log|ini|conf)$">
     Order allow,deny
     Deny from all
 </FilesMatch>`;
@@ -533,8 +565,8 @@ RewriteRule . /index.html [L]
 
 // Fonction principale de déploiement
 async function deploy() {
-  console.log('🚀 Déploiement SEO optimisé pour Creative Developer');
-  console.log('════════════════════════════════════════════════════');
+  console.log('🚀 Déploiement SEO optimisé pour développeur web freelance');
+  console.log('═══════════════════════════════════════════════════════════════');
 
   try {
     // Nettoyage
@@ -598,18 +630,19 @@ async function deploy() {
     fs.writeFileSync(path.join(distPath, 'index.html'), homeHtml);
     console.log(`✅ Page d'accueil optimisée (image LCP conservée)`);
 
-    console.log('════════════════════════════════════════════════════');
+    console.log('═══════════════════════════════════════════════════════════════');
     console.log('🎉 Déploiement SEO terminé avec succès!');
-    console.log(`👨‍💻 Profil: ${SEO_CONFIG.personal.name} - ${SEO_CONFIG.professional.title}`);
+    console.log(`👨‍💻 Profil: ${SEO_CONFIG.personal.fullName} - ${SEO_CONFIG.professional.title}`);
     console.log(`🎓 École: ${SEO_CONFIG.professional.school.name}`);
     console.log(`📍 Localisation: ${SEO_CONFIG.personal.location.primary}`);
-    console.log(`🏢 Entreprise: ${SEO_CONFIG.professional.company}`);
-    console.log(`🔧 Technologies: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}`);
+    console.log(`💼 Disponibilité: Freelance pour nouveaux projets`);
+    console.log(`🔧 Spécialités: ${SEO_CONFIG.professional.specialties.fr.slice(0, 5).join(', ')}`);
     console.log(`🌍 Villes ciblées: ${SEO_CONFIG.personal.location.cities.join(', ')}`);
     console.log(`📊 Pages générées: ${3 + CONFIG.projectIds.length} au total`);
     console.log('🖼️ Image LCP optimisée : uniquement sur la page d\'accueil');
     console.log('⚡ Core Web Vitals : optimisés par page');
-    console.log('════════════════════════════════════════════════════');
+    console.log('🎯 SEO local : WordPress + Freelance + Localisation');
+    console.log('═══════════════════════════════════════════════════════════════');
 
   } catch (error) {
     console.error(`❌ Erreur: ${error.message}`);

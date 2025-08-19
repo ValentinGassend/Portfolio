@@ -55,7 +55,7 @@ RewriteEngine On
 
 <IfModule mod_headers.c>
     # ✅ POLICES - Headers de cache explicites et CORS
-    <FilesMatch ".(woff2|woff|ttf|otf|eot)$">
+    <FilesMatch "\.(woff2|woff|ttf|otf|eot)$">
         # Cache immutable 1 an
         Header set Cache-Control "public, max-age=31536000, immutable"
         
@@ -75,19 +75,19 @@ RewriteEngine On
     </FilesMatch>
     
     # ✅ CSS et JS avec hash
-    <FilesMatch ".(css|js)$">
+    <FilesMatch "\.(css|js)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
         Header set X-Asset-Cache "1-year-immutable"
     </FilesMatch>
     
     # ✅ IMAGES
-    <FilesMatch ".(png|jpg|jpeg|gif|svg|webp|avif)$">
+    <FilesMatch "\.(png|jpg|jpeg|gif|svg|webp|avif)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
         Header set X-Image-Cache "1-year-immutable"
     </FilesMatch>
     
     # ✅ HTML avec revalidation
-    <FilesMatch ".html$">
+    <FilesMatch "\.html$">
         Header set Cache-Control "public, max-age=3600, must-revalidate"
         Header set X-HTML-Cache "1-hour-revalidate"
     </FilesMatch>
@@ -149,10 +149,10 @@ RewriteEngine On
     AddOutputFilterByType DEFLATE image/svg+xml
     
     # ✅ Exclure les polices de la compression (déjà optimisées)
-    SetEnvIfNoCase Request_URI .(?:woff|woff2|ttf|otf|eot)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(?:woff|woff2|ttf|otf|eot)$ no-gzip dont-vary
     
     # ✅ Exclure autres fichiers binaires
-    SetEnvIfNoCase Request_URI .(?:gif|jpe?g|png|webp|avif|zip|gz|rar|bz2|7z)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|avif|zip|gz|rar|bz2|7z)$ no-gzip dont-vary
 </IfModule>
 
 # ========================================
@@ -160,7 +160,7 @@ RewriteEngine On
 # ========================================
 
 # ✅ Cache spécifique pour les polices Bricolage Grotesque
-<LocationMatch "^/font/Bricolage.*.(woff2|woff|ttf|otf)$">
+<LocationMatch "^/font/Bricolage.*\.(woff2|woff|ttf|otf)$">
     ExpiresDefault "access plus 1 year"
     Header set Cache-Control "public, max-age=31536000, immutable"
     Header set X-Font-Family "Bricolage-Grotesque"
@@ -183,13 +183,13 @@ RewriteRule . /index.html [L]
 # ========================================
 
 # ✅ Bloquer accès aux fichiers sensibles
-<FilesMatch "^.">
+<FilesMatch "^\.">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
 # ✅ Protection des logs et configs
-<FilesMatch ".(env|git|htaccess|htpasswd|log|ini|conf)$">
+<FilesMatch "\.(env|git|htaccess|htpasswd|log|ini|conf)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
